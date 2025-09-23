@@ -6,43 +6,20 @@
 	objectVersion = 77;
 	objects = {
 
-/* Begin PBXContainerItemProxy section */
-		A6D26C0D2E7C951E006D9BC8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A6D26BF72E7C951D006D9BC8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A6D26BFE2E7C951D006D9BC8;
-			remoteInfo = OneThing;
-		};
-		A6D26C172E7C951E006D9BC8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A6D26BF72E7C951D006D9BC8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A6D26BFE2E7C951D006D9BC8;
-			remoteInfo = OneThing;
-		};
-/* End PBXContainerItemProxy section */
+/* Begin PBXBuildFile section */
+		A60681ED2E7C9FA900AA7911 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = A60681EC2E7C9FA900AA7911 /* AppFeature */; };
+/* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A6337FDD2E80EA58004C4276 /* ModelActionsTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = ModelActionsTestPlan.xctestplan; path = OneThingPackage/Tests/ModelActionsTests/ModelActionsTestPlan.xctestplan; sourceTree = "<group>"; };
 		A6D26BFF2E7C951D006D9BC8 /* OneThing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OneThing.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A6D26C0C2E7C951E006D9BC8 /* OneThingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OneThingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A6D26C162E7C951E006D9BC8 /* OneThingUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OneThingUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6D26C2C2E7C96F7006D9BC8 /* OneThingPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = OneThingPackage; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A6D26C012E7C951D006D9BC8 /* OneThing */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = OneThing;
-			sourceTree = "<group>";
-		};
-		A6D26C0F2E7C951E006D9BC8 /* OneThingTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = OneThingTests;
-			sourceTree = "<group>";
-		};
-		A6D26C192E7C951E006D9BC8 /* OneThingUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = OneThingUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -52,32 +29,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A6D26C092E7C951E006D9BC8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A6D26C132E7C951E006D9BC8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				A60681ED2E7C9FA900AA7911 /* AppFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A60681EB2E7C9FA900AA7911 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		A6D26BF62E7C951D006D9BC8 = {
 			isa = PBXGroup;
 			children = (
+				A6337FDD2E80EA58004C4276 /* ModelActionsTestPlan.xctestplan */,
+				A6D26C2C2E7C96F7006D9BC8 /* OneThingPackage */,
 				A6D26C012E7C951D006D9BC8 /* OneThing */,
-				A6D26C0F2E7C951E006D9BC8 /* OneThingTests */,
-				A6D26C192E7C951E006D9BC8 /* OneThingUITests */,
+				A60681EB2E7C9FA900AA7911 /* Frameworks */,
 				A6D26C002E7C951D006D9BC8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -86,8 +58,6 @@
 			isa = PBXGroup;
 			children = (
 				A6D26BFF2E7C951D006D9BC8 /* OneThing.app */,
-				A6D26C0C2E7C951E006D9BC8 /* OneThingTests.xctest */,
-				A6D26C162E7C951E006D9BC8 /* OneThingUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -112,56 +82,11 @@
 			);
 			name = OneThing;
 			packageProductDependencies = (
+				A60681EC2E7C9FA900AA7911 /* AppFeature */,
 			);
 			productName = OneThing;
 			productReference = A6D26BFF2E7C951D006D9BC8 /* OneThing.app */;
 			productType = "com.apple.product-type.application";
-		};
-		A6D26C0B2E7C951E006D9BC8 /* OneThingTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A6D26C232E7C951E006D9BC8 /* Build configuration list for PBXNativeTarget "OneThingTests" */;
-			buildPhases = (
-				A6D26C082E7C951E006D9BC8 /* Sources */,
-				A6D26C092E7C951E006D9BC8 /* Frameworks */,
-				A6D26C0A2E7C951E006D9BC8 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A6D26C0E2E7C951E006D9BC8 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				A6D26C0F2E7C951E006D9BC8 /* OneThingTests */,
-			);
-			name = OneThingTests;
-			packageProductDependencies = (
-			);
-			productName = OneThingTests;
-			productReference = A6D26C0C2E7C951E006D9BC8 /* OneThingTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		A6D26C152E7C951E006D9BC8 /* OneThingUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A6D26C262E7C951E006D9BC8 /* Build configuration list for PBXNativeTarget "OneThingUITests" */;
-			buildPhases = (
-				A6D26C122E7C951E006D9BC8 /* Sources */,
-				A6D26C132E7C951E006D9BC8 /* Frameworks */,
-				A6D26C142E7C951E006D9BC8 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A6D26C182E7C951E006D9BC8 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				A6D26C192E7C951E006D9BC8 /* OneThingUITests */,
-			);
-			name = OneThingUITests;
-			packageProductDependencies = (
-			);
-			productName = OneThingUITests;
-			productReference = A6D26C162E7C951E006D9BC8 /* OneThingUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -176,14 +101,6 @@
 					A6D26BFE2E7C951D006D9BC8 = {
 						CreatedOnToolsVersion = 16.4;
 					};
-					A6D26C0B2E7C951E006D9BC8 = {
-						CreatedOnToolsVersion = 16.4;
-						TestTargetID = A6D26BFE2E7C951D006D9BC8;
-					};
-					A6D26C152E7C951E006D9BC8 = {
-						CreatedOnToolsVersion = 16.4;
-						TestTargetID = A6D26BFE2E7C951D006D9BC8;
-					};
 				};
 			};
 			buildConfigurationList = A6D26BFA2E7C951D006D9BC8 /* Build configuration list for PBXProject "OneThing" */;
@@ -195,34 +112,20 @@
 			);
 			mainGroup = A6D26BF62E7C951D006D9BC8;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A6D26C002E7C951D006D9BC8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				A6D26BFE2E7C951D006D9BC8 /* OneThing */,
-				A6D26C0B2E7C951E006D9BC8 /* OneThingTests */,
-				A6D26C152E7C951E006D9BC8 /* OneThingUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		A6D26BFD2E7C951D006D9BC8 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A6D26C0A2E7C951E006D9BC8 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A6D26C142E7C951E006D9BC8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -239,34 +142,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A6D26C082E7C951E006D9BC8 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A6D26C122E7C951E006D9BC8 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		A6D26C0E2E7C951E006D9BC8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A6D26BFE2E7C951D006D9BC8 /* OneThing */;
-			targetProxy = A6D26C0D2E7C951E006D9BC8 /* PBXContainerItemProxy */;
-		};
-		A6D26C182E7C951E006D9BC8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A6D26BFE2E7C951D006D9BC8 /* OneThing */;
-			targetProxy = A6D26C172E7C951E006D9BC8 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		A6D26C1E2E7C951E006D9BC8 /* Debug */ = {
@@ -446,78 +322,6 @@
 			};
 			name = Release;
 		};
-		A6D26C242E7C951E006D9BC8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = PY774CHZ5Z;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jacksonrich.OneThingTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OneThing.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OneThing";
-			};
-			name = Debug;
-		};
-		A6D26C252E7C951E006D9BC8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = PY774CHZ5Z;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jacksonrich.OneThingTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OneThing.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OneThing";
-			};
-			name = Release;
-		};
-		A6D26C272E7C951E006D9BC8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = PY774CHZ5Z;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jacksonrich.OneThingUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = OneThing;
-			};
-			name = Debug;
-		};
-		A6D26C282E7C951E006D9BC8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = PY774CHZ5Z;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.jacksonrich.OneThingUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = OneThing;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -539,25 +343,14 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A6D26C232E7C951E006D9BC8 /* Build configuration list for PBXNativeTarget "OneThingTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A6D26C242E7C951E006D9BC8 /* Debug */,
-				A6D26C252E7C951E006D9BC8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A6D26C262E7C951E006D9BC8 /* Build configuration list for PBXNativeTarget "OneThingUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A6D26C272E7C951E006D9BC8 /* Debug */,
-				A6D26C282E7C951E006D9BC8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A60681EC2E7C9FA900AA7911 /* AppFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppFeature;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A6D26BF72E7C951D006D9BC8 /* Project object */;
 }

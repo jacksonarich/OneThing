@@ -1,17 +1,11 @@
-//
-//  OneThingApp.swift
-//  OneThing
-//
-//  Created by Jackson Rich on 9/18/25.
-//
-
+import AppFeature
 import SwiftUI
 
 @main
 struct OneThingApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+  var body: some Scene {
+    WindowGroup {
+      EmptyView()
     }
+  }
 }
