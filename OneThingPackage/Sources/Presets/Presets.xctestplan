@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "155670A1-276F-4076-83D4-C87B4A79B12B",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "performanceAntipatternCheckerEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PresetTests",
+        "name" : "PresetTests"
+      }
+    }
+  ],
+  "version" : 1
+}

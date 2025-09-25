@@ -1,3 +1,4 @@
+import Dependencies
 import Foundation
 import SQLiteData
 import SwiftUI
@@ -10,28 +11,21 @@ public struct TodoList: Identifiable, Equatable, Sendable {
   public let colorIndex: Int
   public let createDate: Date
   public let modifyDate: Date
+  
+  public init(id: ID, name: String, colorIndex: Int, createDate: Date, modifyDate: Date) {
+    self.id = id
+    self.name = name
+    self.colorIndex = colorIndex
+    self.createDate = createDate
+    self.modifyDate = modifyDate
+  }
 }
 
+extension TodoList.Draft: Equatable {}
 
 public extension TodoList {
   /// Primary key.
   typealias ID = Int
-  /// Shortcut initializer for use in testing.
-  static func preset(
-    id:         TodoList.ID = 1,
-    name:       String      = "",
-    colorIndex: Int         = 0,
-    createDate: Date        = .now,
-    modifyDate: Date        = .now
-  ) -> TodoList.Draft {
-    .init(
-      id:         id,
-      name:       name,
-      colorIndex: colorIndex,
-      createDate: createDate,
-      modifyDate: modifyDate
-    )
-  }
 }
 
 

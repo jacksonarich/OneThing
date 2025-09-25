@@ -1,8 +1,6 @@
 // swift-tools-version: 6.1
 
-
 import PackageDescription
-
 
 let package = Package(
   name: "OneThingPackage",
@@ -17,12 +15,12 @@ let package = Package(
       targets: ["AppFeature"]
     ),
     .library(
-      name: "BaseTestSuite",
-      targets: ["BaseTestSuite"]
-    ),
-    .library(
       name: "ModelActions",
       targets: ["ModelActions"]
+    ),
+    .library(
+      name: "Presets",
+      targets: ["Presets"]
     ),
     .library(
       name: "Schema",
@@ -46,13 +44,6 @@ let package = Package(
       dependencies: []
     ),
     .target(
-      name: "BaseTestSuite",
-      dependencies: [
-        .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
-        "AppDatabase",
-      ]
-    ),
-    .target(
       name: "ModelActions",
       dependencies: [
         "Schema",
@@ -61,20 +52,38 @@ let package = Package(
     .testTarget(
       name: "ModelActionsTests",
       dependencies: [
-//        "BaseTestSuite",
 //        "ModelActions",
 //        "Schema",
+      ]
+    ),
+    .target(
+      name: "Presets",
+      dependencies: [
+        "Schema",
+        .product(name: "Dependencies", package: "swift-dependencies"),
+      ]
+    ),
+    .testTarget(
+      name: "PresetTests",
+      dependencies: [
+        "AppDatabase",
+        "Presets",
+        .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
       ]
     ),
     .target(
       name: "Schema",
       dependencies: [
         .product(name: "SQLiteData", package: "sqlite-data"),
+        .product(name: "Dependencies", package: "swift-dependencies"),
       ]
     ),
     .testTarget(
       name: "SchemaTests",
       dependencies: [
+        .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
+        "AppDatabase",
+        "Presets",
         "Schema",
       ]
     ),
