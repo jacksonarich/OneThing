@@ -2,6 +2,7 @@ import AppDatabase
 import CustomDump
 import Dependencies
 import DependenciesTestSupport
+import Foundation
 import Presets
 import SQLiteData
 import Testing
@@ -28,6 +29,6 @@ struct TodoListTests {
       createDate: date.now,
       modifyDate: date.now
     )
-    expectNoDifference(l2, l1)
+    expectNoDifference(l1, l2)
   }
 }

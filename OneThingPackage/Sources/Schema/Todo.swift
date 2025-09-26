@@ -7,18 +7,18 @@ import SwiftUI
 
 @Table
 public struct Todo: Identifiable, Equatable, Sendable {
-  public let id:                 ID
-  public let title:              String
-  public let notes:              String
-  public let deadline:           Date?
+  public let id: ID
+  public let title: String
+  public let notes: String
+  public let deadline: Date?
   public let frequencyUnitIndex: Int?
-  public let frequencyCount:     Int?
-  public let createDate:         Date
-  public let modifyDate:         Date
-  public let completeDate:       Date?
-  public let deleteDate:         Date?
-  public let order:              String
-  public let listID:             TodoList.ID
+  public let frequencyCount: Int?
+  public let createDate: Date
+  public let modifyDate: Date
+  public let completeDate: Date?
+  public let deleteDate: Date?
+  public let order: String
+  public let listID: TodoList.ID
   
   public init(
     id: ID,
@@ -49,7 +49,7 @@ public struct Todo: Identifiable, Equatable, Sendable {
   }
 }
 
-extension Todo.Draft: Equatable {}
+extension Todo.Draft: Equatable, Sendable {}
 
 public extension Todo {
   /// Primary key.

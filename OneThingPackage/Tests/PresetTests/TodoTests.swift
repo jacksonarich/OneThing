@@ -17,6 +17,7 @@ import Testing
   .dependency(\.date.now, Date(timeIntervalSince1970: 0))
 )
 struct TodoTests {
+  
   @Test
   func testPreset() async throws {
     @Dependency(\.date) var date
@@ -35,6 +36,6 @@ struct TodoTests {
       order: "",
       listID: 1
     )
-    expectNoDifference(t2, t1)
+    expectNoDifference(t1, t2)
   }
 }

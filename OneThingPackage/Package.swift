@@ -52,8 +52,12 @@ let package = Package(
     .testTarget(
       name: "ModelActionsTests",
       dependencies: [
-//        "ModelActions",
-//        "Schema",
+        "AppDatabase",
+        "ModelActions",
+        "Presets",
+        "Schema",
+        .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
+        .product(name: "GRDB", package: "GRDB.swift"),
       ]
     ),
     .target(

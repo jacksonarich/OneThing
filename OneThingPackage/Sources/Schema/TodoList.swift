@@ -12,7 +12,13 @@ public struct TodoList: Identifiable, Equatable, Sendable {
   public let createDate: Date
   public let modifyDate: Date
   
-  public init(id: ID, name: String, colorIndex: Int, createDate: Date, modifyDate: Date) {
+  public init(
+    id: ID,
+    name: String,
+    colorIndex: Int,
+    createDate: Date,
+    modifyDate: Date
+  ) {
     self.id = id
     self.name = name
     self.colorIndex = colorIndex
@@ -21,7 +27,7 @@ public struct TodoList: Identifiable, Equatable, Sendable {
   }
 }
 
-extension TodoList.Draft: Equatable {}
+extension TodoList.Draft: Equatable, Sendable {}
 
 public extension TodoList {
   /// Primary key.
