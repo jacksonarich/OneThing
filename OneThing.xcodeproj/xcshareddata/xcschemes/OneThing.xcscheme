@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1640"
+   LastUpgradeVersion = "2600"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -15,10 +15,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "Schema"
-               BuildableName = "Schema"
-               BlueprintName = "Schema"
-               ReferencedContainer = "container:">
+               BlueprintIdentifier = "A6D26BFE2E7C951D006D9BC8"
+               BuildableName = "OneThing.app"
+               BlueprintName = "OneThing"
+               ReferencedContainer = "container:OneThing.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -40,6 +40,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "A6D26BFE2E7C951D006D9BC8"
+            BuildableName = "OneThing.app"
+            BlueprintName = "OneThing"
+            ReferencedContainer = "container:OneThing.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -47,15 +57,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "Schema"
-            BuildableName = "Schema"
-            BlueprintName = "Schema"
-            ReferencedContainer = "container:">
+            BlueprintIdentifier = "A6D26BFE2E7C951D006D9BC8"
+            BuildableName = "OneThing.app"
+            BlueprintName = "OneThing"
+            ReferencedContainer = "container:OneThing.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

@@ -1,23 +1,27 @@
-import Schema
+// Interface used by view models to write to the database.
+
+
 import SQLiteData
 import SwiftUI
 
+import Schema
 
-struct ModelActions: Sendable {
-  let createTodo:     @Sendable (Todo.Draft)               throws -> Void
-  let completeTodo:   @Sendable (Todo.ID)                  throws -> Void
-  let deleteTodo:     @Sendable (Todo.ID)                  throws -> Void
-  let putBackTodo:    @Sendable (Todo.ID)                  throws -> Void
-  let eraseTodo:      @Sendable (Todo.ID)                  throws -> Void
-  let moveTodo:       @Sendable (Todo.ID, TodoList.ID)     throws -> Void
-  let rescheduleTodo: @Sendable (Todo.ID)                  throws -> Void
-  let createList:     @Sendable (TodoList.Draft)           throws -> Void
-  let updateList:     @Sendable (TodoList.ID, String, Int) throws -> Void
-  let deleteList:     @Sendable (TodoList.ID)              throws -> Void
+
+public struct ModelActions: Sendable {
+  public let createTodo:     @Sendable (Todo.Draft)               throws -> Void
+  public let completeTodo:   @Sendable (Todo.ID)                  throws -> Void
+  public let deleteTodo:     @Sendable (Todo.ID)                  throws -> Void
+  public let putBackTodo:    @Sendable (Todo.ID)                  throws -> Void
+  public let eraseTodo:      @Sendable (Todo.ID)                  throws -> Void
+  public let moveTodo:       @Sendable (Todo.ID, TodoList.ID)     throws -> Void
+  public let rescheduleTodo: @Sendable (Todo.ID)                  throws -> Void
+  public let createList:     @Sendable (TodoList.Draft)           throws -> Void
+  public let updateList:     @Sendable (TodoList.ID, String, Int) throws -> Void
+  public let deleteList:     @Sendable (TodoList.ID)              throws -> Void
 }
 
 
-extension DependencyValues {
+public extension DependencyValues {
   var modelActions: ModelActions {
     get { self[ModelActions.self] }
     set { self[ModelActions.self] = newValue }
@@ -26,7 +30,7 @@ extension DependencyValues {
 
 
 extension ModelActions: DependencyKey {
-  static let liveValue = {
+  public static let liveValue = {
     @Dependency(\.defaultDatabase) var connection
     @Dependency(\.date.now) var now
     return ModelActions(

@@ -1,9 +1,13 @@
+// Exports the `appDatabase` function.
+
+
 import Foundation
 import SQLiteData
+
 import Schema
 
 
-/// Returns a stable connection to the local database, creating an empty one if necessary.
+/// Returns a stable connection to the local database, creating an empty database if necessary.
 public func appDatabase(
   lists: [TodoList.Draft] = [],
   todos: [Todo.Draft] = []

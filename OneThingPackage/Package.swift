@@ -15,12 +15,16 @@ let package = Package(
       targets: ["AppFeature"]
     ),
     .library(
+      name: "Dashboard",
+      targets: ["Dashboard"]
+    ),
+    .library(
       name: "ModelActions",
       targets: ["ModelActions"]
     ),
     .library(
-      name: "Presets",
-      targets: ["Presets"]
+      name: "Utilities",
+      targets: ["Utilities"]
     ),
     .library(
       name: "Schema",
@@ -36,59 +40,68 @@ let package = Package(
     .target(
       name: "AppDatabase",
       dependencies: [
+        .product(name: "SQLiteData", package: "sqlite-data"),
         "Schema",
       ]
     ),
     .target(
       name: "AppFeature",
-      dependencies: []
+      dependencies: [
+        .product(name: "SQLiteData", package: "sqlite-data"),
+        "AppDatabase",
+        "Dashboard",
+        "Schema",
+      ]
+    ),
+    .target(
+      name: "Dashboard",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "SQLiteData", package: "sqlite-data"),
+        "AppDatabase",
+        "ModelActions",
+        "Schema",
+        "Utilities",
+      ]
     ),
     .target(
       name: "ModelActions",
       dependencies: [
+        .product(name: "SQLiteData", package: "sqlite-data"),
         "Schema",
       ]
     ),
     .testTarget(
       name: "ModelActionsTests",
       dependencies: [
-        "AppDatabase",
-        "ModelActions",
-        "Presets",
-        "Schema",
         .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
         .product(name: "GRDB", package: "GRDB.swift"),
+        "AppDatabase",
+        "ModelActions",
+        "Schema",
+        "Utilities",
       ]
     ),
     .target(
-      name: "Presets",
+      name: "Utilities",
       dependencies: [
-        "Schema",
         .product(name: "Dependencies", package: "swift-dependencies"),
+        "Schema",
       ]
     ),
     .testTarget(
-      name: "PresetTests",
+      name: "UtilitiesTests",
       dependencies: [
-        "AppDatabase",
-        "Presets",
         .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
+        "AppDatabase",
+        "Utilities",
       ]
     ),
     .target(
       name: "Schema",
       dependencies: [
-        .product(name: "SQLiteData", package: "sqlite-data"),
         .product(name: "Dependencies", package: "swift-dependencies"),
-      ]
-    ),
-    .testTarget(
-      name: "SchemaTests",
-      dependencies: [
-        .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
-        "AppDatabase",
-        "Presets",
-        "Schema",
+        .product(name: "SQLiteData", package: "sqlite-data"),
       ]
     ),
   ]

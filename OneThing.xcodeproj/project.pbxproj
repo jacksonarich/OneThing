@@ -11,7 +11,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A6337FDD2E80EA58004C4276 /* ModelActionsTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; name = ModelActionsTestPlan.xctestplan; path = OneThingPackage/Tests/ModelActionsTests/ModelActionsTestPlan.xctestplan; sourceTree = "<group>"; };
 		A6D26BFF2E7C951D006D9BC8 /* OneThing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OneThing.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6D26C2C2E7C96F7006D9BC8 /* OneThingPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = OneThingPackage; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -46,7 +45,6 @@
 		A6D26BF62E7C951D006D9BC8 = {
 			isa = PBXGroup;
 			children = (
-				A6337FDD2E80EA58004C4276 /* ModelActionsTestPlan.xctestplan */,
 				A6D26C2C2E7C96F7006D9BC8 /* OneThingPackage */,
 				A6D26C012E7C951D006D9BC8 /* OneThing */,
 				A60681EB2E7C9FA900AA7911 /* Frameworks */,
