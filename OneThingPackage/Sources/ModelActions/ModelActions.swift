@@ -8,16 +8,16 @@ import Schema
 
 
 public struct ModelActions: Sendable {
-  public let createTodo:     @Sendable (Todo.Draft)               throws -> Void
-  public let completeTodo:   @Sendable (Todo.ID)                  throws -> Void
-  public let deleteTodo:     @Sendable (Todo.ID)                  throws -> Void
-  public let putBackTodo:    @Sendable (Todo.ID)                  throws -> Void
-  public let eraseTodo:      @Sendable (Todo.ID)                  throws -> Void
-  public let moveTodo:       @Sendable (Todo.ID, TodoList.ID)     throws -> Void
-  public let rescheduleTodo: @Sendable (Todo.ID)                  throws -> Void
-  public let createList:     @Sendable (TodoList.Draft)           throws -> Void
-  public let updateList:     @Sendable (TodoList.ID, String, Int) throws -> Void
-  public let deleteList:     @Sendable (TodoList.ID)              throws -> Void
+  public var createTodo:     @Sendable (Todo.Draft)               throws -> Void
+  public var completeTodo:   @Sendable (Todo.ID)                  throws -> Void
+  public var deleteTodo:     @Sendable (Todo.ID)                  throws -> Void
+  public var putBackTodo:    @Sendable (Todo.ID)                  throws -> Void
+  public var eraseTodo:      @Sendable (Todo.ID)                  throws -> Void
+  public var moveTodo:       @Sendable (Todo.ID, TodoList.ID)     throws -> Void
+  public var rescheduleTodo: @Sendable (Todo.ID)                  throws -> Void
+  public var createList:     @Sendable (TodoList.Draft)           throws -> Void
+  public var updateList:     @Sendable (TodoList.ID, String, Int) throws -> Void
+  public var deleteList:     @Sendable (TodoList.ID)              throws -> Void
 }
 
 
@@ -136,6 +136,8 @@ extension ModelActions: DependencyKey {
       }
     )
   }()
+  
+  public static let testValue = liveValue
 }
 
 

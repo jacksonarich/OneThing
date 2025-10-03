@@ -12,125 +12,123 @@ import Schema
 import Utilities
 
 
+let now = Date(timeIntervalSince1970: 0)
+
+
 @Suite(
-  .dependency(\.continuousClock, ImmediateClock()),
   .dependency(\.defaultDatabase, try appDatabase()),
   .dependency(\.uuid, .incrementing),
-  .dependency(\.date.now, Date(timeIntervalSince1970: 0))
+  .dependency(\.date.now, now)
 )
 struct ModelActionsTests {
   
   @Test
-  func createList() async throws {
-    try ModelActions.liveValue.createList(.preset())
+  func testCreateList() async throws {
+    try ModelActions.testValue.createList(.preset())
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference(allLists, [.preset(id: 1)])
-    expectNoDifference(allTodos, [])
+    expectNoDifference([.preset(id: 1)], allLists)
+    expectNoDifference([], allTodos)
   }
   
   @Test
-  func updateList() async throws {
-    try ModelActions.liveValue.createList(.preset())
-    try ModelActions.liveValue.updateList(1, "Grocery", 5)
+  func testUpdateList() async throws {
+    try ModelActions.testValue.createList(.preset())
+    try ModelActions.testValue.updateList(1, "Grocery", 5)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference(allLists, [.preset(id: 1, name: "Grocery", colorIndex: 5)])
-    expectNoDifference(allTodos, [])
+    expectNoDifference([.preset(id: 1, name: "Grocery", colorIndex: 5)], allLists)
+    expectNoDifference([], allTodos)
   }
   
   @Test
-  func deleteList() async throws {
-    try ModelActions.liveValue.createList(.preset())
-    try ModelActions.liveValue.deleteList(1)
+  func testDeleteList() async throws {
+    try ModelActions.testValue.createList(.preset())
+    try ModelActions.testValue.deleteList(1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference(allLists, [])
-    expectNoDifference(allTodos, [])
+    expectNoDifference([], allLists)
+    expectNoDifference([], allTodos)
   }
   
   @Test
-  func createTodo() async throws {
-    try ModelActions.liveValue.createList(.preset())
-    try ModelActions.liveValue.createTodo(.preset(id: 1, order: "", listID: 1))
+  func testCreateTodo() async throws {
+    try ModelActions.testValue.createList(.preset())
+    try ModelActions.testValue.createTodo(.preset(order: "", listID: 1))
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference(allLists, [.preset(id: 1)])
-    expectNoDifference(allTodos, [.preset(id: 1, order: "", listID: 1)])
+    expectNoDifference([.preset(id: 1)], allLists)
+    expectNoDifference([.preset(id: 1, order: "", listID: 1)], allTodos)
   }
   
   @Test
-  func completeTodo() async throws {
-    @Dependency(\.date) var date
-    try ModelActions.liveValue.createList(.preset())
-    try ModelActions.liveValue.createTodo(.preset(id: 1, order: "", listID: 1))
-    try ModelActions.liveValue.completeTodo(1)
+  func testCompleteTodo() async throws {
+    try ModelActions.testValue.createList(.preset())
+    try ModelActions.testValue.createTodo(.preset(order: "", listID: 1))
+    try ModelActions.testValue.completeTodo(1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference(allLists, [.preset(id: 1)])
-    expectNoDifference(allTodos, [.preset(id: 1, completeDate: date.now, order: "", listID: 1)])
+    expectNoDifference([.preset(id: 1)], allLists)
+    expectNoDifference([.preset(id: 1, completeDate: now, order: "", listID: 1)], allTodos)
   }
   
   @Test
-  func deleteTodo() async throws {
-    @Dependency(\.date) var date
-    try ModelActions.liveValue.createList(.preset())
-    try ModelActions.liveValue.createTodo(.preset(id: 1, order: "", listID: 1))
-    try ModelActions.liveValue.deleteTodo(1)
+  func testDeleteTodo() async throws {
+    try ModelActions.testValue.createList(.preset())
+    try ModelActions.testValue.createTodo(.preset(order: "", listID: 1))
+    try ModelActions.testValue.deleteTodo(1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference(allLists, [.preset(id: 1)])
-    expectNoDifference(allTodos, [.preset(id: 1, deleteDate: date.now, order: "", listID: 1)])
+    expectNoDifference([.preset(id: 1)], allLists)
+    expectNoDifference([.preset(id: 1, deleteDate: now, order: "", listID: 1)], allTodos)
   }
   
   @Test
-  func putBackTodo() async throws {
-    @Dependency(\.date) var date
-    try ModelActions.liveValue.createList(.preset())
-    try ModelActions.liveValue.createTodo(.preset(id: 1, completeDate: date.now, deleteDate: date.now, order: "", listID: 1))
-    try ModelActions.liveValue.putBackTodo(1)
+  func testPutBackTodo() async throws {
+    try ModelActions.testValue.createList(.preset())
+    try ModelActions.testValue.createTodo(.preset(completeDate: now, deleteDate: now, order: "", listID: 1))
+    try ModelActions.testValue.putBackTodo(1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference(allLists, [.preset(id: 1)])
-    expectNoDifference(allTodos, [.preset(id: 1, order: "", listID: 1)])
+    expectNoDifference([.preset(id: 1)], allLists)
+    expectNoDifference([.preset(id: 1, order: "", listID: 1)], allTodos)
   }
   
   @Test
-  func eraseTodo() async throws {
-    try ModelActions.liveValue.createList(.preset())
-    try ModelActions.liveValue.createTodo(.preset(id: 1, order: "", listID: 1))
-    try ModelActions.liveValue.eraseTodo(1)
+  func testEraseTodo() async throws {
+    try ModelActions.testValue.createList(.preset())
+    try ModelActions.testValue.createTodo(.preset(order: "", listID: 1))
+    try ModelActions.testValue.eraseTodo(1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference(allLists, [.preset(id: 1)])
-    expectNoDifference(allTodos, [])
+    expectNoDifference([.preset(id: 1)], allLists)
+    expectNoDifference([], allTodos)
   }
   
   @Test
-  func moveTodo() async throws {
-    try ModelActions.liveValue.createList(.preset())
-    try ModelActions.liveValue.createList(.preset())
-    try ModelActions.liveValue.createTodo(.preset(id: 1, order: "", listID: 1))
-    try ModelActions.liveValue.moveTodo(1, 2)
+  func testMoveTodo() async throws {
+    try ModelActions.testValue.createList(.preset())
+    try ModelActions.testValue.createList(.preset())
+    try ModelActions.testValue.createTodo(.preset(order: "", listID: 1))
+    try ModelActions.testValue.moveTodo(1, 2)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference(allLists, [.preset(id: 1), .preset(id: 2)])
-    expectNoDifference(allTodos, [.preset(id: 1, order: "", listID: 2)])
+    expectNoDifference([.preset(id: 1), .preset(id: 2)], allLists)
+    expectNoDifference([.preset(id: 1, order: "", listID: 2)], allTodos)
   }
   
   @Test
-  func rescheduleTodo() async throws {
-    @Dependency(\.date) var date
-    try ModelActions.liveValue.createList(.preset())
-    try ModelActions.liveValue.createTodo(
-      .preset(id: 1, deadline: date.now, frequencyUnitIndex: 0, frequencyCount: 2, order: "", listID: 1)
+  func testRescheduleTodo() async throws {
+    try ModelActions.testValue.createList(.preset())
+    try ModelActions.testValue.createTodo(
+      .preset(deadline: now, frequencyUnitIndex: 0, frequencyCount: 2, order: "", listID: 1)
     )
-    try ModelActions.liveValue.rescheduleTodo(1)
+    try ModelActions.testValue.rescheduleTodo(1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference(allLists, [.preset(id: 1)])
-    expectNoDifference(allTodos, [
-      .preset(id: 1, deadline: Calendar.current.date(byAdding: .day, value: 2, to: date.now), frequencyUnitIndex: 0, frequencyCount: 2, order: "", listID: 1)
-    ])
+    expectNoDifference([.preset(id: 1)], allLists)
+    expectNoDifference([
+      .preset(id: 1, deadline: Calendar.current.date(byAdding: .day, value: 2, to: now), frequencyUnitIndex: 0, frequencyCount: 2, order: "", listID: 1)
+    ], allTodos)
   }
 }

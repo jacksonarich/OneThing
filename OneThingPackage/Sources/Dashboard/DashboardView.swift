@@ -23,15 +23,10 @@ public struct DashboardView: View {
         }
       } else {
         ForEach(model.todos) { todo in
-          Text(todo.title)
-//          TodoRowView(
-//            todo:          todo,
-//            movableLists:  model.lists.map(\.list),
-//            onComplete:    model.completeTodo,
-//            onDelete:      model.deleteTodo,
-//            onPutBack:     model.putBackTodo,
-//            onMove:        model.moveTodo,
-//          )
+          TodoRowView(
+            model: model,
+            todo: todo
+          )
         }
       }
     }
@@ -119,4 +114,5 @@ fileprivate struct ListRows: View {
   NavigationStack {
     DashboardView(model: .init())
   }
+  .accentColor(.pink)
 }

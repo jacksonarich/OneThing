@@ -64,6 +64,17 @@ let package = Package(
         "Utilities",
       ]
     ),
+    .testTarget(
+      name: "DashboardTests",
+      dependencies: [
+        .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
+        "AppDatabase",
+        "Dashboard",
+        "ModelActions",
+        "Schema",
+        "Utilities",
+      ]
+    ),
     .target(
       name: "ModelActions",
       dependencies: [

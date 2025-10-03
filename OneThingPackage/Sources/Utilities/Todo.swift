@@ -1,5 +1,6 @@
 // Utility functions relating to `Todo` and its variants.
 
+
 import Dependencies
 import Foundation
 import SQLiteData
@@ -7,6 +8,268 @@ import StructuredQueries
 import SwiftUI
 
 import Schema
+
+
+public extension Todo.Draft {
+  
+  /// Shortcut initializer for use in testing.
+  static func preset(
+    id:                 Todo.ID?    = nil,
+    title:              String      = "",
+    notes:              String      = "",
+    deadline:           Date?       = nil,
+    frequencyUnitIndex: Int?        = nil,
+    frequencyCount:     Int?        = nil,
+    createDate:         Date?       = nil,
+    modifyDate:         Date?       = nil,
+    completeDate:       Date?       = nil,
+    deleteDate:         Date?       = nil,
+    order:              String,
+    listID:             TodoList.ID
+  ) -> Self {
+    let created = createDate ?? {
+      @Dependency(\.date) var date
+      return date.now
+    }()
+    let modified = modifyDate ?? {
+      @Dependency(\.date) var date
+      return date.now
+    }()
+    return .init(
+      id:                 id,
+      title:              title,
+      notes:              notes,
+      deadline:           deadline,
+      frequencyUnitIndex: frequencyUnitIndex,
+      frequencyCount:     frequencyCount,
+      createDate:         created,
+      modifyDate:         modified,
+      completeDate:       completeDate,
+      deleteDate:         deleteDate,
+      order:              order,
+      listID:             listID
+    )
+  }
+  
+  /// Creates a new `Todo.Draft` by describing changes to an existing one.
+  func modify(
+    id:                 Todo.ID??    = nil,
+    title:              String?      = nil,
+    notes:              String?      = nil,
+    deadline:           Date??       = nil,
+    frequencyUnitIndex: Int??        = nil,
+    frequencyCount:     Int??        = nil,
+    createDate:         Date?        = nil,
+    modifyDate:         Date?        = nil,
+    completeDate:       Date??       = nil,
+    deleteDate:         Date??       = nil,
+    order:              String?      = nil,
+    listID:             TodoList.ID? = nil
+  ) -> Self {
+    .init(
+      id:                 id                 ?? self.id,
+      title:              title              ?? self.title,
+      notes:              notes              ?? self.notes,
+      deadline:           deadline           ?? self.deadline,
+      frequencyUnitIndex: frequencyUnitIndex ?? self.frequencyUnitIndex,
+      frequencyCount:     frequencyCount     ?? self.frequencyCount,
+      createDate:         createDate         ?? self.createDate,
+      modifyDate:         modifyDate         ?? self.modifyDate,
+      completeDate:       completeDate       ?? self.completeDate,
+      deleteDate:         deleteDate         ?? self.deleteDate,
+      order:              order              ?? self.order,
+      listID:             listID             ?? self.listID
+    )
+  }
+}
+
+
+public extension [Todo.Draft] {
+  
+  static func preset(
+    modify: @escaping (Todo.Draft) -> Todo.Draft = { $0 }
+  ) -> [Todo.Draft] {
+    let calendar = Calendar.current
+    func customTodo(
+      title:              String = "",
+      notes:              String = "",
+      deadline:           Date?  = nil,
+      frequencyUnitIndex: Int?   = nil,
+      frequencyCount:     Int?   = nil
+    ) -> Todo.Draft {
+      Todo.Draft(
+        id:                  nil,
+        title:               title,
+        notes:               notes,
+        deadline:            deadline,
+        frequencyUnitIndex:  frequencyUnitIndex,
+        frequencyCount:      frequencyCount,
+        createDate:          .now,
+        modifyDate:          .now,
+        completeDate:        nil,
+        deleteDate:          nil,
+        order:               String((1...10).map {_ in "abcdefghijklmnopqrstuvwxyz".randomElement()! }),
+        listID:              .random(in: 1...21)
+      )
+    }
+    return [
+      customTodo(
+        title: "Buy groceries",
+        notes: "Milk, eggs, bread, coffee",
+        deadline: calendar.date( // Tomorrow at 5:00 PM
+          bySettingHour: 17,
+          minute: 0,
+          second: 0,
+          of: calendar.date(
+            byAdding: .day,
+            value: 1, to: .now)!)!,
+        frequencyUnitIndex: 1,
+        frequencyCount: 1
+      ),
+      customTodo(
+        title: "Call mom",
+        deadline: calendar.date( // Sunday at 3:00 PM
+          bySettingHour: 15,
+          minute: 0,
+          second: 0,
+          of: calendar.nextDate(
+            after: .now,
+            matching: DateComponents(weekday: 1),
+            matchingPolicy: .nextTime)!)
+      ),
+      customTodo(
+        title: "Finish quarterly report",
+        notes: "Double-check revenue figures",
+        deadline: calendar.date( // End of this month
+          bySettingHour: 17,
+          minute: 0,
+          second: 0,
+          of: calendar.date(
+            byAdding: .month,
+            value: 1,
+            to: calendar.date(from: calendar.dateComponents([.year, .month], from: .now))!)!)!,
+        frequencyUnitIndex: 2,
+        frequencyCount: 3
+      ),
+      customTodo(
+        title: "Walk the dog",
+        deadline: calendar.date( // Today at 6:30 PM
+          bySettingHour: 18,
+          minute: 30,
+          second: 0,
+          of: .now)!
+      ),
+      customTodo(
+        title: "Plan weekend trip",
+        notes: "Research hiking trails"
+      ),
+      customTodo(
+        title: "Water the plants",
+        notes: "Especially the fern in the living room",
+      ),
+      customTodo(
+        title: "Clean the garage",
+        deadline: calendar.date( // Next Saturday at 10:00 AM
+          bySettingHour: 10,
+          minute: 0,
+          second: 0,
+          of: calendar.nextDate(
+            after: .now,
+            matching: DateComponents(weekday: 7),
+            matchingPolicy: .nextTime)!)
+      ),
+      customTodo(
+        title: "Renew car registration",
+        notes: "Bring insurance card",
+        deadline: calendar.date( // Two weeks from today
+          byAdding: .day,
+          value: 14,
+          to: .now)!,
+        frequencyUnitIndex: 3,
+        frequencyCount: 1
+      ),
+      customTodo(
+        title: "Read 'Atomic Habits'"
+      ),
+      customTodo(
+        title: "Backup laptop",
+        notes: "Use external SSD",
+        deadline: calendar.date( // Friday at 8:00 PM
+          bySettingHour: 20,
+          minute: 0,
+          second: 0,
+          of: calendar.nextDate(
+            after: .now,
+            matching: DateComponents(weekday: 6),
+            matchingPolicy: .nextTime)!)!
+      ),
+      customTodo(
+        title: "Reply to Sarah's email",
+        notes: "About the project update"),
+      customTodo(
+        title: "Pay electricity bill",
+        deadline: calendar.nextDate( // Next Monday
+          after: .now,
+          matching: DateComponents(weekday: 2),
+          matchingPolicy: .nextTime)!
+      ),
+      customTodo(
+        title: "Make dentist appointment",
+        notes: "Prefer morning slot"
+      ),
+      customTodo(
+        title: "Order printer ink"
+      ),
+      customTodo(
+        title: "Meal prep for the week",
+        notes: "Try the new pasta salad recipe",
+        deadline: calendar.date( // Sunday afternoon
+          bySettingHour: 14,
+          minute: 0,
+          second: 0,
+          of: calendar.nextDate(
+            after: .now,
+            matching: DateComponents(weekday: 1),
+            matchingPolicy: .nextTime)!)!,
+        frequencyUnitIndex: 1,
+        frequencyCount: 1
+      ),
+      customTodo(
+        title: "Run 5k",
+        notes: "Track time in Strava"
+      ),
+      customTodo(
+        title: "Organize photo library",
+        notes: "Sort into yearly folders"
+      ),
+      customTodo(
+        title: "Vacuum living room"
+      ),
+      customTodo(
+        title: "Learn SwiftUI animations",
+        notes: "Start with matchedGeometryEffect"
+      ),
+      customTodo(
+        title: "Update résumé",
+        notes: "Add iOS projects",
+        deadline: calendar.date( // Next Friday at 4:00 PM
+          bySettingHour: 16,
+          minute: 0,
+          second: 0,
+          of: calendar.nextDate(
+            after: .now,
+            matching: DateComponents(weekday: 6),
+            matchingPolicy: .nextTime)!)!
+      ),
+      customTodo(
+        title: .loremIpsum,
+        notes: .loremIpsum
+      )
+    ]
+      .shuffled()
+      .map(modify)
+  }
+}
 
 
 public extension Todo {

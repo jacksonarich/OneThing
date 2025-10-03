@@ -66,12 +66,12 @@ public final class DashboardModel {
   var stats
   
   @ObservationIgnored
-  @Shared(.appStorage("hiddenLists"))
-  private(set) var hiddenLists: Set<String> = []
+  @Shared(.hiddenLists)
+  private(set) var hiddenLists
   
   @ObservationIgnored
   @Shared(.navPath)
-  private var navPath
+  private(set) var navPath
   
   var isCreatingList: Bool
   
@@ -94,9 +94,9 @@ public final class DashboardModel {
     }
   }
   
-  private var transitionTask: Task<Void, Never>? = nil
+  private(set) var transitionTask: Task<Void, Never>? = nil
   
-  private var transitioningTodoIDs: Set<Todo.ID> = []
+  private(set) var transitioningTodoIDs: Set<Todo.ID> = []
   
   private(set) var highlightedTodoIDs: Set<Todo.ID> = []
     
@@ -136,36 +136,33 @@ public final class DashboardModel {
 }
 
 
-
 extension DashboardModel {
-  func listVisibilityChanged(name: String, to isHidden: Bool) {
-    $hiddenLists.withLock { hiddenLists in
-      if isHidden {
-        hiddenLists.remove(name)
-      } else {
-        hiddenLists.insert(name)
-      }
-    }
-  }
   
   func completeTodo(id: Todo.ID) {
+    _completeTodoPhase1(id: id)
+    Task { await _completeTodoPhase2(id: id) }
+    transitionTask = Task { await _completeTodoPhase3(id: id) }
+  }
+  func _completeTodoPhase1(id: Todo.ID) {
     transitionTask?.cancel()
     transitioningTodoIDs.insert(id)
     highlightedTodoIDs.insert(id)
-    Task { [self, modelActions] in
+  }
+  func _completeTodoPhase2(id: Todo.ID) async {
+    await withErrorReporting {
       try await $todos.load(todosQuery)
       try modelActions.completeTodo(id)
     }
-    transitionTask = Task { [self, clock] in
-      do {
-        try await clock.sleep(for: .seconds(2))
-        transitioningTodoIDs.removeAll()
-        try await $todos.load(todosQuery, animation: .default)
-        highlightedTodoIDs.removeAll()
-      } catch is CancellationError {
-      } catch {
-        withErrorReporting { throw error }
-      }
+  }
+  func _completeTodoPhase3(id: Todo.ID) async {
+    do {
+      try await clock.sleep(for: .seconds(2))
+      transitioningTodoIDs.removeAll()
+      try await $todos.load(todosQuery, animation: .default)
+      highlightedTodoIDs.removeAll()
+    } catch is CancellationError {
+    } catch {
+      withErrorReporting { throw error }
     }
   }
   
@@ -176,23 +173,30 @@ extension DashboardModel {
   }
   
   func putBackTodo(id: Todo.ID) {
+    _putBackTodoPhase1(id: id)
+    Task { await _putBackTodoPhase2(id: id) }
+    transitionTask = Task { await _putBackTodoPhase3(id: id) }
+  }
+  func _putBackTodoPhase1(id: Todo.ID) {
     transitionTask?.cancel()
     transitioningTodoIDs.remove(id)
     highlightedTodoIDs.remove(id)
-    Task { [self, modelActions] in
+  }
+  func _putBackTodoPhase2(id: Todo.ID) async {
+    await withErrorReporting {
       try modelActions.putBackTodo(id)
-      try await $todos.load(todosQuery)
+      try await $todos.load()
     }
-    transitionTask = Task { [self, clock] in
-      do {
-        try await clock.sleep(for: .seconds(2))
-        transitioningTodoIDs.removeAll()
-        try await $todos.load(todosQuery, animation: .default)
-        highlightedTodoIDs.removeAll()
-      } catch is CancellationError {
-      } catch {
-        withErrorReporting { throw error }
-      }
+  }
+  func _putBackTodoPhase3(id: Todo.ID) async {
+    do {
+      try await clock.sleep(for: .seconds(2))
+      transitioningTodoIDs.removeAll()
+      try await $todos.load(todosQuery, animation: .default)
+      highlightedTodoIDs.removeAll()
+    } catch is CancellationError {
+    } catch {
+      withErrorReporting { throw error }
     }
   }
   
@@ -215,6 +219,16 @@ extension DashboardModel {
   func listCellTapped(name: String) {
     $navPath.withLock { navPath in
       navPath.append(.computedList(name))
+    }
+  }
+  
+  func listVisibilityChanged(name: String, to isVisible: Bool) {
+    $hiddenLists.withLock { hiddenLists in
+      if isVisible {
+        hiddenLists.remove(name)
+      } else {
+        hiddenLists.insert(name)
+      }
     }
   }
 }
