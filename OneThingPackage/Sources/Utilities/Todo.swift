@@ -86,9 +86,7 @@ public extension Todo.Draft {
 
 public extension [Todo.Draft] {
   
-  static func preset(
-    modify: @escaping (Todo.Draft) -> Todo.Draft = { $0 }
-  ) -> [Todo.Draft] {
+  static func preset() -> [Todo.Draft] {
     let calendar = Calendar.current
     func customTodo(
       title:              String = "",
@@ -267,7 +265,6 @@ public extension [Todo.Draft] {
       )
     ]
       .shuffled()
-      .map(modify)
   }
 }
 

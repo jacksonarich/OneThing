@@ -23,7 +23,7 @@ public final class DashboardModel {
   
   @ObservationIgnored
   @FetchAll
-  var todos: [Todo] // depends on searchText
+  var todos: [Todo]
   
   @ObservationIgnored
   @FetchAll(
@@ -31,8 +31,7 @@ public final class DashboardModel {
       .group(by: \.id)
       .order(by: \.name)
       .leftJoin(Todo.all) { l, t in
-        l.id.eq(t.listID)
-          .and(t.isInProgress)
+        l.id.eq(t.listID).and(t.isInProgress)
       }
       .select { l, t in
         TodoListWithCount.Columns(
@@ -89,8 +88,8 @@ public final class DashboardModel {
   var searchText: String {
     didSet {
       let t = $todos
-      let query = todosQuery
-      Task { try await t.load(query) }
+      let q = todosQuery
+      Task { try await t.load(q) }
     }
   }
   
@@ -119,9 +118,9 @@ public final class DashboardModel {
     let searchText = searchText.cleaned()
     return Todo
       .where { t in
-        t.isInProgress
-        && t.contains(searchText)
-        || transitioningTodoIDs.contains(t.id)
+        (t.isInProgress
+        .and(t.contains(searchText)))
+        .or(transitioningTodoIDs.contains(t.id))
       }
       .order(by: \.title)
   }

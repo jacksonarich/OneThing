@@ -15,8 +15,16 @@ let package = Package(
       targets: ["AppFeature"]
     ),
     .library(
+      name: "CompletedDetail",
+      targets: ["CompletedDetail"]
+    ),
+    .library(
       name: "Dashboard",
       targets: ["Dashboard"]
+    ),
+    .library(
+      name: "ListDetail",
+      targets: ["ListDetail"]
     ),
     .library(
       name: "ModelActions",
@@ -50,7 +58,20 @@ let package = Package(
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppDatabase",
         "Dashboard",
+        "ListDetail",
         "Schema",
+        "Utilities",
+      ]
+    ),
+    .target(
+      name: "CompletedDetail",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "SQLiteData", package: "sqlite-data"),
+        "AppDatabase",
+        "ModelActions",
+        "Schema",
+        "Utilities",
       ]
     ),
     .target(
@@ -70,6 +91,17 @@ let package = Package(
         .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
         "AppDatabase",
         "Dashboard",
+        "ModelActions",
+        "Schema",
+        "Utilities",
+      ]
+    ),
+    .target(
+      name: "ListDetail",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "SQLiteData", package: "sqlite-data"),
+        "AppDatabase",
         "ModelActions",
         "Schema",
         "Utilities",

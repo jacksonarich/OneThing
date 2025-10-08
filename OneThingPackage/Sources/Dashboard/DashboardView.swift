@@ -73,7 +73,7 @@ struct ListCells: View {
       }
     } else {
       LazyVGrid(
-        columns: (1...2).map {_ in GridItem(spacing: 16)},
+        columns: (1...2).map {_ in GridItem(spacing: 16) },
         spacing: 16
       ) {
         ListCellView.completed(model: model)

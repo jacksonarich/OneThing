@@ -9,11 +9,12 @@ import Schema
 
 /// Returns a stable connection to the local database, creating an empty database if necessary.
 public func appDatabase(
-  lists: [TodoList.Draft] = [],
-  todos: [Todo.Draft] = []
+  lists:   [TodoList.Draft] = [],
+  todos:   [Todo.Draft]     = [],
+  persist: Bool?            = nil
 ) throws -> any DatabaseWriter {
   // get connection
-  let connection = try getDatabaseConnection()
+  let connection = try getDatabaseConnection(persist: persist)
   try migrate(connection)
   // seed database
   if !lists.isEmpty {
@@ -48,11 +49,13 @@ func getDatabaseConfig() -> Configuration {
 }
 
 
-func getDatabaseConnection() throws -> any DatabaseWriter {
+func getDatabaseConnection(
+  persist: Bool? = nil
+) throws -> any DatabaseWriter {
   @Dependency(\.context) var context // magically knows if we're in a preview or not
   let connection: any DatabaseWriter
   let config = getDatabaseConfig()
-  if context == .live {
+  if persist ?? (context == .live) {
     let path = URL.documentsDirectory.appending(component: "db.sqlite").path() // stored on disk
     connection = try DatabaseQueue(path: path, configuration: config)
   } else {

@@ -5,11 +5,11 @@ import SwiftUI
 
 
 struct TodoRowView: View {
-  let model: DashboardModel
+  let model: ListDetailModel
   let todo:  Todo
   
   init(
-    model: DashboardModel,
+    model: ListDetailModel,
     todo:  Todo
   ) {
     self.model = model

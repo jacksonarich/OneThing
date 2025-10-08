@@ -65,9 +65,7 @@ public extension TodoList.Draft {
 
 public extension [TodoList.Draft] {
   
-  static func preset(
-    modify: @escaping (TodoList.Draft) -> TodoList.Draft = { $0 }
-  ) -> Self {
+  static func preset() -> Self {
     let names: [String] = ["Daily Grind", "Weekend Projects", "Errand Run", "Home Repairs", "Study Sessions", "Career Goals", "Gift Shopping", "Moving Day Prep", "Fitness", "Meal Prep", "Party Planning", "Travel", "Finance", "Pet Care", "Morning Routine", "Declutter", "Learning Skills", "Health & Wellness", "Garden Chores", "Big Ideas", .loremIpsum]
     return names.map {
       TodoList.Draft.preset(
@@ -76,6 +74,5 @@ public extension [TodoList.Draft] {
       )
     }
     .shuffled()
-    .map(modify)
   }
 }
