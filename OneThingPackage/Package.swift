@@ -27,12 +27,20 @@ let package = Package(
       targets: ["DeletedDetail"]
     ),
     .library(
+      name: "InProgressDetail",
+      targets: ["InProgressDetail"]
+    ),
+    .library(
       name: "ListDetail",
       targets: ["ListDetail"]
     ),
     .library(
       name: "ModelActions",
       targets: ["ModelActions"]
+    ),
+    .library(
+      name: "ScheduledDetail",
+      targets: ["ScheduledDetail"]
     ),
     .library(
       name: "Utilities",
@@ -64,7 +72,9 @@ let package = Package(
         "CompletedDetail",
         "Dashboard",
         "DeletedDetail",
+        "InProgressDetail",
         "ListDetail",
+        "ScheduledDetail",
         "Schema",
         "Utilities",
       ]
@@ -114,6 +124,17 @@ let package = Package(
       ]
     ),
     .target(
+      name: "InProgressDetail",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "SQLiteData", package: "sqlite-data"),
+        "AppDatabase",
+        "ModelActions",
+        "Schema",
+        "Utilities",
+      ]
+    ),
+    .target(
       name: "ListDetail",
       dependencies: [
         .product(name: "Dependencies", package: "swift-dependencies"),
@@ -143,6 +164,24 @@ let package = Package(
       ]
     ),
     .target(
+      name: "ScheduledDetail",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "SQLiteData", package: "sqlite-data"),
+        "AppDatabase",
+        "ModelActions",
+        "Schema",
+        "Utilities",
+      ]
+    ),
+    .target(
+      name: "Schema",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "SQLiteData", package: "sqlite-data"),
+      ]
+    ),
+    .target(
       name: "Utilities",
       dependencies: [
         .product(name: "Dependencies", package: "swift-dependencies"),
@@ -155,13 +194,6 @@ let package = Package(
         .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
         "AppDatabase",
         "Utilities",
-      ]
-    ),
-    .target(
-      name: "Schema",
-      dependencies: [
-        .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "SQLiteData", package: "sqlite-data"),
       ]
     ),
   ]

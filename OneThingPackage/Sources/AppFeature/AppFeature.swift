@@ -10,8 +10,10 @@ import AppDatabase
 import CompletedDetail
 import Dashboard
 import DeletedDetail
+import InProgressDetail
 import ListDetail
 import Schema
+import ScheduledDetail
 import Utilities
 
 
@@ -33,13 +35,20 @@ public struct AppEntryPoint: View {
       DashboardView(model: .init())
         .navigationDestination(for: NavigationDestination.self) { dest in
           switch dest {
-          case .dashboard: DashboardView(model: .init())
-          case .listDetail(let id): ListDetailView(model: .init(listID: id))
-          case .computedListDetail("Completed"): CompletedDetailView(model: .init())
-          case .computedListDetail("Deleted"): DeletedDetailView(model: .init())
-          case .computedListDetail("Scheduled"): EmptyView()
-          case .computedListDetail("In Progress"): EmptyView()
-          default: EmptyView()
+          case .dashboard:
+            DashboardView(model: .init())
+          case .listDetail(let id):
+            ListDetailView(model: .init(listID: id))
+          case .computedListDetail("Completed"):
+            CompletedDetailView(model: .init())
+          case .computedListDetail("Deleted"):
+            DeletedDetailView(model: .init())
+          case .computedListDetail("Scheduled"):
+            ScheduledDetailView(model: .init())
+          case .computedListDetail("In Progress"):
+            InProgressDetailView(model: .init())
+          default:
+            EmptyView()
           }
         }
     }
