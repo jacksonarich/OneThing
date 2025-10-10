@@ -8,8 +8,8 @@ import SwiftUI
 
 public enum NavigationDestination: Codable, Hashable, Sendable {
   case dashboard
-  case todoList(TodoList.ID)
-  case computedList(String)
+  case listDetail(TodoList.ID)
+  case computedListDetail(String)
   case empty
 }
 

@@ -18,10 +18,10 @@ struct TodoRowView: View {
   
   var checkboxImage: String {
     switch (todo.completeDate != nil, todo.deleteDate != nil) {
-    case (false, false): return "square"
-    case (true,  false): return "checkmark.square"
-    case (false, true ): return "xmark.square"
-    case (true,  true ): return "questionmark.square"
+    case (false, false): return "circle"
+    case (true,  false): return "checkmark.circle"
+    case (false, true ): return "xmark.circle"
+    case (true,  true ): return "questionmark.circle"
     }
   }
   
@@ -48,9 +48,11 @@ struct TodoRowView: View {
           .padding(.trailing, 5)
           .animation(nil, value: isHighlighted)
         Text(todo.title)
-          .foregroundStyle(Color.primary)
+          .foregroundStyle(isHighlighted ? Color.accentColor : Color.primary)
+          .fontDesign(.rounded)
           .lineLimit(2)
           .multilineTextAlignment(.leading)
+          .animation(.default, value: isHighlighted)
         Spacer(minLength: 0)
       }
       .contentShape(Rectangle())

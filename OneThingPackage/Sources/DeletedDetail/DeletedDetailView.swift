@@ -5,10 +5,10 @@ import AppDatabase
 import Utilities
 
 
-public struct ListDetailView: View {
-  @State var model: ListDetailModel
+public struct DeletedDetailView: View {
+  @State var model: DeletedDetailModel
   
-  public init(model: ListDetailModel) {
+  public init(model: DeletedDetailModel) {
     self.model = model
   }
   
@@ -21,8 +21,6 @@ public struct ListDetailView: View {
             todo: todo
           )
         }
-        .listRowSeparator(.hidden)
-        .listRowBackground(Color.clear)
       }
       .listStyle(.plain)
       if model.stats?.isEmpty == true {
@@ -30,7 +28,7 @@ public struct ListDetailView: View {
           .foregroundStyle(Color.secondary)
       }
     }
-    .navigationTitle(model.list?.name ?? "Unknown")
+    .navigationTitle("Deleted")
     .navigationBarTitleDisplayMode(.large)
     .searchable(text: $model.searchText)
     .background(Color(.systemGroupedBackground))
@@ -43,12 +41,12 @@ public struct ListDetailView: View {
     $0.defaultDatabase = try! appDatabase(
       lists: .preset(),
       todos: .preset().map {
-        $0.modify(listID: 1)
+        $0.modify(deleteDate: .now)
       }
     )
   }
   NavigationStack {
-    ListDetailView(model: .init(listID: 1))
+    DeletedDetailView(model: .init())
   }
   .accentColor(.pink)
 }

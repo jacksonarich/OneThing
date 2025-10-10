@@ -210,14 +210,14 @@ extension DashboardModel {
       editingListID = id
     } else {
       $navPath.withLock { navPath in
-        navPath.append(.todoList(id))
+        navPath.append(.listDetail(id))
       }
     }
   }
   
   func listCellTapped(name: String) {
     $navPath.withLock { navPath in
-      navPath.append(.computedList(name))
+      navPath.append(.computedListDetail(name))
     }
   }
   

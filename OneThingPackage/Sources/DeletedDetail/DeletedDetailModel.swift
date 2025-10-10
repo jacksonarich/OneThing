@@ -10,7 +10,7 @@ import Utilities
 
 @MainActor
 @Observable
-public final class CompletedDetailModel {
+public final class DeletedDetailModel {
 
   @ObservationIgnored
   @Dependency(\.modelActions)
@@ -60,7 +60,7 @@ public final class CompletedDetailModel {
   private var todosQuery: SelectOf<Todo> {
     Todo
       .where { t in
-        (t.isCompleted
+        (t.isDeleted
         .and(t.search(searchText)))
         .or(transitioningTodoIDs.contains(t.id))
       }
@@ -71,7 +71,7 @@ public final class CompletedDetailModel {
     Todo.select { t in
       Stats.Columns(
         isEmpty: t.count(filter:
-          t.isCompleted
+          t.isDeleted
           .or(transitioningTodoIDs.contains(t.id))
         ).eq(0)
       )
@@ -85,26 +85,26 @@ public final class CompletedDetailModel {
 }
 
 
-public extension CompletedDetailModel {
+public extension DeletedDetailModel {
   
-  func completeTodo(id: Todo.ID) {
-    _completeTodoPhase1(id: id)
-    Task { await _completeTodoPhase2(id: id) }
-    transitionTask = Task { await _completeTodoPhase3(id: id) }
+  func deleteTodo(id: Todo.ID) {
+    _deleteTodoPhase1(id: id)
+    Task { await _deleteTodoPhase2(id: id) }
+    transitionTask = Task { await _deleteTodoPhase3(id: id) }
   }
-  func _completeTodoPhase1(id: Todo.ID) {
+  func _deleteTodoPhase1(id: Todo.ID) {
     transitionTask?.cancel()
     transitioningTodoIDs.remove(id)
     highlightedTodoIDs.remove(id)
   }
-  func _completeTodoPhase2(id: Todo.ID) async {
+  func _deleteTodoPhase2(id: Todo.ID) async {
     await withErrorReporting {
-      try modelActions.completeTodo(id)
+      try modelActions.deleteTodo(id)
       try await $todos.load(todosQuery)
       try await $stats.load(statsQuery)
     }
   }
-  func _completeTodoPhase3(id: Todo.ID) async {
+  func _deleteTodoPhase3(id: Todo.ID) async {
     do {
       try await clock.sleep(for: .seconds(2))
       transitioningTodoIDs.removeAll()

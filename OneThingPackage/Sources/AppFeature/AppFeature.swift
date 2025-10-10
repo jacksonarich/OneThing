@@ -7,7 +7,9 @@ import SQLiteData
 import SwiftUI
 
 import AppDatabase
+import CompletedDetail
 import Dashboard
+import DeletedDetail
 import ListDetail
 import Schema
 import Utilities
@@ -32,9 +34,12 @@ public struct AppEntryPoint: View {
         .navigationDestination(for: NavigationDestination.self) { dest in
           switch dest {
           case .dashboard: DashboardView(model: .init())
-          case .todoList(let id): ListDetailView(model: .init(listID: id))
-          case .computedList(let name): Text("Computed List")
-          case .empty: EmptyView()
+          case .listDetail(let id): ListDetailView(model: .init(listID: id))
+          case .computedListDetail("Completed"): CompletedDetailView(model: .init())
+          case .computedListDetail("Deleted"): DeletedDetailView(model: .init())
+          case .computedListDetail("Scheduled"): EmptyView()
+          case .computedListDetail("In Progress"): EmptyView()
+          default: EmptyView()
           }
         }
     }
@@ -45,4 +50,5 @@ public struct AppEntryPoint: View {
 
 #Preview {
   AppEntryPoint()
+    .accentColor(.pink)
 }

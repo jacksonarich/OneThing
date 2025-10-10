@@ -5,10 +5,10 @@ import AppDatabase
 import Utilities
 
 
-public struct ListDetailView: View {
-  @State var model: ListDetailModel
+public struct CompletedDetailView: View {
+  @State var model: CompletedDetailModel
   
-  public init(model: ListDetailModel) {
+  public init(model: CompletedDetailModel) {
     self.model = model
   }
   
@@ -21,8 +21,6 @@ public struct ListDetailView: View {
             todo: todo
           )
         }
-        .listRowSeparator(.hidden)
-        .listRowBackground(Color.clear)
       }
       .listStyle(.plain)
       if model.stats?.isEmpty == true {
@@ -30,7 +28,7 @@ public struct ListDetailView: View {
           .foregroundStyle(Color.secondary)
       }
     }
-    .navigationTitle(model.list?.name ?? "Unknown")
+    .navigationTitle("Completed")
     .navigationBarTitleDisplayMode(.large)
     .searchable(text: $model.searchText)
     .background(Color(.systemGroupedBackground))
@@ -38,17 +36,17 @@ public struct ListDetailView: View {
 }
 
 
-#Preview {
+#Preview { 
   let _ = prepareDependencies {
     $0.defaultDatabase = try! appDatabase(
       lists: .preset(),
       todos: .preset().map {
-        $0.modify(listID: 1)
+        $0.modify(completeDate: .now)
       }
     )
   }
   NavigationStack {
-    ListDetailView(model: .init(listID: 1))
+    CompletedDetailView(model: .init())
   }
   .accentColor(.pink)
 }

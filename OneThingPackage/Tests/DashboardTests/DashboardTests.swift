@@ -133,12 +133,12 @@ struct DashboardTests {
     let model1 = DashboardModel()
     model1.listRowTapped(id: 1)
     #expect(model1.editingListID == nil)
-    expectNoDifference(model1.navPath, [.todoList(1)])
+    expectNoDifference(model1.navPath, [.listDetail(1)])
     // editing
     let model2 = DashboardModel(isEditing: true)
     model2.listRowTapped(id: 1)
     #expect(model2.editingListID == 1)
-    expectNoDifference(model2.navPath, [.todoList(1)])
+    expectNoDifference(model2.navPath, [.listDetail(1)])
   }
   
   @Test
@@ -148,7 +148,7 @@ struct DashboardTests {
     // tap "In Progress"
     let model = DashboardModel()
     model.listCellTapped(name: "In Progress")
-    expectNoDifference(model.navPath, [.computedList("In Progress")])
+    expectNoDifference(model.navPath, [.computedListDetail("In Progress")])
   }
   
   @Test

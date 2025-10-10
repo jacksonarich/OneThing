@@ -5,11 +5,11 @@ import SwiftUI
 
 
 struct TodoRowView: View {
-  let model: DashboardModel
+  let model: DeletedDetailModel
   let todo:  Todo
   
   init(
-    model: DashboardModel,
+    model: DeletedDetailModel,
     todo:  Todo
   ) {
     self.model = model
@@ -25,8 +25,8 @@ struct TodoRowView: View {
     }
   }
   
-  var isInProgress: Bool {
-    todo.completeDate == nil && todo.deleteDate == nil
+  var isDeleted: Bool {
+    todo.deleteDate != nil
   }
   
   var isHighlighted: Bool {
@@ -35,10 +35,10 @@ struct TodoRowView: View {
   
   var body: some View {
     Button {
-      if isInProgress {
-        model.completeTodo(id: todo.id)
-      } else {
+      if isDeleted {
         model.putBackTodo(id: todo.id)
+      } else {
+        model.deleteTodo(id: todo.id)
       }
     } label: {
       HStack {
@@ -59,24 +59,24 @@ struct TodoRowView: View {
     }
     .buttonStyle(.borderless)
     .swipeActions(edge: .trailing) {
-      if isInProgress {
-        Button("Delete", systemImage: "xmark", role: .destructive) {
-          model.deleteTodo(id: todo.id)
+      if isDeleted {
+        Button("Erase", systemImage: "trash", role: .destructive) {
+          model.eraseTodo(id: todo.id)
         }
-        .tint(.red)
+        .tint(.gray)
       }
     }
     .contextMenu {
-      if isInProgress {
+      if isDeleted {
         Button {
-          model.completeTodo(id: todo.id)
+          model.putBackTodo(id: todo.id)
         } label: {
-          Label("Complete", systemImage: "checkmark")
+          Label("Put Back", systemImage: "arrow.uturn.backward")
         }
         Button {
-          model.deleteTodo(id: todo.id)
+          model.eraseTodo(id: todo.id)
         } label: {
-          Label("Delete", systemImage: "xmark")
+          Label("Erase", systemImage: "trash")
         }
         Menu {
           ForEach(model.movableLists) { list in

@@ -27,11 +27,11 @@ public struct DashboardView: View {
             model: model,
             todo: todo
           )
+          .listRowSeparator(.hidden)
         }
       }
     }
-    .scrollContentBackground(.hidden)
-    .background(Color(.systemGroupedBackground))
+//    .background(Color(.systemGroupedBackground))
     .searchable(text: $model.searchText)
 //    .sheet(isPresented: $model.isCreatingList) {
 //      NavigationStack {
@@ -73,8 +73,8 @@ struct ListCells: View {
       }
     } else {
       LazyVGrid(
-        columns: (1...2).map {_ in GridItem(spacing: 16) },
-        spacing: 16
+        columns: (1...2).map {_ in GridItem(spacing: 8) },
+        spacing: 8
       ) {
         ListCellView.completed(model: model)
         ListCellView.deleted(model: model)
