@@ -2,6 +2,7 @@ import SQLiteData
 import SwiftUI
 
 import AppDatabase
+import NewList
 import Utilities
 
 
@@ -31,13 +32,12 @@ public struct DashboardView: View {
         }
       }
     }
-//    .background(Color(.systemGroupedBackground))
     .searchable(text: $model.searchText)
-//    .sheet(isPresented: $model.isCreatingList) {
-//      NavigationStack {
-//        NewListView(model: .init())
-//      }
-//    }
+    .sheet(isPresented: $model.isCreatingList) {
+      NavigationStack {
+        NewListView(model: .init())
+      }
+    }
 //    .sheet(item: $model.editingListID) { listID in
 //      NavigationStack {
 //        EditListView(model: .init(listID: listID))

@@ -12,6 +12,7 @@ import Dashboard
 import DeletedDetail
 import InProgressDetail
 import ListDetail
+import NewList
 import Schema
 import ScheduledDetail
 import Utilities

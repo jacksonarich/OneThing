@@ -22,7 +22,7 @@ struct ListCellView: View {
   var label: some View {
     HStack(alignment: .firstTextBaseline) {
       VStack(alignment: .leading, spacing: 8) {
-        Image(systemName: image + ".circle.fill")
+        Image(systemName: image)
           .font(.largeTitle)
           .symbolRenderingMode(.palette)
           .foregroundStyle(.white, color)
@@ -51,7 +51,7 @@ struct ListCellView: View {
     Self(
       model: model,
       name: "Completed",
-      image: "checkmark",
+      image: "checkmark.circle.fill",
       color: .green.mix(with: .gray, by: 0.5),
       count: model.stats?.completedCount
     )
@@ -60,7 +60,7 @@ struct ListCellView: View {
     Self(
       model: model,
       name: "Deleted",
-      image: "xmark",
+      image: "xmark.circle.fill",
       color: .red.mix(with: .gray, by: 0.5),
       count: model.stats?.deletedCount
     )
@@ -69,7 +69,7 @@ struct ListCellView: View {
     Self(
       model: model,
       name: "Scheduled",
-      image: "calendar",
+      image: "calendar.circle.fill",
       color: .orange.mix(with: .gray, by: 0.5),
       count: model.stats?.scheduledCount
     )
@@ -78,7 +78,7 @@ struct ListCellView: View {
     Self(
       model: model,
       name: "In Progress",
-      image: "tray",
+      image: "tray.circle.fill",
       color: .blue.mix(with: .gray, by: 0.5),
       count: model.stats?.inProgressCount
     )

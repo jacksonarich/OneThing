@@ -39,6 +39,10 @@ let package = Package(
       targets: ["ModelActions"]
     ),
     .library(
+      name: "NewList",
+      targets: ["NewList"]
+    ),
+    .library(
       name: "ScheduledDetail",
       targets: ["ScheduledDetail"]
     ),
@@ -97,6 +101,7 @@ let package = Package(
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppDatabase",
         "ModelActions",
+        "NewList",
         "Schema",
         "Utilities",
       ]
@@ -157,6 +162,17 @@ let package = Package(
       dependencies: [
         .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
         .product(name: "GRDB", package: "GRDB.swift"),
+        "AppDatabase",
+        "ModelActions",
+        "Schema",
+        "Utilities",
+      ]
+    ),
+    .target(
+      name: "NewList",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "SQLiteData", package: "sqlite-data"),
         "AppDatabase",
         "ModelActions",
         "Schema",
