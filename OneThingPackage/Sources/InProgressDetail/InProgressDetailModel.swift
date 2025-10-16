@@ -1,6 +1,7 @@
 import Dependencies
 import Foundation
 import SQLiteData
+import StructuredQueriesCore
 import SwiftUI
 
 import ModelActions
@@ -20,20 +21,6 @@ public final class InProgressDetailModel {
   @Dependency(\.continuousClock)
   private var clock
 
-  private(set) var transitionTask: Task<Void, Never>? = nil
-
-  private(set) var transitioningTodoIDs: Set<Todo.ID> = []
-
-  private(set) var highlightedTodoIDs: Set<Todo.ID> = []
-
-  var searchText: String {
-    didSet {
-      let t = $todos
-      let q = todosQuery
-      Task { try await t.load(q) }
-    }
-  }
-
   @ObservationIgnored
   @FetchAll(
     TodoList
@@ -43,44 +30,35 @@ public final class InProgressDetailModel {
 
   @ObservationIgnored
   @FetchAll
-  var todos: [Todo]
+  var todoGroups: [TodoListWithTodos]
+  
+  private(set) var transitionTask: Task<Void, Never>? = nil
 
-  @ObservationIgnored
-  @FetchOne
-  var stats: Stats?
+  private(set) var transitioningTodoIDs: Set<Todo.ID> = []
 
-  public init(
-    searchText: String = ""
-  ) {
-    self.searchText = searchText
-    self._todos     = FetchAll(todosQuery)
-    self._stats     = FetchOne(statsQuery)
-  }
-
-  private var todosQuery: SelectOf<Todo> {
-    Todo
-      .where { t in
-        (t.isInProgress
-        .and(t.search(searchText)))
-        .or(transitioningTodoIDs.contains(t.id))
-      }
-      .order(by: \.title)
-  }
-
-  private var statsQuery: Select<Stats, Todo, ()> {
-    Todo.select { t in
-      Stats.Columns(
-        isEmpty: t.count(filter:
+  private(set) var highlightedTodoIDs: Set<Todo.ID> = []
+  
+  private var todoGroupsQuery: some StructuredQueriesCore.Statement<TodoListWithTodos> {
+    TodoList
+      .group(by: \.id)
+      .order(by: \.name)
+      .join(Todo.all) { l, t in
+        t.listID.eq(l.id)
+        .and(
           t.isInProgress
           .or(transitioningTodoIDs.contains(t.id))
-        ).eq(0)
-      )
-    }
+        )
+      }
+      .select { l, t in
+        TodoListWithTodos.Columns(
+          list: l,
+          todos: t.jsonGroupArray()
+        )
+      }
   }
-
-  @Selection
-  struct Stats {
-    var isEmpty: Bool
+  
+  public init() {
+    self._todoGroups = FetchAll(todoGroupsQuery)
   }
 }
 
@@ -98,8 +76,7 @@ public extension InProgressDetailModel {
   }
   func _completeTodoPhase2(id: Todo.ID) async {
     await withErrorReporting {
-      try await $todos.load(todosQuery)
-      try await $stats.load(statsQuery)
+      try await $todoGroups.load(todoGroupsQuery)
       try modelActions.completeTodo(id)
     }
   }
@@ -107,8 +84,7 @@ public extension InProgressDetailModel {
     do {
       try await clock.sleep(for: .seconds(2))
       transitioningTodoIDs.removeAll()
-      try await $todos.load(todosQuery, animation: .default)
-      try await $stats.load(statsQuery, animation: .default)
+      try await $todoGroups.load(todoGroupsQuery, animation: .default)
       highlightedTodoIDs.removeAll()
     } catch is CancellationError {
     } catch {
@@ -135,16 +111,14 @@ public extension InProgressDetailModel {
   func _putBackTodoPhase2(id: Todo.ID) async {
     await withErrorReporting {
       try modelActions.putBackTodo(id)
-      try await $todos.load(todosQuery)
-      try await $stats.load(statsQuery)
+      try await $todoGroups.load(todoGroupsQuery)
     }
   }
   func _putBackTodoPhase3(id: Todo.ID) async {
     do {
       try await clock.sleep(for: .seconds(2))
       transitioningTodoIDs.removeAll()
-      try await $todos.load(todosQuery, animation: .default)
-      try await $stats.load(statsQuery, animation: .default)
+      try await $todoGroups.load(todoGroupsQuery, animation: .default)
       highlightedTodoIDs.removeAll()
     } catch is CancellationError {
     } catch {

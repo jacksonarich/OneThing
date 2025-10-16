@@ -21,16 +21,18 @@ public struct DeletedDetailView: View {
             todo: todo
           )
         }
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.clear)
       }
       .listStyle(.plain)
-      if model.stats?.isEmpty == true {
+      if model.todos.isEmpty {
         Text("Nothing to see here")
           .foregroundStyle(Color.secondary)
+          .fontDesign(.rounded)
       }
     }
     .navigationTitle("Deleted")
     .navigationBarTitleDisplayMode(.large)
-    .searchable(text: $model.searchText)
     .background(Color(.systemGroupedBackground))
   }
 }
@@ -41,7 +43,7 @@ public struct DeletedDetailView: View {
     $0.defaultDatabase = try! appDatabase(
       lists: .preset(),
       todos: .preset().map {
-        $0.modify(deleteDate: .now)
+        $0.modify(deleteDate: .now.addingTimeInterval(.random(in: -1000000 ... 0)))
       }
     )
   }

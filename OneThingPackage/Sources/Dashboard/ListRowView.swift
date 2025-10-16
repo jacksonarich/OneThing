@@ -14,6 +14,7 @@ struct ListRowView: View {
           .foregroundStyle(Color.all[row.list.colorIndex])
         Text(row.list.name)
           .foregroundStyle(Color.primary)
+          .fontDesign(.rounded)
           .lineLimit(2)
       }
       .opacity(model.isEditing ? 0.5 : 1)
@@ -22,6 +23,7 @@ struct ListRowView: View {
         HStack {
           Text("\(row.count)")
             .foregroundStyle(Color.gray)
+            .fontDesign(.rounded)
           Image(systemName: "chevron.right")
             .font(.footnote.bold())
             .foregroundStyle(Color(.tertiaryLabel))

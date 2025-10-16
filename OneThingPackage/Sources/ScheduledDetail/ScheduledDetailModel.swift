@@ -20,20 +20,6 @@ public final class ScheduledDetailModel {
   @Dependency(\.continuousClock)
   private var clock
 
-  private(set) var transitionTask: Task<Void, Never>? = nil
-
-  private(set) var transitioningTodoIDs: Set<Todo.ID> = []
-
-  private(set) var highlightedTodoIDs: Set<Todo.ID> = []
-
-  var searchText: String {
-    didSet {
-      let t = $todos
-      let q = todosQuery
-      Task { try await t.load(q) }
-    }
-  }
-
   @ObservationIgnored
   @FetchAll(
     TodoList
@@ -44,43 +30,24 @@ public final class ScheduledDetailModel {
   @ObservationIgnored
   @FetchAll
   var todos: [Todo]
+  
+  private(set) var transitionTask: Task<Void, Never>? = nil
 
-  @ObservationIgnored
-  @FetchOne
-  var stats: Stats?
+  private(set) var transitioningTodoIDs: Set<Todo.ID> = []
 
-  public init(
-    searchText: String = ""
-  ) {
-    self.searchText = searchText
-    self._todos     = FetchAll(todosQuery)
-    self._stats     = FetchOne(statsQuery)
-  }
+  private(set) var highlightedTodoIDs: Set<Todo.ID> = []
 
   private var todosQuery: SelectOf<Todo> {
     Todo
       .where { t in
-        (t.isScheduled
-        .and(t.search(searchText)))
+        t.isScheduled
         .or(transitioningTodoIDs.contains(t.id))
       }
-      .order(by: \.title)
+      .order { $0.deadline.asc(nulls: .last) }
   }
-
-  private var statsQuery: Select<Stats, Todo, ()> {
-    Todo.select { t in
-      Stats.Columns(
-        isEmpty: t.count(filter:
-          t.isScheduled
-          .or(transitioningTodoIDs.contains(t.id))
-        ).eq(0)
-      )
-    }
-  }
-
-  @Selection
-  struct Stats {
-    var isEmpty: Bool
+  
+  public init() {
+    self._todos = FetchAll(todosQuery)
   }
 }
 
@@ -99,7 +66,6 @@ public extension ScheduledDetailModel {
   func _completeTodoPhase2(id: Todo.ID) async {
     await withErrorReporting {
       try await $todos.load(todosQuery)
-      try await $stats.load(statsQuery)
       try modelActions.completeTodo(id)
     }
   }
@@ -108,7 +74,6 @@ public extension ScheduledDetailModel {
       try await clock.sleep(for: .seconds(2))
       transitioningTodoIDs.removeAll()
       try await $todos.load(todosQuery, animation: .default)
-      try await $stats.load(statsQuery, animation: .default)
       highlightedTodoIDs.removeAll()
     } catch is CancellationError {
     } catch {
@@ -136,7 +101,6 @@ public extension ScheduledDetailModel {
     await withErrorReporting {
       try modelActions.putBackTodo(id)
       try await $todos.load(todosQuery)
-      try await $stats.load(statsQuery)
     }
   }
   func _putBackTodoPhase3(id: Todo.ID) async {
@@ -144,7 +108,6 @@ public extension ScheduledDetailModel {
       try await clock.sleep(for: .seconds(2))
       transitioningTodoIDs.removeAll()
       try await $todos.load(todosQuery, animation: .default)
-      try await $stats.load(statsQuery, animation: .default)
       highlightedTodoIDs.removeAll()
     } catch is CancellationError {
     } catch {

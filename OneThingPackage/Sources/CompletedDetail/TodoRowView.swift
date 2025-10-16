@@ -1,7 +1,9 @@
-import AppDatabase
 import Schema
 import SQLiteData
 import SwiftUI
+
+import AppDatabase
+import Utilities
 
 
 struct TodoRowView: View {
@@ -29,31 +31,36 @@ struct TodoRowView: View {
     todo.completeDate != nil
   }
   
-  var isHighlighted: Bool {
-    model.highlightedTodoIDs.contains(todo.id)
+  var completeDate: String {
+    if let date = todo.completeDate {
+      "Completed " + date.formatted(.dateTime.month(.abbreviated).day())
+    } else {
+      "Not Completed"
+    }
   }
   
   var body: some View {
     Button {
       if isCompleted {
         model.putBackTodo(id: todo.id)
-      } else {
-        model.completeTodo(id: todo.id)
       }
     } label: {
-      HStack {
+      HStack(alignment: .top) {
         Image(systemName: checkboxImage)
-          .foregroundStyle(isHighlighted ? .primary : .secondary)
+          .foregroundStyle(.secondary)
           .font(.title2)
           .padding(.trailing, 5)
-          .animation(nil, value: isHighlighted)
-        Text(todo.title)
-          .foregroundStyle(isHighlighted ? Color.accentColor : Color.primary)
-          .fontDesign(.rounded)
-          .lineLimit(2)
-          .multilineTextAlignment(.leading)
-          .animation(.default, value: isHighlighted)
-        Spacer(minLength: 0)
+        VStack(alignment: .leading) {
+          Text(todo.title)
+            .foregroundStyle(Color.primary)
+            .fontDesign(.rounded)
+            .lineLimit(2)
+            .multilineTextAlignment(.leading)
+          Text(completeDate)
+            .foregroundStyle(Color.secondary)
+            .font(.callout)
+            .fontDesign(.rounded)
+        }
       }
       .contentShape(Rectangle())
     }
@@ -92,4 +99,20 @@ struct TodoRowView: View {
       }
     }
   }
+}
+
+
+#Preview {
+  let _ = prepareDependencies {
+    $0.defaultDatabase = try! appDatabase(
+      lists: .preset(),
+      todos: .preset().map {
+        $0.modify(completeDate: .now.addingTimeInterval(.random(in: -1000000 ... 0)))
+      }
+    )
+  }
+  NavigationStack {
+    CompletedDetailView(model: .init())
+  }
+  .accentColor(.pink)
 }

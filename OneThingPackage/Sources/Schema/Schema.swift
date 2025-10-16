@@ -15,7 +15,7 @@ public enum NavigationDestination: Codable, Hashable, Sendable {
 
 
 @Table
-public struct Todo: Identifiable, Equatable, Sendable {
+public struct Todo: Codable, Equatable, Identifiable, Sendable {
   public let id:                 ID
   public let title:              String
   public let notes:              String
@@ -62,7 +62,7 @@ public struct Todo: Identifiable, Equatable, Sendable {
 
 
 @Table
-public struct TodoList: Identifiable, Equatable, Sendable {
+public struct TodoList: Codable, Identifiable, Equatable, Sendable {
   public let id:         ID
   public let name:       String
   public let colorIndex: Int
@@ -92,10 +92,26 @@ extension TodoList.Draft: Equatable, Sendable {}
 
 
 @Selection
-public struct TodoListWithCount: Equatable, Identifiable, Sendable {
+public struct TodoListWithCount: Codable, Equatable, Identifiable, Sendable {
   public var list: TodoList
   public var count: Int
   public var id: Int { list.id }
+}
+
+
+@Selection
+public struct TodoListWithTodos: Codable, Equatable, Identifiable, Sendable {
+  public var list: TodoList
+  @Column(as: [Todo].JSONRepresentation.self)
+  public var todos: [Todo]
+  public var id: Int { list.id }
+  public init(
+    list: TodoList,
+    todos: [Todo]
+  ) {
+    self.list = list
+    self.todos = todos
+  }
 }
 
 

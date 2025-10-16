@@ -69,6 +69,7 @@ struct ListCells: View {
           set: { model.listVisibilityChanged(name: name, to: $0) }
         )) {
           Text(name)
+            .fontDesign(.rounded)
         }
       }
     } else {

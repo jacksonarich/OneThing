@@ -27,8 +27,9 @@ struct ListCellView: View {
           .symbolRenderingMode(.palette)
           .foregroundStyle(.white, color)
         Text(name)
-          .font(.headline)
           .foregroundStyle(.gray)
+          .font(.headline)
+          .fontDesign(.rounded)
           .bold()
           .padding(.leading, 4)
       }

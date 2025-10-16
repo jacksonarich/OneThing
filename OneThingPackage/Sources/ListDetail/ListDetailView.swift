@@ -28,6 +28,7 @@ public struct ListDetailView: View {
       if model.stats?.isEmpty == true {
         Text("Nothing to see here")
           .foregroundStyle(Color.secondary)
+          .fontDesign(.rounded)
       }
     }
     .navigationTitle(model.list?.name ?? "Unknown")

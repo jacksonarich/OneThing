@@ -31,7 +31,7 @@ public final class DashboardModel {
       .group(by: \.id)
       .order(by: \.name)
       .leftJoin(Todo.all) { l, t in
-        l.id.eq(t.listID).and(t.isInProgress)
+        t.listID.eq(l.id).and(t.isInProgress)
       }
       .select { l, t in
         TodoListWithCount.Columns(

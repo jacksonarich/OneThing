@@ -33,7 +33,7 @@ extension ModelActions: DependencyKey {
   public static let liveValue = {
     @Dependency(\.defaultDatabase) var connection
     @Dependency(\.date.now) var now
-    return ModelActions(
+    return Self(
       createTodo: { todo in
         try connection.write { db in
           try Todo

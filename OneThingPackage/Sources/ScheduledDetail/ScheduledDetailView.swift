@@ -25,14 +25,14 @@ public struct ScheduledDetailView: View {
         .listRowBackground(Color.clear)
       }
       .listStyle(.plain)
-      if model.stats?.isEmpty == true {
+      if model.todos.isEmpty {
         Text("Nothing to see here")
           .foregroundStyle(Color.secondary)
+          .fontDesign(.rounded)
       }
     }
     .navigationTitle("Scheduled")
     .navigationBarTitleDisplayMode(.large)
-    .searchable(text: $model.searchText)
     .background(Color(.systemGroupedBackground))
   }
 }
@@ -42,9 +42,7 @@ public struct ScheduledDetailView: View {
   let _ = prepareDependencies {
     $0.defaultDatabase = try! appDatabase(
       lists: .preset(),
-      todos: .preset().map {
-        $0.modify(deadline: .now)
-      }
+      todos: .preset()
     )
   }
   NavigationStack {

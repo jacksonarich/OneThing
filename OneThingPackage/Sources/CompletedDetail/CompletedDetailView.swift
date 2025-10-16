@@ -21,27 +21,29 @@ public struct CompletedDetailView: View {
             todo: todo
           )
         }
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.clear)
       }
       .listStyle(.plain)
-      if model.stats?.isEmpty == true {
+      if model.todos.isEmpty {
         Text("Nothing to see here")
           .foregroundStyle(Color.secondary)
+          .fontDesign(.rounded)
       }
     }
     .navigationTitle("Completed")
     .navigationBarTitleDisplayMode(.large)
-    .searchable(text: $model.searchText)
     .background(Color(.systemGroupedBackground))
   }
 }
 
 
-#Preview { 
+#Preview {
   let _ = prepareDependencies {
     $0.defaultDatabase = try! appDatabase(
       lists: .preset(),
       todos: .preset().map {
-        $0.modify(completeDate: .now)
+        $0.modify(completeDate: .now.addingTimeInterval(.random(in: -1000000 ... 0)))
       }
     )
   }

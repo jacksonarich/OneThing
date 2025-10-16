@@ -1,7 +1,9 @@
-import AppDatabase
 import Schema
 import SQLiteData
 import SwiftUI
+
+import AppDatabase
+import Utilities
 
 
 struct TodoRowView: View {
@@ -29,31 +31,36 @@ struct TodoRowView: View {
     todo.deleteDate != nil
   }
   
-  var isHighlighted: Bool {
-    model.highlightedTodoIDs.contains(todo.id)
+  var deleteDate: String {
+    if let date = todo.deleteDate {
+      "Deleted " + date.formatted(.dateTime.month(.abbreviated).day())
+    } else {
+      "Not Deleted"
+    }
   }
   
   var body: some View {
     Button {
       if isDeleted {
         model.putBackTodo(id: todo.id)
-      } else {
-        model.deleteTodo(id: todo.id)
       }
     } label: {
-      HStack {
+      HStack(alignment: .top) {
         Image(systemName: checkboxImage)
-          .foregroundStyle(isHighlighted ? .primary : .secondary)
+          .foregroundStyle(.secondary)
           .font(.title2)
           .padding(.trailing, 5)
-          .animation(nil, value: isHighlighted)
-        Text(todo.title)
-          .foregroundStyle(isHighlighted ? Color.accentColor : Color.primary)
-          .fontDesign(.rounded)
-          .lineLimit(2)
-          .multilineTextAlignment(.leading)
-          .animation(.default, value: isHighlighted)
-        Spacer(minLength: 0)
+        VStack(alignment: .leading) {
+          Text(todo.title)
+            .foregroundStyle(Color.primary)
+            .fontDesign(.rounded)
+            .lineLimit(2)
+            .multilineTextAlignment(.leading)
+          Text(deleteDate)
+            .foregroundStyle(Color.secondary)
+            .font(.callout)
+            .fontDesign(.rounded)
+        }
       }
       .contentShape(Rectangle())
     }

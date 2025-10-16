@@ -33,6 +33,14 @@ struct TodoRowView: View {
     model.highlightedTodoIDs.contains(todo.id)
   }
   
+  var deadline: String {
+    if let date = todo.deadline {
+      "Due " + date.formatted(.dateTime.month(.abbreviated).day())
+    } else {
+      "No Deadline"
+    }
+  }
+  
   var body: some View {
     Button {
       if isInProgress {
@@ -41,19 +49,25 @@ struct TodoRowView: View {
         model.putBackTodo(id: todo.id)
       }
     } label: {
-      HStack {
+      HStack(alignment: .top) {
         Image(systemName: checkboxImage)
           .foregroundStyle(isHighlighted ? .primary : .secondary)
           .font(.title2)
           .padding(.trailing, 5)
           .animation(nil, value: isHighlighted)
-        Text(todo.title)
-          .foregroundStyle(isHighlighted ? Color.accentColor : Color.primary)
-          .fontDesign(.rounded)
-          .lineLimit(2)
-          .multilineTextAlignment(.leading)
-          .animation(.default, value: isHighlighted)
-        Spacer(minLength: 0)
+        VStack(alignment: .leading) {
+          Text(todo.title)
+            .foregroundStyle(Color.primary)
+            .fontDesign(.rounded)
+            .strikethrough(isHighlighted)
+            .lineLimit(2)
+            .multilineTextAlignment(.leading)
+            .animation(.default, value: isHighlighted)
+          Text(deadline)
+            .foregroundStyle(Color.secondary)
+            .font(.callout)
+            .fontDesign(.rounded)
+        }
       }
       .contentShape(Rectangle())
     }
