@@ -7,7 +7,7 @@ import SQLiteData
 import StructuredQueries
 import SwiftUI
 
-import Schema
+import AppModels
 
 
 public extension Todo.Draft {

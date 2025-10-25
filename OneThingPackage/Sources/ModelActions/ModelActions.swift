@@ -4,7 +4,7 @@
 import SQLiteData
 import SwiftUI
 
-import Schema
+import AppModels
 
 
 public struct ModelActions: Sendable {

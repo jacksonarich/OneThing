@@ -7,13 +7,14 @@ import SQLiteData
 import SwiftUI
 
 import AppDatabase
+import AppModels
 import CompletedDetail
 import Dashboard
 import DeletedDetail
 import InProgressDetail
 import ListDetail
 import NewList
-import Schema
+import AppModels
 import ScheduledDetail
 import Utilities
 
@@ -25,29 +26,26 @@ public struct AppEntryPoint: View {
     let _ = prepareDependencies {
       $0.defaultDatabase = try! appDatabase(
         lists: .preset(),
-        todos: .preset(),
-        persist: false
+        todos: .preset()
       )
     }
   }
   
   public var body: some View {
     NavigationStack(path: Binding($navPath)) {
-      DashboardView(model: .init())
+      DashboardView()
         .navigationDestination(for: NavigationDestination.self) { dest in
           switch dest {
-          case .dashboard:
-            DashboardView(model: .init())
           case .listDetail(let id):
             ListDetailView(model: .init(listID: id))
-          case .computedListDetail("Completed"):
-            CompletedDetailView(model: .init())
-          case .computedListDetail("Deleted"):
-            DeletedDetailView(model: .init())
-          case .computedListDetail("Scheduled"):
-            ScheduledDetailView(model: .init())
-          case .computedListDetail("In Progress"):
-            InProgressDetailView(model: .init())
+          case .computedListDetail(.completed):
+            CompletedDetailView()
+          case .computedListDetail(.deleted):
+            DeletedDetailView()
+          case .computedListDetail(.scheduled):
+            ScheduledDetailView()
+          case .computedListDetail(.inProgress):
+            InProgressDetailView()
           default:
             EmptyView()
           }

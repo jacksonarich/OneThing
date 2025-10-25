@@ -6,7 +6,7 @@ import Foundation
 import SQLiteData
 import SwiftUI
 
-import Schema
+import AppModels
 
 
 public extension TodoList.Draft {

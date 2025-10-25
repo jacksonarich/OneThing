@@ -2,16 +2,15 @@ import SQLiteData
 import SwiftUI
 
 import AppDatabase
+import AppModels
 import NewList
 import Utilities
 
 
 public struct DashboardView: View {
-  @State var model: DashboardModel
-  
-  public init(model: DashboardModel) {
-    self.model = model
-  }
+  @State private var model = DashboardModel()
+
+  public init() {}
   
   public var body: some View {
     List {
@@ -59,16 +58,18 @@ public struct DashboardView: View {
 
 
 struct ListCells: View {
-  @State var model: DashboardModel
+  let model: DashboardModel
   
   var body: some View {
     if model.isEditing {
-      ForEach(["Completed", "Deleted", "Scheduled", "In Progress"], id: \.self) { name in
-        SelectableRow(isSelected: Binding(
-          get: { !model.hiddenLists.contains(name) },
-          set: { model.listVisibilityChanged(name: name, to: $0) }
-        )) {
-          Text(name)
+      ForEach(ComputedList.all) { computedList in
+        SelectableRow(
+          isSelected: Binding(
+            get: { !model.hiddenLists.contains(computedList) },
+            set: { model.listVisibilityChanged(list: computedList, to: $0) }
+          )
+        ) {
+          Text(computedList.rawValue)
             .fontDesign(.rounded)
         }
       }
@@ -77,10 +78,11 @@ struct ListCells: View {
         columns: (1...2).map {_ in GridItem(spacing: 8) },
         spacing: 8
       ) {
-        ListCellView.completed(model: model)
-        ListCellView.deleted(model: model)
-        ListCellView.scheduled(model: model)
-        ListCellView.inProgress(model: model)
+        ForEach(ComputedList.all) { list in
+          if let cellView = ListCellView(list: list, model: model) {
+            cellView
+          }
+        }
       }
       .buttonStyle(.plain)
       .listRowBackground(Color.clear)
@@ -113,7 +115,7 @@ fileprivate struct ListRows: View {
     )
   }
   NavigationStack {
-    DashboardView(model: .init())
+    DashboardView()
   }
   .accentColor(.pink)
 }

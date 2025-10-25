@@ -6,11 +6,9 @@ import Utilities
 
 
 public struct DeletedDetailView: View {
-  @State var model: DeletedDetailModel
+  @State private var model = DeletedDetailModel()
   
-  public init(model: DeletedDetailModel) {
-    self.model = model
-  }
+  public init() {}
   
   public var body: some View {
     ZStack {
@@ -48,7 +46,7 @@ public struct DeletedDetailView: View {
     )
   }
   NavigationStack {
-    DeletedDetailView(model: .init())
+    DeletedDetailView()
   }
   .accentColor(.pink)
 }

@@ -4,17 +4,16 @@
 import Foundation
 import SQLiteData
 
-import Schema
+import AppModels
 
 
 /// Returns a stable connection to the local database, creating an empty database if necessary.
 public func appDatabase(
   lists:   [TodoList.Draft] = [],
-  todos:   [Todo.Draft]     = [],
-  persist: Bool?            = nil
+  todos:   [Todo.Draft]     = []
 ) throws -> any DatabaseWriter {
   // get connection
-  let connection = try getDatabaseConnection(persist: persist)
+  let connection = try getDatabaseConnection()
   try migrate(connection)
   // seed database
   if !lists.isEmpty {
@@ -49,13 +48,11 @@ func getDatabaseConfig() -> Configuration {
 }
 
 
-func getDatabaseConnection(
-  persist: Bool? = nil
-) throws -> any DatabaseWriter {
+func getDatabaseConnection() throws -> any DatabaseWriter {
   @Dependency(\.context) var context // magically knows if we're in a preview or not
   let connection: any DatabaseWriter
   let config = getDatabaseConfig()
-  if persist ?? (context == .live) {
+  if context == .live {
     let path = URL.documentsDirectory.appending(component: "db.sqlite").path() // stored on disk
     connection = try DatabaseQueue(path: path, configuration: config)
   } else {

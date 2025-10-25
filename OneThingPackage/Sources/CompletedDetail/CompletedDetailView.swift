@@ -6,11 +6,9 @@ import Utilities
 
 
 public struct CompletedDetailView: View {
-  @State var model: CompletedDetailModel
+  @State private var model = CompletedDetailModel()
   
-  public init(model: CompletedDetailModel) {
-    self.model = model
-  }
+  public init() {}
   
   public var body: some View {
     ZStack {
@@ -48,7 +46,7 @@ public struct CompletedDetailView: View {
     )
   }
   NavigationStack {
-    CompletedDetailView(model: .init())
+    CompletedDetailView()
   }
   .accentColor(.pink)
 }

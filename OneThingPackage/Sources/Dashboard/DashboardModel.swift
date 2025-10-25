@@ -5,7 +5,7 @@ import SQLiteData
 import SwiftUI
 
 import ModelActions
-import Schema
+import AppModels
 import Utilities
 
 
@@ -215,18 +215,18 @@ extension DashboardModel {
     }
   }
   
-  func listCellTapped(name: String) {
+  func listCellTapped(list: ComputedList) {
     $navPath.withLock { navPath in
-      navPath.append(.computedListDetail(name))
+      navPath.append(.computedListDetail(list))
     }
   }
   
-  func listVisibilityChanged(name: String, to isVisible: Bool) {
+  func listVisibilityChanged(list: ComputedList, to isVisible: Bool) {
     $hiddenLists.withLock { hiddenLists in
       if isVisible {
-        hiddenLists.remove(name)
+        hiddenLists.remove(list)
       } else {
-        hiddenLists.insert(name)
+        hiddenLists.insert(list)
       }
     }
   }

@@ -6,11 +6,9 @@ import Utilities
 
 
 public struct InProgressDetailView: View {
-  @State var model: InProgressDetailModel
+  @State private var model = InProgressDetailModel()
   
-  public init(model: InProgressDetailModel) {
-    self.model = model
-  }
+  public init() {}
   
   public var body: some View {
     ZStack {
@@ -59,7 +57,7 @@ public struct InProgressDetailView: View {
     )
   }
   NavigationStack {
-    InProgressDetailView(model: .init())
+    InProgressDetailView()
   }
   .accentColor(.pink)
 }

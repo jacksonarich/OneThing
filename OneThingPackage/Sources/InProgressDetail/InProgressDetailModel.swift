@@ -5,7 +5,7 @@ import StructuredQueriesCore
 import SwiftUI
 
 import ModelActions
-import Schema
+import AppModels
 import Utilities
 
 

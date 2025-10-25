@@ -6,11 +6,9 @@ import Utilities
 
 
 public struct ScheduledDetailView: View {
-  @State var model: ScheduledDetailModel
+  @State private var model = ScheduledDetailModel()
   
-  public init(model: ScheduledDetailModel) {
-    self.model = model
-  }
+  public init() {}
   
   public var body: some View {
     ZStack {
@@ -46,7 +44,7 @@ public struct ScheduledDetailView: View {
     )
   }
   NavigationStack {
-    ScheduledDetailView(model: .init())
+    ScheduledDetailView()
   }
   .accentColor(.pink)
 }

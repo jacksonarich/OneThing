@@ -9,7 +9,7 @@ import Testing
 import AppDatabase
 @testable import Dashboard
 import ModelActions
-import Schema
+import AppModels
 import Utilities
 
 
@@ -147,8 +147,8 @@ struct DashboardTests {
     try ModelActions.testValue.createTodo(.preset(order: "", listID: 1))
     // tap "In Progress"
     let model = DashboardModel()
-    model.listCellTapped(name: "In Progress")
-    expectNoDifference(model.navPath, [.computedListDetail("In Progress")])
+    model.listCellTapped(list: .inProgress)
+    expectNoDifference(model.navPath, [.computedListDetail(.inProgress)])
   }
   
   @Test
@@ -157,16 +157,16 @@ struct DashboardTests {
     try ModelActions.testValue.createTodo(.preset(order: "", listID: 1))
     let model = DashboardModel()
     // true -> false
-    model.listVisibilityChanged(name: "In Progress", to: false)
-    expectNoDifference(model.hiddenLists, ["In Progress"])
+    model.listVisibilityChanged(list: .inProgress, to: false)
+    expectNoDifference(model.hiddenLists, [.inProgress])
     // false -> false
-    model.listVisibilityChanged(name: "In Progress", to: false)
-    expectNoDifference(model.hiddenLists, ["In Progress"])
+    model.listVisibilityChanged(list: .inProgress, to: false)
+    expectNoDifference(model.hiddenLists, [.inProgress])
     // false -> true
-    model.listVisibilityChanged(name: "In Progress", to: true)
+    model.listVisibilityChanged(list: .inProgress, to: true)
     expectNoDifference(model.hiddenLists, [])
     // true -> true
-    model.listVisibilityChanged(name: "In Progress", to: true)
+    model.listVisibilityChanged(list: .inProgress, to: true)
     expectNoDifference(model.hiddenLists, [])
   }
 }

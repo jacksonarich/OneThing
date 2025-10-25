@@ -1,5 +1,5 @@
 import AppDatabase
-import Schema
+import AppModels
 import SQLiteData
 import SwiftUI
 

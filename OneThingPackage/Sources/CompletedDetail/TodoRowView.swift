@@ -1,4 +1,4 @@
-import Schema
+import AppModels
 import SQLiteData
 import SwiftUI
 
@@ -112,7 +112,7 @@ struct TodoRowView: View {
     )
   }
   NavigationStack {
-    CompletedDetailView(model: .init())
+    CompletedDetailView()
   }
   .accentColor(.pink)
 }

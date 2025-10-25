@@ -51,8 +51,8 @@ let package = Package(
       targets: ["Utilities"]
     ),
     .library(
-      name: "Schema",
-      targets: ["Schema"]
+      name: "AppModels",
+      targets: ["AppModels"]
     ),
   ],
   dependencies: [
@@ -65,7 +65,7 @@ let package = Package(
       name: "AppDatabase",
       dependencies: [
         .product(name: "SQLiteData", package: "sqlite-data"),
-        "Schema",
+        "AppModels",
       ]
     ),
     .target(
@@ -79,7 +79,7 @@ let package = Package(
         "InProgressDetail",
         "ListDetail",
         "ScheduledDetail",
-        "Schema",
+        "AppModels",
         "Utilities",
       ]
     ),
@@ -90,7 +90,7 @@ let package = Package(
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppDatabase",
         "ModelActions",
-        "Schema",
+        "AppModels",
         "Utilities",
       ]
     ),
@@ -102,7 +102,7 @@ let package = Package(
         "AppDatabase",
         "ModelActions",
         "NewList",
-        "Schema",
+        "AppModels",
         "Utilities",
       ]
     ),
@@ -113,7 +113,7 @@ let package = Package(
         "AppDatabase",
         "Dashboard",
         "ModelActions",
-        "Schema",
+        "AppModels",
         "Utilities",
       ]
     ),
@@ -124,7 +124,7 @@ let package = Package(
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppDatabase",
         "ModelActions",
-        "Schema",
+        "AppModels",
         "Utilities",
       ]
     ),
@@ -135,7 +135,7 @@ let package = Package(
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppDatabase",
         "ModelActions",
-        "Schema",
+        "AppModels",
         "Utilities",
       ]
     ),
@@ -146,7 +146,7 @@ let package = Package(
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppDatabase",
         "ModelActions",
-        "Schema",
+        "AppModels",
         "Utilities",
       ]
     ),
@@ -154,7 +154,7 @@ let package = Package(
       name: "ModelActions",
       dependencies: [
         .product(name: "SQLiteData", package: "sqlite-data"),
-        "Schema",
+        "AppModels",
       ]
     ),
     .testTarget(
@@ -164,7 +164,7 @@ let package = Package(
         .product(name: "GRDB", package: "GRDB.swift"),
         "AppDatabase",
         "ModelActions",
-        "Schema",
+        "AppModels",
         "Utilities",
       ]
     ),
@@ -175,7 +175,7 @@ let package = Package(
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppDatabase",
         "ModelActions",
-        "Schema",
+        "AppModels",
         "Utilities",
       ]
     ),
@@ -186,12 +186,12 @@ let package = Package(
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppDatabase",
         "ModelActions",
-        "Schema",
+        "AppModels",
         "Utilities",
       ]
     ),
     .target(
-      name: "Schema",
+      name: "AppModels",
       dependencies: [
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "SQLiteData", package: "sqlite-data"),
@@ -201,7 +201,7 @@ let package = Package(
       name: "Utilities",
       dependencies: [
         .product(name: "Dependencies", package: "swift-dependencies"),
-        "Schema",
+        "AppModels",
       ]
     ),
     .testTarget(
