@@ -30,15 +30,16 @@ struct TodoRowView: View {
   }
   
   var isHighlighted: Bool {
-    model.highlightedTodoIDs.contains(todo.id)
+//    model.highlightedTodoIDs.contains(todo.id)
+    false
   }
   
   var body: some View {
     Button {
       if isInProgress {
-        model.completeTodo(id: todo.id)
+        model.completeTodo(todo)
       } else {
-        model.putBackTodo(id: todo.id)
+        model.putBackTodo(todo)
       }
     } label: {
       HStack {
@@ -62,7 +63,7 @@ struct TodoRowView: View {
     .swipeActions(edge: .trailing) {
       if isInProgress {
         Button("Delete", systemImage: "xmark", role: .destructive) {
-          model.deleteTodo(id: todo.id)
+          model.deleteTodo(todo)
         }
         .tint(.red)
       }
@@ -70,12 +71,12 @@ struct TodoRowView: View {
     .contextMenu {
       if isInProgress {
         Button {
-          model.completeTodo(id: todo.id)
+          model.completeTodo(todo)
         } label: {
           Label("Complete", systemImage: "checkmark")
         }
         Button {
-          model.deleteTodo(id: todo.id)
+          model.deleteTodo(todo)
         } label: {
           Label("Delete", systemImage: "xmark")
         }

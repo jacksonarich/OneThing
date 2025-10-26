@@ -5,6 +5,12 @@ import AppDatabase
 import Utilities
 
 
+// When you complete a recurring todo, it gets rescheduled.
+// The normal checkmark + strikethrough animation plays, in addition to a rotating hourglass icon that tells the user the deadline is advancing.
+// After the 2 seconds are up, instead of disappearing, the todo animates back to normal, and the spinning icon fades out.
+// When you put back a todo while it's rescheduling, it will un-reschedule – that is, the deadline will revert to the previous date. This previous date must be stored in memory along with the todo ID.
+
+
 public struct InProgressDetailView: View {
   @State private var model = InProgressDetailModel()
   

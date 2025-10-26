@@ -39,6 +39,10 @@ let package = Package(
       targets: ["ModelActions"]
     ),
     .library(
+      name: "ModelTransitions",
+      targets: ["ModelTransitions"]
+    ),
+    .library(
       name: "NewList",
       targets: ["NewList"]
     ),
@@ -135,7 +139,12 @@ let package = Package(
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppDatabase",
         "ModelActions",
+<<<<<<< Updated upstream
         "AppModels",
+=======
+        "ModelTransitions",
+        "Schema",
+>>>>>>> Stashed changes
         "Utilities",
       ]
     ),
@@ -166,6 +175,14 @@ let package = Package(
         "ModelActions",
         "AppModels",
         "Utilities",
+      ]
+    ),
+    .target(
+      name: "ModelTransitions",
+      dependencies: [
+        .product(name: "SQLiteData", package: "sqlite-data"),
+        "ModelActions",
+        "Schema",
       ]
     ),
     .target(

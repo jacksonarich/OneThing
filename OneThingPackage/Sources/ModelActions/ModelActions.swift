@@ -8,16 +8,16 @@ import AppModels
 
 
 public struct ModelActions: Sendable {
-  public var createTodo:     @Sendable (Todo.Draft)               throws -> Void
-  public var completeTodo:   @Sendable (Todo.ID)                  throws -> Void
-  public var deleteTodo:     @Sendable (Todo.ID)                  throws -> Void
-  public var putBackTodo:    @Sendable (Todo.ID)                  throws -> Void
-  public var eraseTodo:      @Sendable (Todo.ID)                  throws -> Void
-  public var moveTodo:       @Sendable (Todo.ID, TodoList.ID)     throws -> Void
-  public var rescheduleTodo: @Sendable (Todo.ID)                  throws -> Void
-  public var createList:     @Sendable (TodoList.Draft)           throws -> Void
-  public var updateList:     @Sendable (TodoList.ID, String, Int) throws -> Void
-  public var deleteList:     @Sendable (TodoList.ID)              throws -> Void
+  public var createTodo:       @Sendable (Todo.Draft)               throws -> Void
+  public var completeTodo:     @Sendable (Todo.ID)                  throws -> Void
+  public var unrescheduleTodo: @Sendable (Todo.ID, Date)            throws -> Void
+  public var deleteTodo:       @Sendable (Todo.ID)                  throws -> Void
+  public var putBackTodo:      @Sendable (Todo.ID)                  throws -> Void
+  public var eraseTodo:        @Sendable (Todo.ID)                  throws -> Void
+  public var moveTodo:         @Sendable (Todo.ID, TodoList.ID)     throws -> Void
+  public var createList:       @Sendable (TodoList.Draft)           throws -> Void
+  public var updateList:       @Sendable (TodoList.ID, String, Int) throws -> Void
+  public var deleteList:       @Sendable (TodoList.ID)              throws -> Void
 }
 
 
@@ -43,9 +43,32 @@ extension ModelActions: DependencyKey {
       },
       completeTodo: { todoID in
         try connection.write { db in
+          guard let todo = try Todo
+            .find(todoID)
+            .fetchOne(db) else { return }
+          if let deadline = todo.deadline, let frequencyUnitIndex = todo.frequencyUnitIndex, let frequencyCount = todo.frequencyCount {
+            let frequencyUnit = Calendar.Component.all[frequencyUnitIndex]
+            let newDeadline = deadline.nextFutureDate(
+              unit: frequencyUnit,
+              count: frequencyCount
+            )
+            try Todo
+              .find(todoID)
+              .update { $0.deadline = newDeadline }
+              .execute(db)
+          } else {
+            try Todo
+              .find(todoID)
+              .update { $0.completeDate = now }
+              .execute(db)
+          }
+        }
+      },
+      unrescheduleTodo: { todoID, oldDeadline in
+        try connection.write { db in
           try Todo
             .find(todoID)
-            .update { $0.completeDate = now }
+            .update { $0.deadline = oldDeadline }
             .execute(db)
         }
       },
@@ -81,26 +104,6 @@ extension ModelActions: DependencyKey {
           try Todo
             .find(todoID)
             .update { $0.listID = listID }
-            .execute(db)
-        }
-      },
-      rescheduleTodo: { todoID in
-        try connection.write { db in
-          let todo = try Todo
-            .find(todoID)
-            .fetchOne(db)
-          guard let todo,
-                let deadline = todo.deadline,
-                let frequencyUnitIndex = todo.frequencyUnitIndex,
-                let frequencyCount = todo.frequencyCount else { return }
-          let frequencyUnit = Calendar.Component.all[frequencyUnitIndex]
-          let newDeadline = deadline.nextFutureDate(
-            unit: frequencyUnit,
-            count: frequencyCount
-          )
-          try Todo
-            .find(todoID)
-            .update { $0.deadline = newDeadline }
             .execute(db)
         }
       },
