@@ -138,13 +138,9 @@ let package = Package(
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppDatabase",
-        "ModelActions",
-<<<<<<< Updated upstream
         "AppModels",
-=======
+        "ModelActions",
         "ModelTransitions",
-        "Schema",
->>>>>>> Stashed changes
         "Utilities",
       ]
     ),
@@ -181,8 +177,8 @@ let package = Package(
       name: "ModelTransitions",
       dependencies: [
         .product(name: "SQLiteData", package: "sqlite-data"),
+        "AppModels",
         "ModelActions",
-        "Schema",
       ]
     ),
     .target(
