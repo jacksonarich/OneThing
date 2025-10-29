@@ -8,17 +8,18 @@ import AppModels
 
 
 public struct ModelActions: Sendable {
-  public var createTodo:       @Sendable (Todo.Draft)               throws -> Void
-  public var completeTodo:     @Sendable (Todo.ID)                  throws -> Void
-  public var unrescheduleTodo: @Sendable (Todo.ID, Date)            throws -> Void
-  public var deleteTodo:       @Sendable (Todo.ID)                  throws -> Void
-  public var putBackTodo:      @Sendable (Todo.ID)                  throws -> Void
-  public var eraseTodo:        @Sendable (Todo.ID)                  throws -> Void
-  public var moveTodo:         @Sendable (Todo.ID, TodoList.ID)     throws -> Void
-  public var createList:       @Sendable (TodoList.Draft)           throws -> Void
-  public var updateList:       @Sendable (TodoList.ID, String, Int) throws -> Void
-  public var deleteList:       @Sendable (TodoList.ID)              throws -> Void
-  public var transitionTodo:   @Sendable (Todo.ID, Bool)            throws -> Void
+  public var createTodo:          @Sendable (Todo.Draft)               throws -> Void
+  public var completeTodo:        @Sendable (Todo.ID)                  throws -> Void
+  public var unrescheduleTodo:    @Sendable (Todo.ID, Date)            throws -> Void
+  public var deleteTodo:          @Sendable (Todo.ID)                  throws -> Void
+  public var putBackTodo:         @Sendable (Todo.ID)                  throws -> Void
+  public var eraseTodo:           @Sendable (Todo.ID)                  throws -> Void
+  public var moveTodo:            @Sendable (Todo.ID, TodoList.ID)     throws -> Void
+  public var createList:          @Sendable (TodoList.Draft)           throws -> Void
+  public var updateList:          @Sendable (TodoList.ID, String, Int) throws -> Void
+  public var deleteList:          @Sendable (TodoList.ID)              throws -> Void
+  public var transitionTodo:      @Sendable (Todo.ID, Bool)            throws -> Void
+  public var finalizeTransitions: @Sendable ()                         throws -> Void
 }
 
 
@@ -138,21 +139,41 @@ extension ModelActions: DependencyKey {
             .execute(db)
         }
       },
-      transitionTodo: { todoID, shouldInsert in
+      transitionTodo: { todoID, shouldTransition in
         try connection.write { db in
-          if shouldInsert {
-            try Transition.insert {
-              Transition.Draft(
-                todoID: todoID
-              )
-            }
+          try Todo
+            .find(todoID)
+            .update { $0.isTransitioning = shouldTransition }
             .execute(db)
-          } else {
-            try Transition
-              .find(todoID)
-              .delete()
-              .execute(db)
+        }
+      },
+      finalizeTransitions: {
+        try connection.write { db in
+          let transitioningTodos = try Todo
+            .where { $0.isTransitioning }
+            .fetchAll(db)
+          for todo in transitioningTodos {
+            if let deadline = todo.deadline, let frequencyUnitIndex = todo.frequencyUnitIndex, let frequencyCount = todo.frequencyCount {
+              let frequencyUnit = Calendar.Component.all[frequencyUnitIndex]
+              let newDeadline = deadline.nextFutureDate(
+                unit: frequencyUnit,
+                count: frequencyCount
+              )
+              try Todo
+                .find(todo.id)
+                .update { $0.deadline = newDeadline }
+                .execute(db)
+            } else {
+              try Todo
+                .find(todo.id)
+                .update { $0.completeDate = now }
+                .execute(db)
+            }
           }
+          try Todo
+            .where { $0.isTransitioning }
+            .update { $0.isTransitioning = false }
+            .execute(db)
         }
       }
     )
@@ -178,3 +199,4 @@ extension Date {
     return calendar.date(byAdding: unit, value: steps * count, to: self) ?? self
   }
 }
+

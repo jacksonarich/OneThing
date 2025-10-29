@@ -87,11 +87,7 @@ func migrate(_ connection: DatabaseWriter) throws {
       table.column("deleteDate", .date)
       table.column("order", .text).notNull() // How does this work?
       table.column("listID", .integer).notNull().references("todoLists")
-    }
-    try db.create(table: "transitions") { table in
-      table.column("todoID", .integer).primaryKey().notNull()
-//      table.column("phase", .text).notNull()
-//      table.column("oldDeadline", .date)
+      table.column("isTransitioning", .boolean).notNull()
     }
   }
   try migrator.migrate(connection)

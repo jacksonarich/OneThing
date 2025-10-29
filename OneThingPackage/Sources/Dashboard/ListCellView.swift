@@ -56,44 +56,6 @@ struct ListCellView: View {
     .background(Color(.secondarySystemGroupedBackground))
     .cornerRadius(24)
   }
-  
-//  static func completed(model: DashboardModel) -> some View {
-//    Self(
-//      model: model,
-//      name: "Completed",
-//      image: "checkmark.circle.fill",
-//      color: .green.mix(with: .gray, by: 0.5),
-//      count: model.stats?.completedCount
-//    )
-//  }
-//  static func deleted(model: DashboardModel) -> some View {
-//    Self(
-//      model: model,
-//      name: "Deleted",
-//      image: "xmark.circle.fill",
-//      color: .red.mix(with: .gray, by: 0.5),
-//      count: model.stats?.deletedCount
-//    )
-//  }
-//  static func scheduled(model: DashboardModel) -> some View {
-//    Self(
-//      model: model,
-//      name: "Scheduled",
-//      image: "calendar.circle.fill",
-//      color: .orange.mix(with: .gray, by: 0.5),
-//      count: model.stats?.scheduledCount
-//    )
-//  }
-//  static func inProgress(model: DashboardModel) -> some View {
-//    Self(
-//      model: model,
-//      name: "In Progress",
-//      image: "tray.circle.fill",
-//      color: .blue.mix(with: .gray, by: 0.5),
-//      count: model.stats?.inProgressCount
-//    )
-//  }
-}
 
 private struct ListCellModel {
   let name: String

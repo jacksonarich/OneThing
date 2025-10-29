@@ -4,33 +4,35 @@ import SQLiteData
 @Table
 public struct Todo: Codable, Equatable, Identifiable, Sendable {
   public let id:                 ID
-  public let title:              String
-  public let notes:              String
-  public let deadline:           Date?
-  public let frequencyUnitIndex: Int?
-  public let frequencyCount:     Int?
-  public let createDate:         Date
-  public let modifyDate:         Date
-  public var completeDate:       Date?
-  public let deleteDate:         Date?
-  public let order:              String
-  public let listID:             TodoList.ID
+  public var title:              String = ""
+  public var notes:              String = ""
+  public var deadline:           Date? = nil
+  public var frequencyUnitIndex: Int? = nil
+  public var frequencyCount:     Int? = nil
+  public var createDate:         Date
+  public var modifyDate:         Date
+  public var completeDate:       Date? = nil
+  public var deleteDate:         Date? = nil
+  public var order:              String
+  public var listID:             TodoList.ID
+  public var isTransitioning:    Bool = false
   
   public typealias ID = Int
   
   public init(
     id:                 ID,
-    title:              String,
-    notes:              String,
-    deadline:           Date?,
-    frequencyUnitIndex: Int?,
-    frequencyCount:     Int?,
+    title:              String = "",
+    notes:              String = "",
+    deadline:           Date? = nil,
+    frequencyUnitIndex: Int? = nil,
+    frequencyCount:     Int? = nil,
     createDate:         Date,
     modifyDate:         Date,
-    completeDate:       Date?,
-    deleteDate:         Date?,
+    completeDate:       Date? = nil,
+    deleteDate:         Date? = nil,
     order:              String,
-    listID:             TodoList.ID
+    listID:             TodoList.ID,
+    isTransitioning:    Bool = false
   ) {
     self.id                 = id
     self.title              = title
@@ -44,7 +46,48 @@ public struct Todo: Codable, Equatable, Identifiable, Sendable {
     self.deleteDate         = deleteDate
     self.order              = order
     self.listID             = listID
+    self.isTransitioning    = isTransitioning
   }
 }
 
 extension Todo.Draft: Equatable, Sendable {}
+
+extension Todo.Draft {
+  public init(
+    id:                 Todo.ID?    = nil,
+    title:              String      = "",
+    notes:              String      = "",
+    deadline:           Date?       = nil,
+    frequencyUnitIndex: Int?        = nil,
+    frequencyCount:     Int?        = nil,
+    createDate:         Date?       = nil,
+    modifyDate:         Date?       = nil,
+    completeDate:       Date?       = nil,
+    deleteDate:         Date?       = nil,
+    order:              String,
+    listID:             TodoList.ID
+  ) {
+    let created = createDate ?? {
+      @Dependency(\.date) var date
+      return date.now
+    }()
+    let modified = modifyDate ?? {
+      @Dependency(\.date) var date
+      return date.now
+    }()
+    self.init(
+      id:                 id,
+      title:              title,
+      notes:              notes,
+      deadline:           deadline,
+      frequencyUnitIndex: frequencyUnitIndex,
+      frequencyCount:     frequencyCount,
+      createDate:         created,
+      modifyDate:         modified,
+      completeDate:       completeDate,
+      deleteDate:         deleteDate,
+      order:              order,
+      listID:             listID
+    )
+  }
+}

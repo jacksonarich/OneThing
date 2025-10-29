@@ -17,21 +17,25 @@ struct TodoRowView: View {
   }
   
   var checkboxImage: String {
-    switch (todo.completeDate != nil, todo.deleteDate != nil) {
-    case (false, false): return "circle"
-    case (true,  false): return "checkmark.circle"
-    case (false, true ): return "xmark.circle"
-    case (true,  true ): return "questionmark.circle"
-    }
+    todo.isTransitioning ? "checkmark.circle" : "circle"
+//    switch (todo.completeDate != nil || todo.isTransitioning, todo.deleteDate != nil) {
+//    case (false, false): return "circle"
+//    case (true,  false): return "checkmark.circle"
+//    case (false, true ): return "xmark.circle"
+//    case (true,  true ): return "questionmark.circle"
+//    }
   }
   
   var isInProgress: Bool {
     todo.completeDate == nil && todo.deleteDate == nil
   }
   
-  var isHighlighted: Bool {
-//    model.highlightedTodoIDs.contains(todo.id)
-    false
+  var deadline: String? {
+    if let date = todo.deadline {
+      "Due " + date.formatted(.dateTime.month(.abbreviated).day())
+    } else {
+      nil
+    }
   }
   
   var body: some View {
@@ -43,21 +47,36 @@ struct TodoRowView: View {
 //        model.putBackTodo(todo)
 //      }
     } label: {
-      HStack {
+      HStack(alignment: .top) {
         Image(systemName: checkboxImage)
-          .foregroundStyle(isHighlighted ? .primary : .secondary)
+          .foregroundStyle(todo.isTransitioning ? .primary : .secondary)
           .font(.title2)
           .padding(.trailing, 5)
-          .animation(nil, value: isHighlighted)
-        Text(todo.title)
-          .foregroundStyle(Color.primary)
-          .fontDesign(.rounded)
-          .strikethrough(isHighlighted)
-          .lineLimit(2)
-          .multilineTextAlignment(.leading)
-          .animation(.default, value: isHighlighted)
+        VStack(alignment: .leading) {
+          Text(todo.title)
+            .foregroundStyle(Color.primary)
+            .fontDesign(.rounded)
+            .lineLimit(2)
+            .multilineTextAlignment(.leading)
+            .strikethrough(todo.isTransitioning)
+          if let deadline {
+            Text(deadline)
+              .foregroundStyle(Color.secondary)
+              .font(.callout)
+              .fontDesign(.rounded)
+              .animation(.default, value: todo.deadline)
+          }
+        }
+//        Text(todo.title)
+//          .foregroundStyle(Color.primary)
+//          .fontDesign(.rounded)
+//          .strikethrough(todo.isTransitioning)
+//          .lineLimit(2)
+//          .multilineTextAlignment(.leading)
+//          .animation(.default, value: todo.isTransitioning)
         Spacer(minLength: 0)
       }
+      .animation(nil, value: todo.isTransitioning)
       .contentShape(Rectangle())
     }
     .buttonStyle(.borderless)
@@ -72,7 +91,7 @@ struct TodoRowView: View {
     .contextMenu {
       if isInProgress {
         Button {
-          model.completeTodo(todo)
+          model.toggleComplete(todo)
         } label: {
           Label("Complete", systemImage: "checkmark")
         }
@@ -95,4 +114,32 @@ struct TodoRowView: View {
       }
     }
   }
+}
+
+#Preview {
+  let _ = prepareDependencies {
+    $0.defaultDatabase = try! appDatabase(
+      lists: .preset(),
+      todos: .preset()
+    )
+  }
+  let model = InProgressDetailModel()
+  TodoRowView(
+    model: model,
+    todo: Todo(
+      id: 1,
+      title: "Todo title",
+      notes: "",
+      deadline: nil,
+      frequencyUnitIndex: nil,
+      frequencyCount: nil,
+      createDate: .now,
+      modifyDate: .now,
+      completeDate: nil,
+      deleteDate: nil,
+      order: "",
+      listID: 1,
+      isTransitioning: true
+    )
+  )
 }

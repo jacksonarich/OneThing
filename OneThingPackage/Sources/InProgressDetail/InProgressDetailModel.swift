@@ -7,7 +7,6 @@ import SwiftUI
 
 import AppModels
 import ModelActions
-import ModelTransitions
 import Utilities
 
 
@@ -35,63 +34,23 @@ public final class InProgressDetailModel {
     TodoList
       .group(by: \.id)
       .order(by: \.name)
-      .join(
-        Todo
-          .where { $0.deleteDate.is(nil) }
-          .leftJoin(Transition.all) { $0.id.eq($1.todoID) }
-          .where {
-            $0.completeDate.is(nil) || $1.isNot(nil)
-          }
-      ) {
-        $0.id.eq($1.listID)
+      .join(Todo.all) { list, todo in
+        todo.listID.eq(list.id).and(todo.isInProgress)
       }
-      .select {
+      .select { list, todo in
         TodoListWithTodos.Columns(
-          list: $0,
-          todos: $1.jsonGroupArray()
+          list: list,
+          todos: todo.jsonGroupArray()
         )
-      }
+      },
+    animation: .default
   )
   var todoGroups: [TodoListWithTodos]
-  
-//  private var removing = IdentifiedArrayOf<Todo>()
-//  private var inserting = Set<Todo.ID>()
+
   private var timerTask: Task<Void, Never>?
-//  
-//  var displayGroups: [TodoListWithTodos] {
-//    var groups = todoGroups
-//    for todo in removing {
-//      
-//    }
-//  }
-  
-  // PROBLEM: modelTransitions and todoGroupsQuery fundamentally depend on each other
-  
-//  private var modelTransitions: ModelTransitions
-    
-//  private func rawTodoGroupsQuery(
-//    transitions: Transitions = .init()
-//  ) -> some StructuredQueriesCore.Statement<TodoListWithTodos> {
-//    TodoList
-//      .group(by: \.id)
-//      .order(by: \.name)
-//      .join(Todo.all) { l, t in
-//        t.listID.eq(l.id)
-//          .and(transitions.isVisible(t.id, wrapping: t.isInProgress))
-//      }
-//      .select { l, t in
-//        TodoListWithTodos.Columns(
-//          list: l,
-//          todos: t.jsonGroupArray()
-//        )
-//      }
-//  }
   
   public init() {
-//    self._rawTodoGroups = FetchAll(rawTodoGroupsQuery, animation: .default)
-//    self.modelTransitions = ModelTransitions {
-//      try! await self.$rawTodoGroups.load(self.rawTodoGroupsQuery(), animation: .default)
-//    }
+
   }
 }
 
@@ -139,10 +98,6 @@ public extension InProgressDetailModel {
       try modelActions.deleteTodo(todo.id)
     }
   }
-  
-//  func putBackTodo(_ todo: Todo) {
-//    modelTransitions?.putBackTodo(todo, undo: true)
-//  }
   
   func moveTodo(id: Todo.ID, to listID: TodoList.ID) {
     withErrorReporting {
