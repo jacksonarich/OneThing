@@ -18,6 +18,7 @@ public struct ModelActions: Sendable {
   public var createList:       @Sendable (TodoList.Draft)           throws -> Void
   public var updateList:       @Sendable (TodoList.ID, String, Int) throws -> Void
   public var deleteList:       @Sendable (TodoList.ID)              throws -> Void
+  public var transitionTodo:   @Sendable (Todo.ID, Bool)            throws -> Void
 }
 
 
@@ -135,6 +136,23 @@ extension ModelActions: DependencyKey {
             .find(listID)
             .delete()
             .execute(db)
+        }
+      },
+      transitionTodo: { todoID, shouldInsert in
+        try connection.write { db in
+          if shouldInsert {
+            try Transition.insert {
+              Transition.Draft(
+                todoID: todoID
+              )
+            }
+            .execute(db)
+          } else {
+            try Transition
+              .find(todoID)
+              .delete()
+              .execute(db)
+          }
         }
       }
     )

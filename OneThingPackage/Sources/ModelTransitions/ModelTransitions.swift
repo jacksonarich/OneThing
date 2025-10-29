@@ -5,9 +5,43 @@ import SQLiteData
 import StructuredQueriesCore
 import SwiftUI
 
+import AppModels
 import ModelActions
-import Schema
 
+
+public struct Transitions: Equatable {
+  private let phase1: Dictionary<Todo.ID, Date?>.Keys
+  private let phase2: Set<Todo.ID>
+  
+  internal init(phase1: Dictionary<Todo.ID, Date?>.Keys, phase2: Set<Todo.ID>) {
+    self.phase1 = phase1
+    self.phase2 = phase2
+  }
+  
+  public init() {
+    self.phase1 = [Todo.ID: Date?]().keys
+    self.phase2 = []
+  }
+}
+
+extension Transitions {
+  public func isVisible(
+    _ todoID: SQLiteData.TableColumn<Todo.TableColumns.QueryValue, Todo.ID>,
+    predicate: some QueryExpression<Bool>
+  ) -> some QueryExpression<Bool> {
+    phase1.contains(todoID)
+      .or(
+        phase2.contains(todoID).not()
+          .and(predicate)
+      )
+  }
+}
+
+extension ModelTransitions {
+  public var transitions: Transitions {
+    .init(phase1: phaseOneIDs.keys, phase2: phaseTwoIDs)
+  }
+}
 
 @MainActor
 public class ModelTransitions {
@@ -17,9 +51,6 @@ public class ModelTransitions {
   
   @Dependency(\.continuousClock)
   private var clock
-  
-  @Dependency(\.date.now)
-  private var now
   
   public private(set) var phaseOneIDs: [Todo.ID : Date?] = [:]
   
@@ -36,12 +67,13 @@ public class ModelTransitions {
   // no  | yes | no
   // no  | no  | depends on query
   public func isVisible(
-    _ todo: Todo,
+//    _ todoID: Todo.ID,
+    _ todoID: SQLiteData.TableColumn<Todo.TableColumns.QueryValue, Todo.ID>,
     wrapping predicate: some QueryExpression<Bool>
   ) -> some QueryExpression<Bool> {
-    phaseOneIDs.keys.contains(todo.id)
+    phaseOneIDs.keys.contains(todoID)
     .or(
-      phaseTwoIDs.contains(todo.id).not()
+      phaseTwoIDs.contains(todoID).not()
       .and(predicate)
     )
   }

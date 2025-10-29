@@ -11,7 +11,7 @@ public struct Todo: Codable, Equatable, Identifiable, Sendable {
   public let frequencyCount:     Int?
   public let createDate:         Date
   public let modifyDate:         Date
-  public let completeDate:       Date?
+  public var completeDate:       Date?
   public let deleteDate:         Date?
   public let order:              String
   public let listID:             TodoList.ID

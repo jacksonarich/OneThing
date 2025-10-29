@@ -36,11 +36,12 @@ struct TodoRowView: View {
   
   var body: some View {
     Button {
-      if isInProgress {
-        model.completeTodo(todo)
-      } else {
-        model.putBackTodo(todo)
-      }
+      model.toggleComplete(todo)
+//      if isInProgress {
+//        model.completeTodo(todo)
+//      } else {
+//        model.putBackTodo(todo)
+//      }
     } label: {
       HStack {
         Image(systemName: checkboxImage)
