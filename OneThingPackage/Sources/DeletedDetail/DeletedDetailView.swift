@@ -14,10 +14,26 @@ public struct DeletedDetailView: View {
     ZStack {
       List {
         ForEach(model.todos) { todo in
-          TodoRowView(
-            model: model,
-            todo: todo
-          )
+          TodoRowButton(
+            todo: todo,
+            subtitle: todo.deleteDate.map { "Deleted \($0.subtitle)" }
+          ) {
+            model.putBackTodo(todo.id)
+          }
+          .swipeActions {
+            Button("Erase", systemImage: "trash", role: .destructive) {
+              model.eraseTodo(todo.id)
+            }
+          }
+          .contextMenu {
+            DeletedTodoRowContextMenu(
+              currentListID: todo.listID,
+              movableLists: model.movableLists,
+              onPutBack: { model.putBackTodo(todo.id) },
+              onErase: { model.eraseTodo(todo.id) },
+              onMove: { listID in model.moveTodo(todo.id, to: listID) }
+            )
+          }
         }
         .listRowSeparator(.hidden)
         .listRowBackground(Color.clear)

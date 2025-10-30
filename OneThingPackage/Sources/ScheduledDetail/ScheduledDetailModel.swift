@@ -60,15 +60,15 @@ public extension ScheduledDetailModel {
     }
   }
   
-  func deleteTodo(_ todo: Todo) {
+  func deleteTodo(_ todoID: Todo.ID) {
     withErrorReporting {
-      try modelActions.deleteTodo(todo.id)
+      try modelActions.deleteTodo(todoID)
     }
   }
   
-  func moveTodo(id: Todo.ID, to listID: TodoList.ID) {
+  func moveTodo(_ todoID: Todo.ID, to listID: TodoList.ID) {
     withErrorReporting {
-      try modelActions.moveTodo(id, listID)
+      try modelActions.moveTodo(todoID, listID)
     }
   }
 }

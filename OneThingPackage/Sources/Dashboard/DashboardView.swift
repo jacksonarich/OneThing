@@ -8,30 +8,24 @@ import Utilities
 
 
 public struct DashboardView: View {
-  @State private var model = DashboardModel(searchText: "e")
-
+  @State private var model = DashboardModel()
+//  @State private var searchModel = SearchModel()
+  
   public init() {}
   
   public var body: some View {
     List {
-      if model.searchText.cleaned().isEmpty {
+//      if searchModel.searchText.cleaned().isEmpty {
         Section {
           ListCells(model: model)
         }
         Section {
           ListRows(model: model)
         }
-      } else {
-        ForEach(model.todos) { todo in
-          TodoRowView(
-            model: model,
-            todo: todo
-          )
-          .listRowSeparator(.hidden)
-        }
-      }
+//      } else {
+//      }
     }
-    .searchable(text: $model.searchText)
+//    .searchable(text: $model.searchText)
     .sheet(isPresented: $model.isCreatingList) {
       NavigationStack {
         NewListView(model: .init())

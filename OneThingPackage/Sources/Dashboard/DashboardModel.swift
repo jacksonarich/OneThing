@@ -21,11 +21,7 @@ public final class DashboardModel {
   @ObservationIgnored
   @Dependency(\.continuousClock)
   private var clock
-  
-  @ObservationIgnored
-  @FetchAll
-  var todos: [Todo]
-  
+    
   @ObservationIgnored
   @FetchAll(
     TodoList
@@ -83,13 +79,6 @@ public final class DashboardModel {
     set { editMode = newValue ? .active : .inactive }
   }
     
-  var searchText: String {
-    didSet {
-      let t = $todos
-      let q = todosQuery
-      Task { try await t.load(q) }
-    }
-  }
   
   @ObservationIgnored
   private var modelTransitions = ModelTransitions()
@@ -99,24 +88,13 @@ public final class DashboardModel {
     editingListID:  TodoList.ID? = nil,
     deletingListID: TodoList.ID? = nil,
     isEditing:      Bool         = false,
-    searchText:     String       = ""
   ) {
     self.isCreatingList = isCreatingList
     self.editingListID  = editingListID
     self.deletingListID = deletingListID
     self.editMode       = isEditing ? .active : .inactive
-    self.searchText     = searchText
-    self._todos         = FetchAll(todosQuery, animation: .default)
   }
   
-  private var todosQuery: SelectOf<Todo> {
-    let searchText = searchText.cleaned()
-    return Todo
-      .where { t in
-        t.isInProgress
-        .and(t.contains(searchText))
-      }
-      .order(by: \.title)
   }
   
   @Selection

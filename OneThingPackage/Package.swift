@@ -47,6 +47,10 @@ let package = Package(
       targets: ["NewList"]
     ),
     .library(
+      name: "Search",
+      targets: ["Search"]
+    ),
+    .library(
       name: "ScheduledDetail",
       targets: ["ScheduledDetail"]
     ),
@@ -108,6 +112,7 @@ let package = Package(
         "ModelActions",
         "ModelTransitions",
         "NewList",
+        "Search",
         "Utilities",
       ]
     ),
@@ -158,8 +163,9 @@ let package = Package(
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppDatabase",
-        "ModelActions",
         "AppModels",
+        "ModelActions",
+        "ModelTransitions",
         "Utilities",
       ]
     ),
@@ -208,6 +214,17 @@ let package = Package(
         "AppDatabase",
         "ModelActions",
         "AppModels",
+        "Utilities",
+      ]
+    ),
+    .target(
+      name: "Search",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "SQLiteData", package: "sqlite-data"),
+        "AppDatabase",
+        "AppModels",
+        "ModelActions",
         "Utilities",
       ]
     ),

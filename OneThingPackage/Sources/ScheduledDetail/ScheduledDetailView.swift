@@ -14,10 +14,26 @@ public struct ScheduledDetailView: View {
     ZStack {
       List {
         ForEach(model.todos) { todo in
-          TodoRowView(
-            model: model,
-            todo: todo
-          )
+          TodoRowButton(
+            todo: todo,
+            subtitle: todo.deadline.map { "Due \($0.subtitle)" }
+          ) {
+            model.toggleComplete(todo.id, complete: todo.isTransitioning == false)
+          }
+          .swipeActions {
+            Button("Delete", systemImage: "xmark", role: .destructive) {
+              model.deleteTodo(todo.id)
+            }
+          }
+          .contextMenu {
+            TodoRowContextMenu(
+              currentListID: todo.listID,
+              movableLists: model.movableLists,
+              onToggleComplete: { model.toggleComplete(todo.id, complete: todo.isTransitioning == false) },
+              onDelete: { model.deleteTodo(todo.id) },
+              onMove: { listID in model.moveTodo(todo.id, to: listID) }
+            )
+          }
         }
         .listRowSeparator(.hidden)
         .listRowBackground(Color.clear)

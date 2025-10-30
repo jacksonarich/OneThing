@@ -38,21 +38,21 @@ public final class CompletedDetailModel {
 
 public extension CompletedDetailModel {
   
-  func putBackTodo(id: Todo.ID) {
+  func putBackTodo(_ todoID: Todo.ID) {
     withErrorReporting {
-      try modelActions.putBackTodo(id)
+      try modelActions.putBackTodo(todoID)
     }
   }
   
-  func eraseTodo(id: Todo.ID) {
+  func deleteTodo(_ todoID: Todo.ID) {
     withErrorReporting {
-      try modelActions.eraseTodo(id)
+      try modelActions.deleteTodo(todoID)
     }
   }
   
-  func moveTodo(id: Todo.ID, to listID: TodoList.ID) {
+  func moveTodo(_ todoID: Todo.ID, to listID: TodoList.ID) {
     withErrorReporting {
-      try modelActions.moveTodo(id, listID)
+      try modelActions.moveTodo(todoID, listID)
     }
   }
 }

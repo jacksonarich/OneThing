@@ -16,16 +16,32 @@ public struct ListDetailView: View {
     ZStack {
       List {
         ForEach(model.todos) { todo in
-          TodoRowView(
-            model: model,
-            todo: todo
-          )
+          TodoRowButton(
+            todo: todo,
+            subtitle: todo.deadline.map { "Due \($0.subtitle)" }
+          ) {
+            model.toggleComplete(todo.id, complete: todo.isTransitioning == false)
+          }
+          .swipeActions {
+            Button("Delete", systemImage: "xmark", role: .destructive) {
+              model.deleteTodo(todo.id)
+            }
+          }
+          .contextMenu {
+            TodoRowContextMenu(
+              currentListID: todo.listID,
+              movableLists: model.movableLists,
+              onToggleComplete: { model.toggleComplete(todo.id, complete: todo.isTransitioning == false) },
+              onDelete: { model.deleteTodo(todo.id) },
+              onMove: { listID in model.moveTodo(todo.id, to: listID) }
+            )
+          }
         }
         .listRowSeparator(.hidden)
         .listRowBackground(Color.clear)
       }
       .listStyle(.plain)
-      if model.stats?.isEmpty == true {
+      if model.todos.isEmpty {
         Text("Nothing to see here")
           .foregroundStyle(Color.secondary)
           .fontDesign(.rounded)
@@ -33,7 +49,6 @@ public struct ListDetailView: View {
     }
     .navigationTitle(model.list?.name ?? "Unknown")
     .navigationBarTitleDisplayMode(.large)
-    .searchable(text: $model.searchText)
     .background(Color(.systemGroupedBackground))
   }
 }

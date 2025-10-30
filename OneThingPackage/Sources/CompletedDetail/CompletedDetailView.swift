@@ -14,10 +14,40 @@ public struct CompletedDetailView: View {
     ZStack {
       List {
         ForEach(model.todos) { todo in
-          TodoRowView(
-            model: model,
-            todo: todo
-          )
+          TodoRowButton(
+            todo: todo,
+            subtitle: todo.completeDate.map { "Completed \($0.subtitle)" }
+          ) {
+            model.putBackTodo(todo.id)
+          }
+          .swipeActions {
+            Button("Delete", systemImage: "xmark", role: .destructive) {
+              model.deleteTodo(todo.id)
+            }
+          }
+          .contextMenu {
+            Button {
+              model.putBackTodo(todo.id)
+            } label: {
+              Label("Put Back", systemImage: "arrow.uturn.backward")
+            }
+            Button {
+              model.deleteTodo(todo.id)
+            } label: {
+              Label("Delete", systemImage: "xmark")
+            }
+            Menu {
+              ForEach(model.movableLists) { list in
+                Button {
+                  model.moveTodo(todo.id, to: list.id)
+                } label: {
+                  Label(list.name, systemImage: list.id == todo.listID ? "checkmark" : "")
+                }
+              }
+            } label: {
+              Label("Move To...", systemImage: "folder")
+            }
+          }
         }
         .listRowSeparator(.hidden)
         .listRowBackground(Color.clear)
