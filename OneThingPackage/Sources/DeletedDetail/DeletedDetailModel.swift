@@ -24,18 +24,15 @@ public final class DeletedDetailModel {
   ) var movableLists
 
   @ObservationIgnored
-  @FetchAll
-  var todos: [Todo]
-
-  private var todosQuery: SelectOf<Todo> {
+  @FetchAll(
     Todo
       .where { $0.isDeleted }
-      .order { $0.deleteDate.desc(nulls: .last) }
-  }
+      .order { $0.deleteDate.desc() },
+    animation: .default
+  )
+  var todos: [Todo]
   
-  public init() {
-    self._todos = FetchAll(todosQuery, animation: .default)
-  }
+  public init() {}
 }
 
 
