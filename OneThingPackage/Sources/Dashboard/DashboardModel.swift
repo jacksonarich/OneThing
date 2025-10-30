@@ -4,8 +4,9 @@ import Sharing
 import SQLiteData
 import SwiftUI
 
-import ModelActions
 import AppModels
+import ModelActions
+import ModelTransitions
 import Utilities
 
 
@@ -73,11 +74,8 @@ public final class DashboardModel {
   private(set) var navPath
   
   var isCreatingList: Bool
-  
   var editingListID: TodoList.ID?
-  
   var deletingListID: TodoList.ID?
-  
   var editMode: EditMode
   
   var isEditing: Bool {
@@ -93,7 +91,8 @@ public final class DashboardModel {
     }
   }
   
-  private var timerTask: Task<Void, Never>? = nil
+  @ObservationIgnored
+  private var modelTransitions = ModelTransitions()
   
   public init(
     isCreatingList: Bool         = false,
@@ -131,20 +130,8 @@ public final class DashboardModel {
 
 
 extension DashboardModel {
-  func toggleComplete(_ todoId: Todo.ID, complete shouldComplete: Bool) {
-    timerTask?.cancel()
-    withErrorReporting {
-      try modelActions.transitionTodo(todoId, shouldComplete)
-      timerTask = Task { [clock] in
-        do {
-          try await clock.sleep(for: .seconds(2))
-          try modelActions.finalizeTransitions()
-        } catch {
-          if error is CancellationError { return }
-          reportIssue(error)
-        }
-      }
-    }
+  func toggleComplete(_ todoID: Todo.ID, complete shouldComplete: Bool) {
+    modelTransitions.toggleComplete(todoID, complete: shouldComplete)
   }
   
   func deleteTodo(_ todo: Todo) {

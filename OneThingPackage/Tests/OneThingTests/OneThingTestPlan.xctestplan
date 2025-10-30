@@ -1,0 +1,51 @@
+{
+  "configurations" : [
+    {
+      "id" : "F6D43F36-4B89-4567-B73A-AD8EA6C29C00",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:OneThing.xcodeproj",
+      "identifier" : "A6D26BFE2E7C951D006D9BC8",
+      "name" : "OneThing"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:OneThingPackage",
+        "identifier" : "DashboardTests",
+        "name" : "DashboardTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:OneThingPackage",
+        "identifier" : "InProgressDetailTests",
+        "name" : "InProgressDetailTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:OneThingPackage",
+        "identifier" : "ModelActionsTests",
+        "name" : "ModelActionsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:OneThingPackage",
+        "identifier" : "UtilitiesTests",
+        "name" : "UtilitiesTests"
+      }
+    }
+  ],
+  "version" : 1
+}

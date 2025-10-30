@@ -104,9 +104,10 @@ let package = Package(
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppDatabase",
-        "ModelActions",
-        "NewList",
         "AppModels",
+        "ModelActions",
+        "ModelTransitions",
+        "NewList",
         "Utilities",
       ]
     ),
@@ -186,6 +187,17 @@ let package = Package(
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppModels",
         "ModelActions",
+      ]
+    ),
+    .testTarget(
+      name: "ModelTransitionsTests",
+      dependencies: [
+        .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
+//        .product(name: "GRDB", package: "GRDB.swift"),
+        "AppDatabase",
+        "ModelTransitions",
+//        "AppModels",
+//        "Utilities",
       ]
     ),
     .target(

@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "155670A1-276F-4076-83D4-C87B4A79B12B",
+      "id" : "87B09E60-7B49-44B7-8698-7EA86CC81139",
       "name" : "Test Scheme Action",
       "options" : {
 
@@ -9,15 +9,14 @@
     }
   ],
   "defaultOptions" : {
-    "codeCoverage" : false,
     "performanceAntipatternCheckerEnabled" : true
   },
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:OneThingPackage",
-        "identifier" : "UtilitiesTests",
-        "name" : "UtilitiesTests"
+        "containerPath" : "container:",
+        "identifier" : "ModelTransitionsTests",
+        "name" : "ModelTransitionsTests"
       }
     }
   ],

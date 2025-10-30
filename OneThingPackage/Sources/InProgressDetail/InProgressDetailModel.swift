@@ -6,6 +6,7 @@ import SwiftUI
 
 import AppModels
 import ModelActions
+import ModelTransitions
 import Utilities
 
 
@@ -46,27 +47,16 @@ public final class InProgressDetailModel {
   )
   var todoGroups: [TodoListWithTodos]
 
-  private var timerTask: Task<Void, Never>?
+  @ObservationIgnored
+  private var modelTransitions = ModelTransitions()
   
   public init() {}
 }
 
 
 public extension InProgressDetailModel {
-  func toggleComplete(_ todoId: Todo.ID, complete shouldComplete: Bool) {
-    timerTask?.cancel()
-    withErrorReporting {
-      try modelActions.transitionTodo(todoId, shouldComplete)
-      timerTask = Task { [clock] in
-        do {
-          try await clock.sleep(for: .seconds(2))
-          try modelActions.finalizeTransitions()
-        } catch {
-          if error is CancellationError { return }
-          reportIssue(error)
-        }
-      }
-    }
+  func toggleComplete(_ todoID: Todo.ID, complete shouldComplete: Bool) {
+    modelTransitions.toggleComplete(todoID, complete: shouldComplete)
   }
   
   func deleteTodo(_ todo: Todo) {

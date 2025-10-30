@@ -22,7 +22,7 @@ struct UtilitiesTests {
   
   @Test
   func testTodoPreset() async throws {
-    let t1 = Todo.Draft.preset(
+    let t1 = Todo.Draft(
       order: "",
       listID: 1
     )
@@ -58,7 +58,7 @@ struct UtilitiesTests {
   
   @Test
   func testTodoSearch() async throws {
-    let t1 = Todo.Draft.preset(
+    let t1 = Todo.Draft(
       title: "Bell pepper",
       order: "",
       listID: 1
@@ -69,7 +69,7 @@ struct UtilitiesTests {
     #expect(t1.search("PEPPER"))
     #expect(!t1.search("  "))
     #expect(!t1.search("banana"))
-    let t2 = Todo.Draft.preset(
+    let t2 = Todo.Draft(
       title: "",
       order: "",
       listID: 1
