@@ -17,65 +17,66 @@ struct TodoRowView: View {
   }
   
   var checkboxImage: String {
-    switch (todo.completeDate != nil, todo.deleteDate != nil) {
-    case (false, false): return "circle"
-    case (true,  false): return "checkmark.circle"
-    case (false, true ): return "xmark.circle"
-    case (true,  true ): return "questionmark.circle"
-    }
+    todo.isTransitioning ? "checkmark.circle" : "circle"
+    //    switch (todo.completeDate != nil || todo.isTransitioning, todo.deleteDate != nil) {
+    //    case (false, false): return "circle"
+    //    case (true,  false): return "checkmark.circle"
+    //    case (false, true ): return "xmark.circle"
+    //    case (true,  true ): return "questionmark.circle"
+    //    }
   }
   
   var isInProgress: Bool {
     todo.completeDate == nil && todo.deleteDate == nil
   }
   
-  var isHighlighted: Bool {
-    model.highlightedTodoIDs.contains(todo.id)
-  }
-  
-  var deadline: String {
+  var deadline: String? {
     if let date = todo.deadline {
       "Due " + date.formatted(.dateTime.month(.abbreviated).day())
     } else {
-      "No Deadline"
+      nil
     }
   }
   
   var body: some View {
     Button {
-      if isInProgress {
-        model.completeTodo(id: todo.id)
-      } else {
-        model.putBackTodo(id: todo.id)
-      }
+      model.toggleComplete(todo.id, complete: todo.isTransitioning == false)
+      //      if isInProgress {
+      //        model.completeTodo(todo)
+      //      } else {
+      //        model.putBackTodo(todo)
+      //      }
     } label: {
       HStack(alignment: .top) {
         Image(systemName: checkboxImage)
-          .foregroundStyle(isHighlighted ? .primary : .secondary)
+          .foregroundStyle(todo.isTransitioning ? .primary : .secondary)
           .font(.title2)
           .padding(.trailing, 5)
-          .animation(nil, value: isHighlighted)
         VStack(alignment: .leading) {
           Text(todo.title)
             .foregroundStyle(Color.primary)
             .fontDesign(.rounded)
-            .strikethrough(isHighlighted)
             .lineLimit(2)
             .multilineTextAlignment(.leading)
-            .animation(.default, value: isHighlighted)
-          Text(deadline)
-            .foregroundStyle(Color.secondary)
-            .font(.callout)
-            .fontDesign(.rounded)
+            .strikethrough(todo.isTransitioning)
+          if let deadline {
+            Text(deadline)
+              .foregroundStyle(Color.secondary)
+              .font(.callout)
+              .fontDesign(.rounded)
+              .animation(.default, value: todo.deadline)
+          }
         }
+        Spacer(minLength: 0)
       }
+      .animation(nil, value: todo.isTransitioning)
       .contentShape(Rectangle())
     }
     .buttonStyle(.borderless)
     .swipeActions(edge: .trailing) {
       if isInProgress {
         Button("Delete", systemImage: "xmark", role: .destructive) {
-          model.deleteTodo(id: todo.id)
+          model.deleteTodo(todo)
         }
         .tint(.red)
       }
@@ -83,12 +84,12 @@ struct TodoRowView: View {
     .contextMenu {
       if isInProgress {
         Button {
-          model.completeTodo(id: todo.id)
+          model.toggleComplete(todo.id, complete: todo.isTransitioning == false)
         } label: {
           Label("Complete", systemImage: "checkmark")
         }
         Button {
-          model.deleteTodo(id: todo.id)
+          model.deleteTodo(todo)
         } label: {
           Label("Delete", systemImage: "xmark")
         }
@@ -106,4 +107,32 @@ struct TodoRowView: View {
       }
     }
   }
+}
+
+#Preview {
+  let _ = prepareDependencies {
+    $0.defaultDatabase = try! appDatabase(
+      lists: .preset(),
+      todos: .preset()
+    )
+  }
+  let model = ScheduledDetailModel()
+  TodoRowView(
+    model: model,
+    todo: Todo(
+      id: 1,
+      title: "Todo title",
+      notes: "",
+      deadline: nil,
+      frequencyUnitIndex: nil,
+      frequencyCount: nil,
+      createDate: .now,
+      modifyDate: .now,
+      completeDate: nil,
+      deleteDate: nil,
+      order: "",
+      listID: 1,
+      isTransitioning: true
+    )
+  )
 }

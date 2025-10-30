@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "159690E2-B591-4E0F-98CE-FCFD6AAE2F3B",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "performanceAntipatternCheckerEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "InProgressDetailTests",
+        "name" : "InProgressDetailTests"
+      }
+    }
+  ],
+  "version" : 1
+}

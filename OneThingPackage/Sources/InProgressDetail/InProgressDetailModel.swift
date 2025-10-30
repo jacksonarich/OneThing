@@ -1,6 +1,5 @@
 import Dependencies
 import Foundation
-import IdentifiedCollections
 import SQLiteData
 import StructuredQueriesCore
 import SwiftUI
@@ -54,21 +53,17 @@ public final class InProgressDetailModel {
 
 
 public extension InProgressDetailModel {
-  func toggleComplete(_ todo: Todo) {
+  func toggleComplete(_ todoId: Todo.ID, complete shouldComplete: Bool) {
     timerTask?.cancel()
     withErrorReporting {
-      if todo.isTransitioning {
-        try modelActions.transitionTodo(todo.id, false)
-      } else {
-        try modelActions.transitionTodo(todo.id, true)
-        timerTask = Task { [clock] in
-          do {
-            try await clock.sleep(for: .seconds(2))
-            try modelActions.finalizeTransitions()
-          } catch {
-            if error is CancellationError { return }
-            reportIssue(error)
-          }
+      try modelActions.transitionTodo(todoId, shouldComplete)
+      timerTask = Task { [clock] in
+        do {
+          try await clock.sleep(for: .seconds(2))
+          try modelActions.finalizeTransitions()
+        } catch {
+          if error is CancellationError { return }
+          reportIssue(error)
         }
       }
     }

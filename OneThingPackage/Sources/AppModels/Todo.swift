@@ -71,7 +71,7 @@ extension Todo.Draft {
       @Dependency(\.date) var date
       return date.now
     }()
-    let modified = modifyDate ?? {
+    let modified = modifyDate ?? createDate ?? {
       @Dependency(\.date) var date
       return date.now
     }()

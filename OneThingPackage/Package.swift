@@ -144,6 +144,13 @@ let package = Package(
         "Utilities",
       ]
     ),
+    .testTarget(
+      name: "InProgressDetailTests",
+      dependencies: [
+        "InProgressDetail",
+        .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
+      ]
+    ),
     .target(
       name: "ListDetail",
       dependencies: [

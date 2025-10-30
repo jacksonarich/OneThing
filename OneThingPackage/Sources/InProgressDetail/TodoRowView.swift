@@ -40,7 +40,7 @@ struct TodoRowView: View {
   
   var body: some View {
     Button {
-      model.toggleComplete(todo)
+      model.toggleComplete(todo.id, complete: todo.isTransitioning == false)
 //      if isInProgress {
 //        model.completeTodo(todo)
 //      } else {
@@ -67,13 +67,6 @@ struct TodoRowView: View {
               .animation(.default, value: todo.deadline)
           }
         }
-//        Text(todo.title)
-//          .foregroundStyle(Color.primary)
-//          .fontDesign(.rounded)
-//          .strikethrough(todo.isTransitioning)
-//          .lineLimit(2)
-//          .multilineTextAlignment(.leading)
-//          .animation(.default, value: todo.isTransitioning)
         Spacer(minLength: 0)
       }
       .animation(nil, value: todo.isTransitioning)
@@ -91,7 +84,7 @@ struct TodoRowView: View {
     .contextMenu {
       if isInProgress {
         Button {
-          model.toggleComplete(todo)
+          model.toggleComplete(todo.id, complete: todo.isTransitioning == false)
         } label: {
           Label("Complete", systemImage: "checkmark")
         }
