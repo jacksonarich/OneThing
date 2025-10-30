@@ -64,6 +64,9 @@ func getDatabaseConnection() throws -> any DatabaseWriter {
 
 func migrate(_ connection: DatabaseWriter) throws {
   var migrator = DatabaseMigrator()
+  #if DEBUG
+  migrator.eraseDatabaseOnSchemaChange = true
+  #endif
   migrator.registerMigration("Create lists table") { db in
     // lists table
     try db.create(table: "todoLists") { table in

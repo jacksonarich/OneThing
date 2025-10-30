@@ -49,9 +49,7 @@ public final class InProgressDetailModel {
 
   private var timerTask: Task<Void, Never>?
   
-  public init() {
-
-  }
+  public init() {}
 }
 
 
