@@ -163,10 +163,15 @@ extension ModelActions: DependencyKey {
                 .find(todo.id)
                 .update { $0.deadline = newDeadline }
                 .execute(db)
-            } else {
+            } else if todo.completeDate == nil {
               try Todo
                 .find(todo.id)
                 .update { $0.completeDate = now }
+                .execute(db)
+            } else {
+              try Todo
+                .find(todo.id)
+                .update { $0.completeDate = nil }
                 .execute(db)
             }
           }
