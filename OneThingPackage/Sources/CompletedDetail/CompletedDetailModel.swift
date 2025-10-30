@@ -24,18 +24,15 @@ public final class CompletedDetailModel {
   ) var movableLists
 
   @ObservationIgnored
-  @FetchAll
-  var todos: [Todo]
-
-  private var todosQuery: SelectOf<Todo> {
+  @FetchAll(
     Todo
       .where { $0.isCompleted }
-      .order { $0.completeDate.desc(nulls: .last) }
-  }
+      .order { $0.completeDate.desc() },
+    animation: .default
+  )
+  var todos: [Todo]
   
-  public init() {
-    self._todos = FetchAll(todosQuery, animation: .default)
-  }
+  public init() {}
 }
 
 
