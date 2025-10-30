@@ -8,7 +8,7 @@ import Utilities
 
 
 public struct DashboardView: View {
-  @State private var model = DashboardModel()
+  @State private var model = DashboardModel(searchText: "e")
 
   public init() {}
   
