@@ -27,6 +27,7 @@ public struct DashboardView: View {
         SearchView(model: searchModel)
       }
     }
+    .searchable(text: $searchModel.searchText)
     .sheet(isPresented: $model.isCreatingList) {
       NavigationStack {
         NewListView(model: .init())
