@@ -32,7 +32,7 @@ struct ModelTransitionsTests {
         .execute(db)
       try Todo
         .insert {
-          Todo.Draft(order: "", listID: 1)
+          Todo.Draft(rank: "0", listID: 1)
         }
         .execute(db)
     }
@@ -71,7 +71,7 @@ struct ModelTransitionsTests {
         .execute(db)
       try Todo
         .insert {
-          Todo.Draft(order: "", listID: 1)
+          Todo.Draft(rank: "0", listID: 1)
         }
         .execute(db)
     }
@@ -112,8 +112,8 @@ struct ModelTransitionsTests {
       try Todo
         .insert {
           [
-            Todo.Draft(order: "", listID: 1),
-            Todo.Draft(order: "", listID: 1),
+            Todo.Draft(rank: "0", listID: 1),
+            Todo.Draft(rank: "0", listID: 1),
           ]
         }
         .execute(db)

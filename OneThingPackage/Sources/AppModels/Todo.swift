@@ -13,7 +13,7 @@ public struct Todo: Codable, Equatable, Identifiable, Sendable {
   public var modifyDate:         Date
   public var completeDate:       Date? = nil
   public var deleteDate:         Date? = nil
-  public var order:              String
+  public var rank:               Rank
   public var listID:             TodoList.ID
   public var isTransitioning:    Bool = false
   
@@ -30,7 +30,7 @@ public struct Todo: Codable, Equatable, Identifiable, Sendable {
     modifyDate:         Date,
     completeDate:       Date? = nil,
     deleteDate:         Date? = nil,
-    order:              String,
+    rank:               Rank,
     listID:             TodoList.ID,
     isTransitioning:    Bool = false
   ) {
@@ -44,7 +44,7 @@ public struct Todo: Codable, Equatable, Identifiable, Sendable {
     self.modifyDate         = modifyDate
     self.completeDate       = completeDate
     self.deleteDate         = deleteDate
-    self.order              = order
+    self.rank               = rank
     self.listID             = listID
     self.isTransitioning    = isTransitioning
   }
@@ -64,7 +64,7 @@ extension Todo.Draft {
     modifyDate:         Date?       = nil,
     completeDate:       Date?       = nil,
     deleteDate:         Date?       = nil,
-    order:              String,
+    rank:               Rank,
     listID:             TodoList.ID
   ) {
     let created = createDate ?? {
@@ -86,7 +86,7 @@ extension Todo.Draft {
       modifyDate:         modified,
       completeDate:       completeDate,
       deleteDate:         deleteDate,
-      order:              order,
+      rank:               rank,
       listID:             listID
     )
   }

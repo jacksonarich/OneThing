@@ -65,8 +65,10 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/groue/GRDB.swift", from: "7.6.0"),
-    .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.9.0"),
     .package(url: "https://github.com/pointfreeco/sqlite-data", from: "1.0.0"),
+    .package(url: "https://github.com/apple/swift-algorithms", from: "1.2.1"),
+    .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.9.0"),
+    .package(url: "https://github.com/pointfreeco/swift-nonempty", from: "0.4.0"),
   ],
   targets: [
     .target(
@@ -96,6 +98,7 @@ let package = Package(
       dependencies: [
         .product(name: "Dependencies", package: "swift-dependencies"),
         .product(name: "SQLiteData", package: "sqlite-data"),
+        .product(name: "NonEmpty", package: "swift-nonempty"),
       ]
     ),
     .target(
@@ -251,12 +254,14 @@ let package = Package(
       name: "Utilities",
       dependencies: [
         .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "DependenciesMacros", package: "swift-dependencies"),
         "AppModels",
       ]
     ),
     .testTarget(
       name: "UtilitiesTests",
       dependencies: [
+        .product(name: "Algorithms", package: "swift-algorithms"),
         .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
         "AppDatabase",
         "Utilities",

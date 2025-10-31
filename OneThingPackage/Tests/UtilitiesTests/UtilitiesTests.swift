@@ -23,7 +23,7 @@ struct UtilitiesTests {
   @Test
   func testTodoPreset() async throws {
     let t1 = Todo.Draft(
-      order: "",
+      rank: "0",
       listID: 1
     )
     let t2 = Todo.Draft(
@@ -37,7 +37,7 @@ struct UtilitiesTests {
       modifyDate: now,
       completeDate: nil,
       deleteDate: nil,
-      order: "",
+      rank: "0",
       listID: 1
     )
     expectNoDifference(t2, t1)
@@ -60,7 +60,7 @@ struct UtilitiesTests {
   func testTodoSearch() async throws {
     let t1 = Todo.Draft(
       title: "Bell pepper",
-      order: "",
+      rank: "0",
       listID: 1
     )
     #expect(t1.search(""))
@@ -71,7 +71,7 @@ struct UtilitiesTests {
     #expect(!t1.search("banana"))
     let t2 = Todo.Draft(
       title: "",
-      order: "",
+      rank: "0",
       listID: 1
     )
     #expect(t2.search(""))

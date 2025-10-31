@@ -54,50 +54,50 @@ struct ModelActionsTests {
   @Test
   func testCreateTodo() async throws {
     try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createTodo(.init(order: "", listID: 1))
+    try ModelActions.testValue.createTodo(.init(rank: "0", listID: 1))
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
     expectNoDifference([.init(id: 1)], allLists)
-    expectNoDifference([.init(id: 1, order: "", listID: 1)], allTodos)
+    expectNoDifference([.init(id: 1, rank: "0", listID: 1)], allTodos)
   }
   
   @Test
   func testCompleteTodo() async throws {
     try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createTodo(.init(order: "", listID: 1))
+    try ModelActions.testValue.createTodo(.init(rank: "0", listID: 1))
     try ModelActions.testValue.completeTodo(1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
     expectNoDifference([.init(id: 1)], allLists)
-    expectNoDifference([.init(id: 1, completeDate: now, order: "", listID: 1)], allTodos)
+    expectNoDifference([.init(id: 1, completeDate: now, rank: "0", listID: 1)], allTodos)
   }
   
   @Test
   func testDeleteTodo() async throws {
     try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createTodo(.init(order: "", listID: 1))
+    try ModelActions.testValue.createTodo(.init(rank: "0", listID: 1))
     try ModelActions.testValue.deleteTodo(1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
     expectNoDifference([.init(id: 1)], allLists)
-    expectNoDifference([.init(id: 1, deleteDate: now, order: "", listID: 1)], allTodos)
+    expectNoDifference([.init(id: 1, deleteDate: now, rank: "0", listID: 1)], allTodos)
   }
   
   @Test
   func testPutBackTodo() async throws {
     try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createTodo(.init(completeDate: now, deleteDate: now, order: "", listID: 1))
+    try ModelActions.testValue.createTodo(.init(completeDate: now, deleteDate: now, rank: "0", listID: 1))
     try ModelActions.testValue.putBackTodo(1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
     expectNoDifference([.init(id: 1)], allLists)
-    expectNoDifference([.init(id: 1, order: "", listID: 1)], allTodos)
+    expectNoDifference([.init(id: 1, rank: "0", listID: 1)], allTodos)
   }
   
   @Test
   func testEraseTodo() async throws {
     try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createTodo(.init(order: "", listID: 1))
+    try ModelActions.testValue.createTodo(.init(rank: "0", listID: 1))
     try ModelActions.testValue.eraseTodo(1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
@@ -109,26 +109,26 @@ struct ModelActionsTests {
   func testMoveTodo() async throws {
     try ModelActions.testValue.createList(.init())
     try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createTodo(.init(order: "", listID: 1))
+    try ModelActions.testValue.createTodo(.init(rank: "0", listID: 1))
     try ModelActions.testValue.moveTodo(1, 2)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
     expectNoDifference([.init(id: 1), .init(id: 2)], allLists)
-    expectNoDifference([.init(id: 1, order: "", listID: 2)], allTodos)
+    expectNoDifference([.init(id: 1, rank: "0", listID: 2)], allTodos)
   }
   
   @Test
   func testRescheduleTodo() async throws {
     try ModelActions.testValue.createList(.init())
     try ModelActions.testValue.createTodo(
-      .init(deadline: now, frequencyUnitIndex: 0, frequencyCount: 2, order: "", listID: 1)
+      .init(deadline: now, frequencyUnitIndex: 0, frequencyCount: 2, rank: "0", listID: 1)
     )
     try ModelActions.testValue.completeTodo(1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
     expectNoDifference([.init(id: 1)], allLists)
     expectNoDifference([
-      .init(id: 1, deadline: Calendar.current.date(byAdding: .day, value: 2, to: now), frequencyUnitIndex: 0, frequencyCount: 2, order: "", listID: 1)
+      .init(id: 1, deadline: Calendar.current.date(byAdding: .day, value: 2, to: now), frequencyUnitIndex: 0, frequencyCount: 2, rank: "0", listID: 1)
     ], allTodos)
   }
 }

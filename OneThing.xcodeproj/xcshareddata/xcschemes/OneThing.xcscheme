@@ -30,7 +30,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:OneThingPackage/Tests/OneThing.xctestplan"
+            reference = "container:OneThingPackage/Tests/OneThingTests/OneThingTestPlan.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

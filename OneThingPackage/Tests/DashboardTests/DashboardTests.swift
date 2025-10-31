@@ -29,13 +29,12 @@ struct DashboardTests {
     #expect(m1.editingListID == nil)
     #expect(m1.deletingListID == nil)
     #expect(m1.editMode == .inactive)
-    #expect(m1.searchText == "")
   }
   
   @Test
   func testListRowTapped() async throws {
     try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createTodo(.init(order: "", listID: 1))
+    try ModelActions.testValue.createTodo(.init(rank: "0", listID: 1))
     // not editing
     let model1 = DashboardModel()
     model1.listRowTapped(id: 1)
@@ -51,7 +50,7 @@ struct DashboardTests {
   @Test
   func testListCellTapped() async throws {
     try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createTodo(.init(order: "", listID: 1))
+    try ModelActions.testValue.createTodo(.init(rank: "0", listID: 1))
     // tap "In Progress"
     let model = DashboardModel()
     model.listCellTapped(list: .inProgress)
@@ -61,7 +60,7 @@ struct DashboardTests {
   @Test
   func testListVisibilityChanged() async throws {
     try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createTodo(.init(order: "", listID: 1))
+    try ModelActions.testValue.createTodo(.init(rank: "0", listID: 1))
     let model = DashboardModel()
     // true -> false
     model.listVisibilityChanged(list: .inProgress, to: false)

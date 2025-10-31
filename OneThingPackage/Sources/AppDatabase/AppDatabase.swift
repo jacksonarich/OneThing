@@ -88,7 +88,7 @@ func migrate(_ connection: DatabaseWriter) throws {
       table.column("modifyDate", .date).notNull()
       table.column("completeDate", .date)
       table.column("deleteDate", .date)
-      table.column("order", .text).notNull() // How does this work?
+      table.column("rank", .text).notNull()
       table.column("listID", .integer).notNull().references("todoLists")
       table.column("isTransitioning", .boolean).notNull()
     }

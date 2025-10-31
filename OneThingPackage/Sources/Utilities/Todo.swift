@@ -23,7 +23,7 @@ public extension Todo.Draft {
     modifyDate:         Date?        = nil,
     completeDate:       Date??       = nil,
     deleteDate:         Date??       = nil,
-    order:              String?      = nil,
+    rank:               Rank?        = nil,
     listID:             TodoList.ID? = nil
   ) -> Self {
     .init(
@@ -37,7 +37,7 @@ public extension Todo.Draft {
       modifyDate:         modifyDate         ?? self.modifyDate,
       completeDate:       completeDate       ?? self.completeDate,
       deleteDate:         deleteDate         ?? self.deleteDate,
-      order:              order              ?? self.order,
+      rank:               rank               ?? self.rank,
       listID:             listID             ?? self.listID
     )
   }
@@ -48,6 +48,8 @@ public extension [Todo.Draft] {
   
   static func preset() -> [Todo.Draft] {
     let calendar = Calendar.current
+    let rankClient = RankGenerationClient()
+    var ranks = rankClient.distribute(21).shuffled()
     func customTodo(
       title:              String = "",
       notes:              String = "",
@@ -66,7 +68,7 @@ public extension [Todo.Draft] {
         modifyDate:          .now,
         completeDate:        nil,
         deleteDate:          nil,
-        order:               String((1...10).map {_ in "abcdefghijklmnopqrstuvwxyz".randomElement()! }),
+        rank:                ranks.remove(at: .random(in: 0 ..< 21)),
         listID:              .random(in: 1...21)
       )
     }
