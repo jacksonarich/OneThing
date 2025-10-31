@@ -94,9 +94,7 @@ public final class DashboardModel {
     self.deletingListID = deletingListID
     self.editMode       = isEditing ? .active : .inactive
   }
-  
-  }
-  
+    
   @Selection
   struct Stats {
     var completedCount: Int

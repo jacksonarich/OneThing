@@ -225,6 +225,7 @@ let package = Package(
         "AppDatabase",
         "AppModels",
         "ModelActions",
+        "ModelTransitions",
         "Utilities",
       ]
     ),

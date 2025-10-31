@@ -27,7 +27,7 @@ public final class SearchModel {
 
   @ObservationIgnored
   @FetchAll(
-    Self.searchResultQuery("")
+    SearchModel.searchResultQuery("")
   )
   var todos: [Todo]
 
@@ -54,9 +54,10 @@ extension SearchModel {
     Todo
       .where { t in
         t.isInProgress
-          .and(t.contains(text.cleaned))
+          .and(t.contains(text.cleaned()))
       }
       .order(by: \.title)
+  }
 }
 
 //public extension InProgressDetailModel {
