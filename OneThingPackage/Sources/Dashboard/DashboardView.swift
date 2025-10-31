@@ -4,28 +4,29 @@ import SwiftUI
 import AppDatabase
 import AppModels
 import NewList
+import Search
 import Utilities
 
 
 public struct DashboardView: View {
   @State private var model = DashboardModel()
-//  @State private var searchModel = SearchModel()
+  @State private var searchModel = SearchModel()
   
   public init() {}
   
   public var body: some View {
     List {
-//      if searchModel.searchText.cleaned().isEmpty {
+      if searchModel.searchText.cleaned().isEmpty {
         Section {
           ListCells(model: model)
         }
         Section {
           ListRows(model: model)
         }
-//      } else {
-//      }
+      } else {
+        SearchView(model: searchModel)
+      }
     }
-//    .searchable(text: $model.searchText)
     .sheet(isPresented: $model.isCreatingList) {
       NavigationStack {
         NewListView(model: .init())

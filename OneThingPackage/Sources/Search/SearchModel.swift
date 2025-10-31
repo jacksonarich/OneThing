@@ -27,7 +27,8 @@ public final class SearchModel {
 
   @ObservationIgnored
   @FetchAll(
-    SearchModel.searchResultQuery("")
+    SearchModel.searchResultQuery(""),
+    animation: .default
   )
   var todos: [Todo]
 
@@ -42,10 +43,9 @@ public final class SearchModel {
     }
   }
 
-  public init(
-    text: String
-  ) {
+  public init(text: String = "") {
     self.searchText = text
+    self._todos = FetchAll(SearchModel.searchResultQuery(text), animation: .default)
   }
 }
 
@@ -60,21 +60,21 @@ extension SearchModel {
   }
 }
 
-//public extension InProgressDetailModel {
-//  func toggleComplete(_ todoID: Todo.ID, complete shouldComplete: Bool) {
-//    modelTransitions.toggleComplete(todoID, complete: shouldComplete)
-//  }
-//  
-//  func deleteTodo(_ todo: Todo) {
-//    withErrorReporting {
-//      try modelActions.deleteTodo(todo.id)
-//    }
-//  }
-//  
-//  func moveTodo(id: Todo.ID, to listID: TodoList.ID) {
-//    withErrorReporting {
-//      try modelActions.moveTodo(id, listID)
-//    }
-//  }
-//}
-//
+public extension SearchModel {
+  func toggleComplete(_ todoID: Todo.ID, complete shouldComplete: Bool) {
+    modelTransitions.toggleComplete(todoID, complete: shouldComplete)
+  }
+  
+  func deleteTodo(_ todo: Todo) {
+    withErrorReporting {
+      try modelActions.deleteTodo(todo.id)
+    }
+  }
+  
+  func moveTodo(id: Todo.ID, to listID: TodoList.ID) {
+    withErrorReporting {
+      try modelActions.moveTodo(id, listID)
+    }
+  }
+}
+

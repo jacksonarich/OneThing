@@ -92,6 +92,13 @@ let package = Package(
       ]
     ),
     .target(
+      name: "AppModels",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "SQLiteData", package: "sqlite-data"),
+      ]
+    ),
+    .target(
       name: "CompletedDetail",
       dependencies: [
         .product(name: "Dependencies", package: "swift-dependencies"),
@@ -238,13 +245,6 @@ let package = Package(
         "ModelActions",
         "AppModels",
         "Utilities",
-      ]
-    ),
-    .target(
-      name: "AppModels",
-      dependencies: [
-        .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "SQLiteData", package: "sqlite-data"),
       ]
     ),
     .target(
