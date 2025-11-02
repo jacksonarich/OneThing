@@ -184,6 +184,7 @@ let package = Package(
       dependencies: [
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppModels",
+        "Utilities",
       ]
     ),
     .testTarget(

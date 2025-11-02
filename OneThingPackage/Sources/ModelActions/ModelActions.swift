@@ -5,7 +5,7 @@ import SQLiteData
 import SwiftUI
 
 import AppModels
-
+import Utilities
 
 public struct ModelActions: Sendable {
   public var createTodo: @Sendable (TodoList.ID) throws -> Void
@@ -36,16 +36,19 @@ extension ModelActions: DependencyKey {
   public static let liveValue = {
     @Dependency(\.defaultDatabase) var connection
     @Dependency(\.date.now) var now
+    @Dependency(\.rankGeneration) var rankGeneration
     return Self(
-      createTodo: { listID in
-        // largestRank = get largest rank in todo table (or nil if there are no todos)
-        // newRank = rankGeneration.midpoint(largestRank, nil)
-        // newTodo.rank = newRank
-        let todo = Todo.Draft(
-          rank: "",
-          listID: listID
-        )
+      createTodo: { [rankGeneration] listID in
         try connection.write { db in
+          let maxRank = try Todo
+            .select { $0.rank.max() }
+            .fetchOne(db) ?? nil
+          guard let newRank = rankGeneration.midpoint(between: maxRank, and: nil)
+          else { throw ModelActionsError.rankError }
+          let todo = Todo.Draft(
+            rank: newRank,
+            listID: listID
+          )
           try Todo
             .insert { todo }
             .execute(db)
