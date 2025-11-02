@@ -6,3 +6,4 @@
 * Make sure completed items can be deleted
 * Moving deleted todos should undelete them
 * Creating todos should only take a listID, all other columns should have default values (including rank!)
+  * need a test rig for setting up database with preset todos (done)

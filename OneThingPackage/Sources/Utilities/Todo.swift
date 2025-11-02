@@ -47,9 +47,6 @@ public extension Todo.Draft {
 public extension [Todo.Draft] {
   
   static func preset() -> [Todo.Draft] {
-    let calendar = Calendar.current
-    let rankClient = RankGenerationClient()
-    var ranks = rankClient.distribute(21).shuffled()
     func customTodo(
       title:              String = "",
       notes:              String = "",
@@ -68,11 +65,12 @@ public extension [Todo.Draft] {
         modifyDate:          .now,
         completeDate:        nil,
         deleteDate:          nil,
-        rank:                ranks.remove(at: .random(in: 0 ..< 21)),
+        rank:                "0",
         listID:              .random(in: 1...21)
       )
     }
-    return [
+    let calendar = Calendar.current
+    let customTodos = [
       customTodo(
         title: "Buy groceries",
         notes: "Milk, eggs, bread, coffee",
@@ -227,6 +225,9 @@ public extension [Todo.Draft] {
       )
     ]
       .shuffled()
+    @Dependency(\.rankGeneration) var rankGeneration
+    let ranks = rankGeneration.distribute(customTodos.count).shuffled()
+    return customTodos
   }
 }
 

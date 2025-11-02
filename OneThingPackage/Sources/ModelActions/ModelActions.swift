@@ -8,18 +8,19 @@ import AppModels
 
 
 public struct ModelActions: Sendable {
-  public var createTodo:          @Sendable (Todo.Draft)               throws -> Void
-  public var completeTodo:        @Sendable (Todo.ID)                  throws -> Void
-  public var unrescheduleTodo:    @Sendable (Todo.ID, Date)            throws -> Void
-  public var deleteTodo:          @Sendable (Todo.ID)                  throws -> Void
-  public var putBackTodo:         @Sendable (Todo.ID)                  throws -> Void
-  public var eraseTodo:           @Sendable (Todo.ID)                  throws -> Void
-  public var moveTodo:            @Sendable (Todo.ID, TodoList.ID)     throws -> Void
-  public var createList:          @Sendable (TodoList.Draft)           throws -> Void
-  public var updateList:          @Sendable (TodoList.ID, String, Int) throws -> Void
-  public var deleteList:          @Sendable (TodoList.ID)              throws -> Void
-  public var transitionTodo:      @Sendable (Todo.ID, Bool)            throws -> Void
-  public var finalizeTransitions: @Sendable ()                         throws -> Void
+  public var createTodo: @Sendable (TodoList.ID) throws -> Void
+  public var completeTodo: @Sendable (Todo.ID) throws -> Void
+  public var unrescheduleTodo: @Sendable (Todo.ID, Date) throws -> Void
+  public var deleteTodo: @Sendable (Todo.ID) throws -> Void
+  public var putBackTodo: @Sendable (Todo.ID) throws -> Void
+  public var eraseTodo: @Sendable (Todo.ID) throws -> Void
+  public var moveTodo: @Sendable (Todo.ID, TodoList.ID) throws -> Void
+  public var createList: @Sendable (TodoList.Draft) throws -> Void
+  public var updateList: @Sendable (TodoList.ID, String, Int) throws -> Void
+  public var deleteList: @Sendable (TodoList.ID) throws -> Void
+  public var transitionTodo: @Sendable (Todo.ID, Bool) throws -> Void
+  public var finalizeTransitions: @Sendable () throws -> Void
+  public var seedDatabase: @Sendable ([TodoList.Draft], [Todo.Draft]) throws -> Void
 }
 
 
@@ -36,7 +37,14 @@ extension ModelActions: DependencyKey {
     @Dependency(\.defaultDatabase) var connection
     @Dependency(\.date.now) var now
     return Self(
-      createTodo: { todo in
+      createTodo: { listID in
+        // largestRank = get largest rank in todo table (or nil if there are no todos)
+        // newRank = rankGeneration.midpoint(largestRank, nil)
+        // newTodo.rank = newRank
+        let todo = Todo.Draft(
+          rank: "",
+          listID: listID
+        )
         try connection.write { db in
           try Todo
             .insert { todo }
@@ -178,6 +186,16 @@ extension ModelActions: DependencyKey {
           try Todo
             .where { $0.isTransitioning }
             .update { $0.isTransitioning = false }
+            .execute(db)
+        }
+      },
+      seedDatabase: { lists, todos in
+        try connection.write { db in
+          try TodoList
+            .insert { lists }
+            .execute(db)
+          try Todo
+            .insert { todos }
             .execute(db)
         }
       }

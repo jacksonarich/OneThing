@@ -24,43 +24,55 @@ struct DashboardTests {
   
   @Test
   func testDashboardInit() async throws {
-    let m1 = DashboardModel()
-    #expect(m1.isCreatingList == false)
-    #expect(m1.editingListID == nil)
-    #expect(m1.deletingListID == nil)
-    #expect(m1.editMode == .inactive)
+    let m = DashboardModel()
+    #expect(m.isCreatingList == false)
+    #expect(m.editingListID == nil)
+    #expect(m.deletingListID == nil)
+    #expect(m.editMode == .inactive)
   }
   
   @Test
   func testListRowTapped() async throws {
-    try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createTodo(.init(rank: "0", listID: 1))
+    // setup
+    try ModelActions.testValue.seedDatabase([
+      TodoList.Draft()
+    ], [
+      Todo.Draft(rank: "0", listID: 1)
+    ])
     // not editing
-    let model1 = DashboardModel()
-    model1.listRowTapped(id: 1)
-    #expect(model1.editingListID == nil)
-    expectNoDifference(model1.navPath, [.listDetail(1)])
+    let m1 = DashboardModel()
+    m1.listRowTapped(id: 1)
+    #expect(m1.editingListID == nil)
+    expectNoDifference(m1.navPath, [.listDetail(1)])
     // editing
-    let model2 = DashboardModel(isEditing: true)
-    model2.listRowTapped(id: 1)
-    #expect(model2.editingListID == 1)
-    expectNoDifference(model2.navPath, [.listDetail(1)])
+    let m2 = DashboardModel(isEditing: true)
+    m2.listRowTapped(id: 1)
+    #expect(m2.editingListID == 1)
+    expectNoDifference(m2.navPath, [.listDetail(1)])
   }
   
   @Test
   func testListCellTapped() async throws {
-    try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createTodo(.init(rank: "0", listID: 1))
+    // setup
+    try ModelActions.testValue.seedDatabase([
+      TodoList.Draft()
+    ], [
+      Todo.Draft(rank: "0", listID: 1)
+    ])
     // tap "In Progress"
-    let model = DashboardModel()
-    model.listCellTapped(list: .inProgress)
-    expectNoDifference(model.navPath, [.computedListDetail(.inProgress)])
+    let m = DashboardModel()
+    m.listCellTapped(list: .inProgress)
+    expectNoDifference(m.navPath, [.computedListDetail(.inProgress)])
   }
   
   @Test
   func testListVisibilityChanged() async throws {
-    try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createTodo(.init(rank: "0", listID: 1))
+    // setup
+    try ModelActions.testValue.seedDatabase([
+      TodoList.Draft()
+    ], [
+      Todo.Draft(rank: "0", listID: 1)
+    ])
     let model = DashboardModel()
     // true -> false
     model.listVisibilityChanged(list: .inProgress, to: false)

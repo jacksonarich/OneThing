@@ -33,7 +33,11 @@ struct ModelActionsTests {
   
   @Test
   func testUpdateList() async throws {
-    try ModelActions.testValue.createList(.init())
+    // setup
+    try ModelActions.testValue.seedDatabase([
+      TodoList.Draft()
+    ], [])
+    // begin test
     try ModelActions.testValue.updateList(1, "Grocery", 5)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
@@ -43,7 +47,11 @@ struct ModelActionsTests {
   
   @Test
   func testDeleteList() async throws {
-    try ModelActions.testValue.createList(.init())
+    // setup
+    try ModelActions.testValue.seedDatabase([
+      TodoList.Draft()
+    ], [])
+    // begin test
     try ModelActions.testValue.deleteList(1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
@@ -53,7 +61,11 @@ struct ModelActionsTests {
   
   @Test
   func testCreateTodo() async throws {
-    try ModelActions.testValue.createList(.init())
+    // setup
+    try ModelActions.testValue.seedDatabase([
+      TodoList.Draft()
+    ], [])
+    // begin test
     try ModelActions.testValue.createTodo(.init(rank: "0", listID: 1))
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
@@ -63,8 +75,13 @@ struct ModelActionsTests {
   
   @Test
   func testCompleteTodo() async throws {
-    try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createTodo(.init(rank: "0", listID: 1))
+    // setup
+    try ModelActions.testValue.seedDatabase([
+      TodoList.Draft()
+    ], [
+      Todo.Draft(rank: "0", listID: 1)
+    ])
+    // begin test
     try ModelActions.testValue.completeTodo(1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
@@ -74,8 +91,13 @@ struct ModelActionsTests {
   
   @Test
   func testDeleteTodo() async throws {
-    try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createTodo(.init(rank: "0", listID: 1))
+    // setup
+    try ModelActions.testValue.seedDatabase([
+      TodoList.Draft()
+    ], [
+      Todo.Draft(rank: "0", listID: 1)
+    ])
+    // begin test
     try ModelActions.testValue.deleteTodo(1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
@@ -85,8 +107,13 @@ struct ModelActionsTests {
   
   @Test
   func testPutBackTodo() async throws {
-    try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createTodo(.init(completeDate: now, deleteDate: now, rank: "0", listID: 1))
+    // setup
+    try ModelActions.testValue.seedDatabase([
+      TodoList.Draft()
+    ], [
+      Todo.Draft(completeDate: .now, deleteDate: .now, rank: "0", listID: 1)
+    ])
+    // begin test
     try ModelActions.testValue.putBackTodo(1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
@@ -96,8 +123,13 @@ struct ModelActionsTests {
   
   @Test
   func testEraseTodo() async throws {
-    try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createTodo(.init(rank: "0", listID: 1))
+    // setup
+    try ModelActions.testValue.seedDatabase([
+      TodoList.Draft()
+    ], [
+      Todo.Draft(rank: "0", listID: 1)
+    ])
+    // begin test
     try ModelActions.testValue.eraseTodo(1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
@@ -107,9 +139,14 @@ struct ModelActionsTests {
   
   @Test
   func testMoveTodo() async throws {
-    try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createTodo(.init(rank: "0", listID: 1))
+    // setup
+    try ModelActions.testValue.seedDatabase([
+      TodoList.Draft(),
+      TodoList.Draft()
+    ], [
+      Todo.Draft(rank: "0", listID: 1)
+    ])
+    // begin test
     try ModelActions.testValue.moveTodo(1, 2)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
@@ -119,10 +156,13 @@ struct ModelActionsTests {
   
   @Test
   func testRescheduleTodo() async throws {
-    try ModelActions.testValue.createList(.init())
-    try ModelActions.testValue.createTodo(
-      .init(deadline: now, frequencyUnitIndex: 0, frequencyCount: 2, rank: "0", listID: 1)
-    )
+    // setup
+    try ModelActions.testValue.seedDatabase([
+      TodoList.Draft()
+    ], [
+      Todo.Draft(deadline: now, frequencyUnitIndex: 0, frequencyCount: 2, rank: "0", listID: 1)
+    ])
+    // begin test
     try ModelActions.testValue.completeTodo(1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
