@@ -49,7 +49,7 @@ public struct ListDetailView: View {
       }
     }
     .toolbar {
-      ToolbarItem(placement: .bottombar) {
+      ToolbarItem(placement: .bottomBar) {
         Text("New Item")
       }
     }

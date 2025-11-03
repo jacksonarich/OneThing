@@ -41,7 +41,7 @@ public struct NewTodoView: View {
         }
       }
       Section {
-        // list picker
+        ListPicker(model: model)
       }
     }
     .navigationTitle("New Item")
@@ -74,8 +74,8 @@ public struct NewTodoView: View {
   NavigationStack {
     NewTodoView(model: .init(
       listID: 1,
-      listName: "List Name",
-      listColorIndex: 0
+//      listName: "List Name",
+//      listColorIndex: 0
     ))
   }
   .accentColor(.pink)

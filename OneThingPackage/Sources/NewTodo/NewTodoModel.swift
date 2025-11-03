@@ -20,7 +20,7 @@ public final class NewTodoModel {
   @ObservationIgnored
   @FetchAll(
     TodoList
-      .all
+      .order(by: \.name)
   )
   var selectableLists
   
@@ -29,38 +29,41 @@ public final class NewTodoModel {
   var deadline: Date?
   
   var listID: TodoList.ID
-  var listName: String
-  var listColorIndex: Int
-  
-  public init(
-    title: String = "",
-    notes: String = "",
-    deadline: Date? = nil,
-    list: TodoList
-  ) {
-    self.title = title
-    self.notes = notes
-    self.deadline = deadline
-    self.listID = list.id
-    self.listName = list.name
-    self.listColorIndex = list.colorIndex
+  var selectedList: TodoList? {
+    selectableLists.first { $0.id == listID }
   }
+//  var listName: String
+//  var listColorIndex: Int
   
   public init(
     title: String = "",
     notes: String = "",
     deadline: Date? = nil,
-    listID: TodoList.ID,
-    listName: String,
-    listColorIndex: Int
+    listID: TodoList.ID
   ) {
     self.title = title
     self.notes = notes
     self.deadline = deadline
     self.listID = listID
-    self.listName = listName
-    self.listColorIndex = listColorIndex
+//    self.listName = list.name
+//    self.listColorIndex = list.colorIndex
   }
+  
+//  public init(
+//    title: String = "",
+//    notes: String = "",
+//    deadline: Date? = nil,
+//    listID: TodoList.ID,
+//    listName: String,
+//    listColorIndex: Int
+//  ) {
+//    self.title = title
+//    self.notes = notes
+//    self.deadline = deadline
+//    self.listID = listID
+//    self.listName = listName
+//    self.listColorIndex = listColorIndex
+//  }
 }
 
 
