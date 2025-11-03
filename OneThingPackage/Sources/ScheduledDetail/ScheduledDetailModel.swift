@@ -32,10 +32,10 @@ public final class ScheduledDetailModel {
   @FetchAll(
     Todo
       .where { $0.isScheduled }
-      .order { $0.deadline.asc() },
+      .order(by: \.deadline),
     animation: .default
   )
-  var todos: [Todo]
+  var todos
   
   private var timerTask: Task<Void, Never>?
   

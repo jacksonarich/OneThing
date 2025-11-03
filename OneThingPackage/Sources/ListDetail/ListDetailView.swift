@@ -2,6 +2,7 @@ import SQLiteData
 import SwiftUI
 
 import AppDatabase
+import NewTodo
 import Utilities
 
 
@@ -45,6 +46,11 @@ public struct ListDetailView: View {
         Text("Nothing to see here")
           .foregroundStyle(Color.secondary)
           .fontDesign(.rounded)
+      }
+    }
+    .toolbar {
+      ToolbarItem(placement: .bottombar) {
+        Text("New Item")
       }
     }
     .navigationTitle(model.list?.name ?? "Unknown")

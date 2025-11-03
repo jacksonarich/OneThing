@@ -42,11 +42,12 @@ public final class ListDetailModel {
     self._list = FetchOne(TodoList.find(listID))
     self._todos = FetchAll(
       Todo
-        .where {
-          $0.listID.eq(listID)
-            .and($0.isInProgress)
+        .where { t in
+          t.listID.eq(listID)
+          .and(t.isInProgress)
         }
-        .order(by: \.title)
+        .order(by: \.rank),
+      animation: .default
     )
   }
 }

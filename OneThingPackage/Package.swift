@@ -47,6 +47,10 @@ let package = Package(
       targets: ["NewList"]
     ),
     .library(
+      name: "NewTodo",
+      targets: ["NewTodo"]
+    ),
+    .library(
       name: "Search",
       targets: ["Search"]
     ),
@@ -176,6 +180,7 @@ let package = Package(
         "AppModels",
         "ModelActions",
         "ModelTransitions",
+        "NewTodo",
         "Utilities",
       ]
     ),
@@ -228,6 +233,18 @@ let package = Package(
         "Utilities",
       ]
     ),
+    .target(
+      name: "NewTodo",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "SQLiteData", package: "sqlite-data"),
+        "AppDatabase",
+        "AppModels",
+        "ModelActions",
+        "Utilities",
+      ]
+    ),
+    
     .target(
       name: "Search",
       dependencies: [

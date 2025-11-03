@@ -226,8 +226,10 @@ public extension [Todo.Draft] {
     ]
       .shuffled()
     @Dependency(\.rankGeneration) var rankGeneration
-    let ranks = rankGeneration.distribute(customTodos.count).shuffled()
-    return customTodos
+    let ranks = rankGeneration.distribute(customTodos.count)
+    return zip(customTodos, ranks).map { todo, rank in
+      todo.modify(rank: rank)
+    }
   }
 }
 

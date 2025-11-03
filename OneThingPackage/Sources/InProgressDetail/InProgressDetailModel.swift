@@ -30,13 +30,14 @@ public final class InProgressDetailModel {
     TodoList
       .group(by: \.id)
       .order(by: \.name)
-      .join(Todo.all) { list, todo in
-        todo.listID.eq(list.id).and(todo.isInProgress)
+      .join(Todo.all) { l, t in
+        t.listID.eq(l.id)
+        .and(t.isInProgress)
       }
-      .select { list, todo in
+      .select { l, t in
         TodoListWithTodos.Columns(
-          list: list,
-          todos: todo.jsonGroupArray()
+          list: l,
+          todos: t.jsonGroupArray()
         )
       },
     animation: .default

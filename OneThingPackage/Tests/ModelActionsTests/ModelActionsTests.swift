@@ -60,13 +60,13 @@ struct ModelActionsTests {
   }
   
   @Test
-  func testCreateTodo() async throws {
+  func testCreateEmptyTodo() async throws {
     // setup
     try ModelActions.testValue.seedDatabase([
       TodoList.Draft()
     ], [])
     // begin test
-    try ModelActions.testValue.createTodo(1)
+    try ModelActions.testValue.createEmptyTodo(1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
     expectNoDifference([.init(id: 1)], allLists)
