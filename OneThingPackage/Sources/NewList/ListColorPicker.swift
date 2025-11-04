@@ -1,21 +1,22 @@
+import AppModels
 import SwiftUI
 
 
 struct ListColorPicker: View {
-  @Binding var colorIndex: Int
+  @Binding var color: ListColor
   
   var body: some View {
     LazyVGrid(
       columns: (1...5).map {_ in GridItem(.flexible()) }
     ) {
-      ForEach(0...9, id: \.self) { i in
+      ForEach(ListColor.all, id: \.self) { c in
         Circle()
-          .fill(Color.all[i])
-          .scaleEffect(colorIndex == i ? 1 : sqrt(0.5))
-          .opacity(colorIndex == i ? 1 : 0.5)
+          .fill(c.swiftUIColor ?? .clear)
+          .scaleEffect(color == c ? 1 : sqrt(0.5))
+          .opacity(color == c ? 1 : 0.5)
           .onTapGesture {
             withAnimation {
-              colorIndex = i
+              color = c
             }
           }
       }

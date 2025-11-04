@@ -7,7 +7,7 @@ public struct Todo: Codable, Equatable, Identifiable, Sendable {
   public var title:              String = ""
   public var notes:              String = ""
   public var deadline:           Date? = nil
-  public var frequencyUnitIndex: Int? = nil
+  public var frequencyUnit:      FrequencyUnit? = nil
   public var frequencyCount:     Int? = nil
   public var createDate:         Date
   public var modifyDate:         Date
@@ -24,7 +24,7 @@ public struct Todo: Codable, Equatable, Identifiable, Sendable {
     title:              String = "",
     notes:              String = "",
     deadline:           Date? = nil,
-    frequencyUnitIndex: Int? = nil,
+    frequencyUnit:      FrequencyUnit? = nil,
     frequencyCount:     Int? = nil,
     createDate:         Date,
     modifyDate:         Date,
@@ -38,7 +38,7 @@ public struct Todo: Codable, Equatable, Identifiable, Sendable {
     self.title              = title
     self.notes              = notes
     self.deadline           = deadline
-    self.frequencyUnitIndex = frequencyUnitIndex
+    self.frequencyUnit      = frequencyUnit
     self.frequencyCount     = frequencyCount
     self.createDate         = createDate
     self.modifyDate         = modifyDate
@@ -58,7 +58,7 @@ extension Todo.Draft {
     title:              String      = "",
     notes:              String      = "",
     deadline:           Date?       = nil,
-    frequencyUnitIndex: Int?        = nil,
+    frequencyUnit:      FrequencyUnit?        = nil,
     frequencyCount:     Int?        = nil,
     createDate:         Date?       = nil,
     modifyDate:         Date?       = nil,
@@ -80,7 +80,7 @@ extension Todo.Draft {
       title:              title,
       notes:              notes,
       deadline:           deadline,
-      frequencyUnitIndex: frequencyUnitIndex,
+      frequencyUnit: frequencyUnit,
       frequencyCount:     frequencyCount,
       createDate:         created,
       modifyDate:         modified,

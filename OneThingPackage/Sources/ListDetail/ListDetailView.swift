@@ -65,7 +65,7 @@ public struct ListDetailView: View {
     $0.defaultDatabase = try! appDatabase(
       lists: .preset(),
       todos: .preset().map {
-        $0.modify(listID: 1)
+        $0.modified { $0.listID = 1 }
       }
     )
   }

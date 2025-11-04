@@ -11,35 +11,10 @@ import AppModels
 
 
 public extension Todo.Draft {
-  /// Creates a new `Todo.Draft` by describing changes to an existing one.
-  func modify(
-    id:                 Todo.ID??    = nil,
-    title:              String?      = nil,
-    notes:              String?      = nil,
-    deadline:           Date??       = nil,
-    frequencyUnitIndex: Int??        = nil,
-    frequencyCount:     Int??        = nil,
-    createDate:         Date?        = nil,
-    modifyDate:         Date?        = nil,
-    completeDate:       Date??       = nil,
-    deleteDate:         Date??       = nil,
-    rank:               Rank?        = nil,
-    listID:             TodoList.ID? = nil
-  ) -> Self {
-    .init(
-      id:                 id                 ?? self.id,
-      title:              title              ?? self.title,
-      notes:              notes              ?? self.notes,
-      deadline:           deadline           ?? self.deadline,
-      frequencyUnitIndex: frequencyUnitIndex ?? self.frequencyUnitIndex,
-      frequencyCount:     frequencyCount     ?? self.frequencyCount,
-      createDate:         createDate         ?? self.createDate,
-      modifyDate:         modifyDate         ?? self.modifyDate,
-      completeDate:       completeDate       ?? self.completeDate,
-      deleteDate:         deleteDate         ?? self.deleteDate,
-      rank:               rank               ?? self.rank,
-      listID:             listID             ?? self.listID
-    )
+  func modified(_ body: (inout Todo.Draft) -> Void) -> Todo.Draft {
+    var copy = self
+    body(&copy)
+    return copy
   }
 }
 
@@ -51,7 +26,7 @@ public extension [Todo.Draft] {
       title:              String = "",
       notes:              String = "",
       deadline:           Date?  = nil,
-      frequencyUnitIndex: Int?   = nil,
+      frequencyUnit: FrequencyUnit?   = nil,
       frequencyCount:     Int?   = nil
     ) -> Todo.Draft {
       Todo.Draft(
@@ -59,7 +34,7 @@ public extension [Todo.Draft] {
         title:               title,
         notes:               notes,
         deadline:            deadline,
-        frequencyUnitIndex:  frequencyUnitIndex,
+        frequencyUnit:  frequencyUnit,
         frequencyCount:      frequencyCount,
         createDate:          .now,
         modifyDate:          .now,
@@ -81,7 +56,7 @@ public extension [Todo.Draft] {
           of: calendar.date(
             byAdding: .day,
             value: 1, to: .now)!)!,
-        frequencyUnitIndex: 1,
+        frequencyUnit: .week,
         frequencyCount: 1
       ),
       customTodo(
@@ -106,7 +81,7 @@ public extension [Todo.Draft] {
             byAdding: .month,
             value: 1,
             to: calendar.date(from: calendar.dateComponents([.year, .month], from: .now))!)!)!,
-        frequencyUnitIndex: 2,
+        frequencyUnit: .month,
         frequencyCount: 3
       ),
       customTodo(
@@ -143,7 +118,7 @@ public extension [Todo.Draft] {
           byAdding: .day,
           value: 14,
           to: .now)!,
-        frequencyUnitIndex: 3,
+        frequencyUnit: .year,
         frequencyCount: 1
       ),
       customTodo(
@@ -189,7 +164,7 @@ public extension [Todo.Draft] {
             after: .now,
             matching: DateComponents(weekday: 1),
             matchingPolicy: .nextTime)!)!,
-        frequencyUnitIndex: 1,
+        frequencyUnit: .week,
         frequencyCount: 1
       ),
       customTodo(
@@ -228,7 +203,7 @@ public extension [Todo.Draft] {
     @Dependency(\.rankGeneration) var rankGeneration
     let ranks = rankGeneration.distribute(customTodos.count)
     return zip(customTodos, ranks).map { todo, rank in
-      todo.modify(rank: rank)
+      todo.modified { $0.rank = rank }
     }
   }
 }

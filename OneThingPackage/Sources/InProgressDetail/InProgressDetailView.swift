@@ -20,7 +20,7 @@ public struct InProgressDetailView: View {
     ZStack {
       List {
         ForEach(model.todoGroups) { group in
-          let listColor = Color.all[group.list.colorIndex]
+//          let listColor = Color.all[group.list.colorIndex]
           Section {
             ForEach(group.todos) { todo in
               TodoRowButton(
@@ -46,7 +46,7 @@ public struct InProgressDetailView: View {
             }
           } header: {
             Text(group.list.name) 
-              .foregroundStyle(listColor)
+              .foregroundStyle(group.list.color.swiftUIColor ?? .gray)
               .font(.title2)
               .fontDesign(.rounded)
               .bold()

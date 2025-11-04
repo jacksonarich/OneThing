@@ -31,7 +31,7 @@ struct UtilitiesTests {
       title: "",
       notes: "",
       deadline: nil,
-      frequencyUnitIndex: nil,
+      frequencyUnit: nil,
       frequencyCount: nil,
       createDate: now,
       modifyDate: now,
@@ -49,7 +49,7 @@ struct UtilitiesTests {
     let l2 = TodoList.Draft(
       id: nil,
       name: "",
-      colorIndex: 0,
+      color: .red,
       createDate: now,
       modifyDate: now
     )

@@ -18,12 +18,12 @@ public struct NewListView: View {
       Section {
         ListNameTextField(
           name: $model.name,
-          colorIndex: $model.colorIndex
+          color: $model.color
         )
       }
       Section {
         ListColorPicker(
-          colorIndex: $model.colorIndex
+          color: $model.color
         )
       }
     }

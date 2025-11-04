@@ -1,3 +1,4 @@
 public enum ModelActionsError: Error {
-  case rankError
+  case invalidFrequency
+  case noRankMidpoint
 }

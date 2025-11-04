@@ -54,6 +54,7 @@ func getDatabaseConnection() throws -> any DatabaseWriter {
   let config = getDatabaseConfig()
   if context == .live {
     let path = URL.documentsDirectory.appending(component: "db.sqlite").path() // stored on disk
+    print(path)
     connection = try DatabaseQueue(path: path, configuration: config)
   } else {
     connection = try DatabaseQueue(configuration: config) // stored in memory
@@ -72,7 +73,7 @@ func migrate(_ connection: DatabaseWriter) throws {
     try db.create(table: "todoLists") { table in
       table.autoIncrementedPrimaryKey("id")
       table.column("name", .text).notNull()
-      table.column("colorIndex", .integer).notNull()
+      table.column("color", .text).notNull()
       table.column("createDate", .date).notNull()
       table.column("modifyDate", .date).notNull()
     }
@@ -82,7 +83,7 @@ func migrate(_ connection: DatabaseWriter) throws {
       table.column("title", .text).notNull()
       table.column("notes", .text).notNull()
       table.column("deadline", .date)
-      table.column("frequencyUnitIndex", .integer)
+      table.column("frequencyUnit", .text)
       table.column("frequencyCount", .integer)
       table.column("createDate", .date).notNull()
       table.column("modifyDate", .date).notNull()

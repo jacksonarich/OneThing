@@ -8,7 +8,7 @@ import AppModels
 import Utilities
 
 public struct ModelActions: Sendable {
-  public var createTodo: @Sendable (String, String, Date?, Int?, Int?, TodoList.ID) throws -> Void
+  public var createTodo: @Sendable (String, String, Date?, FrequencyUnit?, Int?, TodoList.ID) throws -> Void
   public var completeTodo: @Sendable (Todo.ID) throws -> Void
   public var unrescheduleTodo: @Sendable (Todo.ID, Date) throws -> Void
   public var deleteTodo: @Sendable (Todo.ID) throws -> Void
@@ -16,7 +16,7 @@ public struct ModelActions: Sendable {
   public var eraseTodo: @Sendable (Todo.ID) throws -> Void
   public var moveTodo: @Sendable (Todo.ID, TodoList.ID) throws -> Void
   public var createList: @Sendable (TodoList.Draft) throws -> Void
-  public var updateList: @Sendable (TodoList.ID, String, Int) throws -> Void
+  public var updateList: @Sendable (TodoList.ID, String, ListColor) throws -> Void
   public var deleteList: @Sendable (TodoList.ID) throws -> Void
   public var transitionTodo: @Sendable (Todo.ID, Bool) throws -> Void
   public var finalizeTransitions: @Sendable () throws -> Void
@@ -43,13 +43,30 @@ extension ModelActions: DependencyKey {
           let maxRank = try Todo
             .select { $0.rank.max() }
             .fetchOne(db) ?? nil
-          guard let newRank = rankGeneration.midpoint(between: maxRank, and: nil)
-          else { throw ModelActionsError.rankError }
+          let newRank = try {
+            if let newRank = rankGeneration.midpoint(between: maxRank, and: nil) {
+              return newRank
+            }
+            let todoIds = try Todo
+              .select(\.id)
+              .order(by: \.rank)
+              .fetchAll(db)
+            let ranks = rankGeneration.distribute(todoIds.count)
+            for (id, rank) in zip(todoIds, ranks) {
+              try Todo
+                .find(id)
+                .update { $0.rank = rank }
+                .execute(db)
+            }
+            guard let newRank = rankGeneration.midpoint(between: ranks.max(), and: nil)
+            else { throw ModelActionsError.noRankMidpoint }
+            return newRank
+          }()
           let todo = Todo.Draft(
             title: title,
             notes: notes,
             deadline: deadline,
-            frequencyUnitIndex: freqUnit,
+            frequencyUnit: freqUnit,
             frequencyCount: freqCount,
             rank: newRank,
             listID: listID
@@ -64,10 +81,11 @@ extension ModelActions: DependencyKey {
           guard let todo = try Todo
             .find(todoID)
             .fetchOne(db) else { return }
-          if let deadline = todo.deadline, let frequencyUnitIndex = todo.frequencyUnitIndex, let frequencyCount = todo.frequencyCount {
-            let frequencyUnit = Calendar.Component.all[frequencyUnitIndex]
+          if let deadline = todo.deadline, let frequencyUnit = todo.frequencyUnit, let frequencyCount = todo.frequencyCount {
+            guard let calendarUnit = frequencyUnit.calendarComponent
+            else { throw ModelActionsError.invalidFrequency }
             let newDeadline = deadline.nextFutureDate(
-              unit: frequencyUnit,
+              unit: calendarUnit,
               count: frequencyCount
             )
             try Todo
@@ -132,13 +150,13 @@ extension ModelActions: DependencyKey {
             .execute(db)
         }
       },
-      updateList: { listID, listName, listColorIndex in
+      updateList: { listID, listName, listColor in
         try connection.write { db in
           try TodoList
             .find(listID)
             .update {
               $0.name = listName
-              $0.colorIndex = listColorIndex
+              $0.color = listColor
             }
             .execute(db)
         }
@@ -169,10 +187,11 @@ extension ModelActions: DependencyKey {
             .where { $0.isTransitioning }
             .fetchAll(db)
           for todo in transitioningTodos {
-            if let deadline = todo.deadline, let frequencyUnitIndex = todo.frequencyUnitIndex, let frequencyCount = todo.frequencyCount {
-              let frequencyUnit = Calendar.Component.all[frequencyUnitIndex]
+            if let deadline = todo.deadline, let frequencyUnit = todo.frequencyUnit, let frequencyCount = todo.frequencyCount {
+              guard let calendarUnit = frequencyUnit.calendarComponent
+              else { throw ModelActionsError.invalidFrequency }
               let newDeadline = deadline.nextFutureDate(
-                unit: frequencyUnit,
+                unit: calendarUnit,
                 count: frequencyCount
               )
               try Todo

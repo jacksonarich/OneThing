@@ -71,7 +71,9 @@ public struct CompletedDetailView: View {
     $0.defaultDatabase = try! appDatabase(
       lists: .preset(),
       todos: .preset().map {
-        $0.modify(completeDate: .now.addingTimeInterval(.random(in: -1000000 ... 0)))
+        $0.modified {
+          $0.completeDate = .now.addingTimeInterval(.random(in: -1_000_000 ... 0))
+        }
       }
     )
   }

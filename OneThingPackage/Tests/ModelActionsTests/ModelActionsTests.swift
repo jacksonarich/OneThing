@@ -38,10 +38,10 @@ struct ModelActionsTests {
       TodoList.Draft()
     ], [])
     // begin test
-    try ModelActions.testValue.updateList(1, "Grocery", 5)
+    try ModelActions.testValue.updateList(1, "Grocery", .blue)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference([.init(id: 1, name: "Grocery", colorIndex: 5)], allLists)
+    expectNoDifference([.init(id: 1, name: "Grocery", color: .blue)], allLists)
     expectNoDifference([], allTodos)
   }
   
@@ -66,7 +66,7 @@ struct ModelActionsTests {
       TodoList.Draft()
     ], [])
     // begin test
-    try ModelActions.testValue.createEmptyTodo(1)
+    try ModelActions.testValue.createTodo("", "", nil, nil, nil, 1)
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
     expectNoDifference([.init(id: 1)], allLists)
@@ -160,7 +160,7 @@ struct ModelActionsTests {
     try ModelActions.testValue.seedDatabase([
       TodoList.Draft()
     ], [
-      Todo.Draft(deadline: now, frequencyUnitIndex: 0, frequencyCount: 2, rank: "0", listID: 1)
+      Todo.Draft(deadline: now, frequencyUnit: .day, frequencyCount: 2, rank: "0", listID: 1)
     ])
     // begin test
     try ModelActions.testValue.completeTodo(1)
@@ -168,7 +168,7 @@ struct ModelActionsTests {
     @FetchAll(Todo.Draft.all) var allTodos
     expectNoDifference([.init(id: 1)], allLists)
     expectNoDifference([
-      .init(id: 1, deadline: Calendar.current.date(byAdding: .day, value: 2, to: now), frequencyUnitIndex: 0, frequencyCount: 2, rank: "0", listID: 1)
+      .init(id: 1, deadline: Calendar.current.date(byAdding: .day, value: 2, to: now), frequencyUnit: .day, frequencyCount: 2, rank: "0", listID: 1)
     ], allTodos)
   }
 }

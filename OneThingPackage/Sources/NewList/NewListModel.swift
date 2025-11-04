@@ -20,30 +20,27 @@ public final class NewListModel {
   @ObservationIgnored
   @FetchAll(
     TodoList
-      .select(\.colorIndex)
+      .select(\.color)
       .distinct()
-      .order(by: \.colorIndex)
   )
-  private var usedColorIndexes
+  private var usedColors
   
-  private var allColorIndexes = 0...9
-  
-  private var initialColorIndex: Int {
-    allColorIndexes.first {
-      !usedColorIndexes.contains($0)
-    } ?? allColorIndexes.randomElement()!
+  private var initialColor: ListColor {
+    ListColor.all.first {
+      !usedColors.contains($0)
+    } ?? ListColor.all.randomElement()!
   }
   
   var name: String
   
-  var colorIndex: Int = 0
+  var color: ListColor = .red
   
   public init(
     name:       String = "",
-    colorIndex: Int?   = nil
+    color: ListColor?   = nil
   ) {
     self.name       = name
-    self.colorIndex = colorIndex ?? initialColorIndex
+    self.color = color ?? initialColor
   }
 }
 
@@ -52,7 +49,7 @@ public extension NewListModel {
   func createList() {
     let newList = TodoList.Draft(
       name: name.trimmed(),
-      colorIndex: colorIndex,
+      color: color,
       createDate: .now,
       modifyDate: .now
     )

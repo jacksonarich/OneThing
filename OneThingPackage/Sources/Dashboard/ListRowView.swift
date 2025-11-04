@@ -11,7 +11,7 @@ struct ListRowView: View {
       Group {
         Image(systemName: "circle.fill")
           .font(.largeTitle)
-          .foregroundStyle(Color.all[row.list.colorIndex])
+          .foregroundStyle(row.list.color.swiftUIColor ?? .gray)
         Text(row.list.name)
           .foregroundStyle(Color.primary)
           .fontDesign(.rounded)

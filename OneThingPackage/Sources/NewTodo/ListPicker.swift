@@ -14,7 +14,7 @@ struct ListPicker: View {
           Text(list.name)
         } icon: {
           Image(systemName: "list.bullet.circle.fill")
-            .foregroundStyle(Color.all[list.colorIndex])
+            .foregroundStyle(list.color.swiftUIColor ?? .gray)
         }
       }
     } currentValueLabel: {
@@ -25,9 +25,7 @@ struct ListPicker: View {
   }
   
   var selectedTint: Color {
-    guard let index = model.selectedList?.colorIndex
-    else { return .gray }
-    return Color.all[index]
+    model.selectedList?.color.swiftUIColor ?? .gray
   }
   
   var selectedTitle: String {

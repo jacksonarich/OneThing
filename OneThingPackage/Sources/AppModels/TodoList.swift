@@ -5,7 +5,7 @@ import SQLiteData
 public struct TodoList: Codable, Identifiable, Equatable, Sendable {
   public let id:         ID
   public var name:       String = ""
-  public var colorIndex: Int = 0
+  public var color: ListColor = .red
   public var createDate: Date
   public var modifyDate: Date
   
@@ -14,13 +14,13 @@ public struct TodoList: Codable, Identifiable, Equatable, Sendable {
   public init(
     id:         ID,
     name:       String = "",
-    colorIndex: Int = 0,
+    color: ListColor = .red,
     createDate: Date,
     modifyDate: Date
   ) {
     self.id         = id
     self.name       = name
-    self.colorIndex = colorIndex
+    self.color = color
     self.createDate = createDate
     self.modifyDate = modifyDate
   }
@@ -33,7 +33,7 @@ extension TodoList.Draft {
   public init(
     id:         TodoList.ID? = nil,
     name:       String = "",
-    colorIndex: Int = 0,
+    color: ListColor = .red,
     createDate: Date? = nil,
     modifyDate: Date? = nil
   ) {
@@ -48,7 +48,7 @@ extension TodoList.Draft {
     self.init(
       id: id,
       name: name,
-      colorIndex: colorIndex,
+      color: color,
       createDate: created,
       modifyDate: modified
     )

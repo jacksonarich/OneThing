@@ -15,7 +15,7 @@ public extension TodoList.Draft {
   static func preset(
     id:         TodoList.ID? = nil,
     name:       String       = "",
-    colorIndex: Int          = 0,
+    color: ListColor          = .red,
     createDate: Date?        = nil,
     modifyDate: Date?        = nil
   ) -> Self {
@@ -30,35 +30,16 @@ public extension TodoList.Draft {
     return .init(
       id:         id,
       name:       name,
-      colorIndex: colorIndex,
+      color: color,
       createDate: cd,
       modifyDate: md
     )
   }
   
-  /// Creates a new `TodoList.Draft` by describing changes to an existing one.
-  func modify(
-    id:         TodoList.ID?? = nil,
-    name:       String?       = nil,
-    colorIndex: Int?          = nil,
-    createDate: Date??        = nil,
-    modifyDate: Date??        = nil
-  ) -> Self {
-    let cd = createDate.flatMap { $0 ?? {
-      @Dependency(\.date) var date
-      return date.now
-    }() }
-    let md = modifyDate.flatMap { $0 ?? {
-      @Dependency(\.date) var date
-      return date.now
-    }() }
-    return .init(
-      id:         id         ?? self.id,
-      name:       name       ?? self.name,
-      colorIndex: colorIndex ?? self.colorIndex,
-      createDate: cd         ?? self.createDate,
-      modifyDate: md         ?? self.modifyDate
-    )
+  func modified(_ body: (inout TodoList.Draft) -> Void) -> TodoList.Draft {
+    var copy = self
+    body(&copy)
+    return copy
   }
 }
 
@@ -70,7 +51,7 @@ public extension [TodoList.Draft] {
     return names.map {
       TodoList.Draft.preset(
         name: $0,
-        colorIndex: Color.all.indices.randomElement()!
+        color: ListColor.all.randomElement()!
       )
     }
     .shuffled()

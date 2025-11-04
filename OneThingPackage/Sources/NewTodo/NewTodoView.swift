@@ -37,7 +37,7 @@ public struct NewTodoView: View {
             in: .now...
           )
           .datePickerStyle(.graphical)
-          // frequency picker
+          FrequencyPicker()
         }
       }
       Section {
