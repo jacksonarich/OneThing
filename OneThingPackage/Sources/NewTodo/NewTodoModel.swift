@@ -27,47 +27,50 @@ public final class NewTodoModel {
   var title: String
   var notes: String
   var deadline: Date?
+  var frequencySelection: FrequencySelection
+  var customFrequency: Frequency
   
   var listID: TodoList.ID
   var selectedList: TodoList? {
     selectableLists.first { $0.id == listID }
   }
-//  var listName: String
-//  var listColorIndex: Int
   
   public init(
     title: String = "",
     notes: String = "",
     deadline: Date? = nil,
+    frequencySelection: FrequencySelection = .never,
+    customFrequency: Frequency = Frequency(unit: .day),
     listID: TodoList.ID
   ) {
     self.title = title
     self.notes = notes
     self.deadline = deadline
+    self.frequencySelection = frequencySelection
+    self.customFrequency = customFrequency
     self.listID = listID
-//    self.listName = list.name
-//    self.listColorIndex = list.colorIndex
   }
-  
-//  public init(
-//    title: String = "",
-//    notes: String = "",
-//    deadline: Date? = nil,
-//    listID: TodoList.ID,
-//    listName: String,
-//    listColorIndex: Int
-//  ) {
-//    self.title = title
-//    self.notes = notes
-//    self.deadline = deadline
-//    self.listID = listID
-//    self.listName = listName
-//    self.listColorIndex = listColorIndex
-//  }
 }
 
 
 public extension NewTodoModel {
+  var frequency: Frequency? {
+    switch frequencySelection {
+    case .never:
+      return nil
+    case .daily:
+      return Frequency(unit: .day)
+    case .weekly:
+      return Frequency(unit: .week)
+    case .monthly:
+      return Frequency(unit: .month)
+    case .yearly:
+      return Frequency(unit: .year)
+    case .custom:
+      return customFrequency
+    }
+  }
+
   func toggleDeadline(isOn: Bool) {
     if isOn {
       @Dependency(\.date) var date

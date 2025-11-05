@@ -8,7 +8,7 @@ import AppModels
 import Utilities
 
 public struct ModelActions: Sendable {
-  public var createTodo: @Sendable (String, String, Date?, FrequencyUnit?, Int?, TodoList.ID) throws -> Void
+  public var createTodo: @Sendable (Todo.Draft) throws -> Void
   public var completeTodo: @Sendable (Todo.ID) throws -> Void
   public var unrescheduleTodo: @Sendable (Todo.ID, Date) throws -> Void
   public var deleteTodo: @Sendable (Todo.ID) throws -> Void
@@ -38,7 +38,7 @@ extension ModelActions: DependencyKey {
     @Dependency(\.date.now) var now
     @Dependency(\.rankGeneration) var rankGeneration
     return Self(
-      createTodo: { [rankGeneration] title, notes, deadline, freqUnit, freqCount, listID in
+      createTodo: { [rankGeneration] todo in
         try connection.write { db in
           let maxRank = try Todo
             .select { $0.rank.max() }
@@ -62,17 +62,9 @@ extension ModelActions: DependencyKey {
             else { throw ModelActionsError.noRankMidpoint }
             return newRank
           }()
-          let todo = Todo.Draft(
-            title: title,
-            notes: notes,
-            deadline: deadline,
-            frequencyUnit: freqUnit,
-            frequencyCount: freqCount,
-            rank: newRank,
-            listID: listID
-          )
+          let rankedTodo = todo.modified { $0.rank = newRank }
           try Todo
-            .insert { todo }
+            .insert { rankedTodo }
             .execute(db)
         }
       },

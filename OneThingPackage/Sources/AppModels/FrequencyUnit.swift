@@ -12,6 +12,10 @@ public struct FrequencyUnit: Codable, Equatable, Hashable, QueryBindable, RawRep
   public static let week = FrequencyUnit(rawValue: "Week")
   public static let month = FrequencyUnit(rawValue: "Month")
   public static let year = FrequencyUnit(rawValue: "Year")
+  
+  public static var allCases: [Self] {
+    [.day, .week, .month, .year]
+  }
 }
 
 extension FrequencyUnit {

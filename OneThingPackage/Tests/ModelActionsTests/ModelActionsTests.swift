@@ -66,7 +66,7 @@ struct ModelActionsTests {
       TodoList.Draft()
     ], [])
     // begin test
-    try ModelActions.testValue.createTodo("", "", nil, nil, nil, 1)
+    try ModelActions.testValue.createTodo(.init(rank: "0", listID: 1))
     @FetchAll(TodoList.Draft.all) var allLists
     @FetchAll(Todo.Draft.all) var allTodos
     expectNoDifference([.init(id: 1)], allLists)

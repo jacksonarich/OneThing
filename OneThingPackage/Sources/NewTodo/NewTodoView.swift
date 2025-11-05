@@ -37,7 +37,11 @@ public struct NewTodoView: View {
             in: .now...
           )
           .datePickerStyle(.graphical)
-          FrequencyPicker()
+          NavigationLink {
+            FrequencyPickerView(model: model)
+          } label: {
+            Text("Repeats")
+          }
         }
       }
       Section {
@@ -71,12 +75,9 @@ public struct NewTodoView: View {
       todos: .preset()
     )
   }
+  let model = NewTodoModel(listID: 1)
   NavigationStack {
-    NewTodoView(model: .init(
-      listID: 1,
-//      listName: "List Name",
-//      listColorIndex: 0
-    ))
+    NewTodoView(model: model)
   }
   .accentColor(.pink)
 }
