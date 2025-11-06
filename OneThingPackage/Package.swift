@@ -1,10 +1,10 @@
-// swift-tools-version: 6.1
+// swift-tools-version: 6.2
 
 import PackageDescription
 
 let package = Package(
   name: "OneThingPackage",
-  platforms: [.iOS(.v18)],
+  platforms: [.iOS(.v26)],
   products: [
     .library(
       name: "AppDatabase",

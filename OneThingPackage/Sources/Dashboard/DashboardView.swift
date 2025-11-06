@@ -41,11 +41,11 @@ public struct DashboardView: View {
     .toolbar {
       Button(model.isEditing ? "Done" : "Edit") {
         withAnimation {
-          model.isEditing.toggle()
+          model.editButtonTapped()
         }
       }
       Button("New List", systemImage: "plus") {
-        model.isCreatingList.toggle()
+        model.createListButtonTapped()
       }
     }
     .environment(\.editMode, $model.editMode)
@@ -96,7 +96,11 @@ fileprivate struct ListRows: View {
       Button {
         model.listRowTapped(id: row.id)
       } label: {
-        ListRowView(model: model, row: row)
+        ListRowView(
+          name: row.list.name,
+          color: row.list.color.swiftUIColor ?? .gray,
+          count: row.count
+        )
       }
     }
   }

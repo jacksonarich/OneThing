@@ -1,17 +1,17 @@
 import Foundation
 import StructuredQueries
 
-public struct FrequencyUnit: Codable, Equatable, Hashable, QueryBindable, RawRepresentable, Sendable {
+public struct FrequencyUnit: Codable, Hashable, QueryBindable, RawRepresentable, Sendable {
   public var rawValue: String
   
   public init(rawValue: String) {
     self.rawValue = rawValue
   }
   
-  public static let day = FrequencyUnit(rawValue: "Day")
-  public static let week = FrequencyUnit(rawValue: "Week")
-  public static let month = FrequencyUnit(rawValue: "Month")
-  public static let year = FrequencyUnit(rawValue: "Year")
+  public static let day = FrequencyUnit(rawValue: "day")
+  public static let week = FrequencyUnit(rawValue: "week")
+  public static let month = FrequencyUnit(rawValue: "month")
+  public static let year = FrequencyUnit(rawValue: "year")
   
   public static var allCases: [Self] {
     [.day, .week, .month, .year]
@@ -29,3 +29,16 @@ extension FrequencyUnit {
     }
   }
 }
+
+//extension FrequencyUnit {
+//  public func dateComponents(_ count: Int) -> DateComponents? {
+//    switch self {
+//    case .day: .init(day: count)
+//    case .week: .init(weekOfMonth: count)
+//    case .month: .init(month: count)
+//    case .year: .init(year: count)
+//    default: nil
+//    }
+//  }
+//}
+

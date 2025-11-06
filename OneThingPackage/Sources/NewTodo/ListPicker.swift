@@ -8,20 +8,40 @@ struct ListPicker: View {
   @Bindable var model: NewTodoModel
   
   var body: some View {
-    Picker("List", systemImage: "list.bullet.circle.fill", selection: $model.listID) {
+    Picker(
+      selection: $model.listID
+    ) {
       ForEach(model.selectableLists) { list in
-        Label {
-          Text(list.name)
-        } icon: {
-          Image(systemName: "list.bullet.circle.fill")
-            .foregroundStyle(list.color.swiftUIColor ?? .gray)
-        }
+        ListLabel(
+          name: list.name,
+          color: list.color.swiftUIColor ?? .gray
+        )
       }
+    } label: {
+      ListLabel(
+        name: "List",
+        color: selectedTint
+      )
     } currentValueLabel: {
       Text(selectedTitle)
+        .lineLimit(1)
     }
     .pickerStyle(.navigationLink)
     .listItemTint(selectedTint)
+
+//    Picker("List", systemImage: "circle.fill", selection: $model.listID) {
+//      ForEach(model.selectableLists) { list in
+//        ListLabel(
+//          name: list.name,
+//          color: list.color.swiftUIColor ?? .gray
+//        )
+//      }
+//    } currentValueLabel: {
+//      Text(selectedTitle)
+//        .lineLimit(1)
+//    }
+//    .pickerStyle(.navigationLink)
+//    .listItemTint(selectedTint)
   }
   
   var selectedTint: Color {
@@ -47,4 +67,5 @@ struct ListPicker: View {
       ListPicker(model: model)
     }
   }
+  .accentColor(.pink)
 }

@@ -15,7 +15,7 @@ struct FrequencyPickerView: View {
   var body: some View {
     List {
       Picker(
-        "Frequency Selection",
+        "",
         selection: Binding(
           get: { model.frequencySelection },
           set: { selection in
@@ -25,42 +25,43 @@ struct FrequencyPickerView: View {
           }
         )
       ) {
-        Text("Never")
-          .tag(FrequencySelection.never)
-        Text("Daily")
-          .tag(FrequencySelection.daily)
-        Text("Weekly")
-          .tag(FrequencySelection.weekly)
-        Text("Monthly")
-          .tag(FrequencySelection.monthly)
-        Text("Yearly")
-          .tag(FrequencySelection.yearly)
-        Text("Custom")
-          .tag(FrequencySelection.custom)
+        ForEach(FrequencySelection.allCases, id: \.self) { selection in
+          Text(selection.rawValue.capitalized)
+            .tag(selection)
+        }
       }
       .pickerStyle(.inline)
       
-      Section {
-        if model.frequencySelection == .custom {
+      if model.frequencySelection == .custom {
+        Section {
           Picker("Frequency", selection: $model.customFrequency.unit) {
-            ForEach(FrequencyUnit.allCases, id: \.self) { fu in
-              Text("\(fu.rawValue)\(model.customFrequency.count == 1 ? "" : "s")")
-                .tag(fu)
+            ForEach(FrequencyUnit.allCases, id: \.self) { unit in
+              Text("\(unit.rawValue.capitalized)")
+                .tag(unit)
             }
           }
           .pickerStyle(.menu)
           .tint(.secondary)
           
           LabeledContent("Every") {
-            TextField("Every", value: $model.customFrequency.count, format: .number)
+            TextField("Count", value: $model.customFrequency.count, format: .number)
               .keyboardType(.decimalPad)
               .multilineTextAlignment(.trailing)
+          }
+        } footer: {
+          if let frequency = model.frequency?.localizedString {
+            Text("This thing will repeat \(frequency).")
+          } else {
+            Text("This thing will never repeat.")
           }
         }
       }
     }
+    .navigationTitle("Repeats")
+    .navigationBarTitleDisplayMode(.inline)
   }
 }
+
 
 #Preview {
   let _ = prepareDependencies {
@@ -78,4 +79,5 @@ struct FrequencyPickerView: View {
   NavigationStack {
     FrequencyPickerView(model: model)
   }
+  .accentColor(.pink)
 }

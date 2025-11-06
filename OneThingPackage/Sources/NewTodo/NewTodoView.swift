@@ -23,10 +23,15 @@ public struct NewTodoView: View {
       Section {
         Toggle(isOn: Binding(
           get: { model.deadline != nil },
-          set: { model.toggleDeadline(isOn: $0) }
+          set: { isOn in
+            withAnimation {
+              model.toggleDeadline(isOn: isOn)
+            }
+          }
         )) {
-          Text("Due Date")
+          Label("Due Date", systemImage: "calendar")
         }
+        .tint(.accentColor)
         if let deadline = model.deadline {
           DatePicker(
             "",
@@ -40,7 +45,9 @@ public struct NewTodoView: View {
           NavigationLink {
             FrequencyPickerView(model: model)
           } label: {
-            Text("Repeats")
+            LabeledContent("Repeats") {
+              Text(model.frequency?.localizedString.sentenceCased ?? "Never")
+            }
           }
         }
       }
@@ -48,7 +55,7 @@ public struct NewTodoView: View {
         ListPicker(model: model)
       }
     }
-    .navigationTitle("New Item")
+    .navigationTitle("New Thing")
     .navigationBarTitleDisplayMode(.inline)
     .toolbar {
       ToolbarItem(placement: .topBarLeading) {
@@ -75,7 +82,12 @@ public struct NewTodoView: View {
       todos: .preset()
     )
   }
-  let model = NewTodoModel(listID: 1)
+  let model = NewTodoModel(
+//    deadline: .now,
+//    frequencySelection: .custom,
+//    customFrequency: Frequency(unit: .day, count: 1),
+    listID: 1
+  )
   NavigationStack {
     NewTodoView(model: model)
   }

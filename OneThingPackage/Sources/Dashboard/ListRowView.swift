@@ -1,38 +1,80 @@
-import AppModels
+import SQLiteData
 import SwiftUI
+
+import AppDatabase
+import AppModels
+import NewList
+import Search
+import Utilities
+
+
+private struct ListCount: View {
+  let count: Int
+  
+  init(_ count: Int) {
+    self.count = count
+  }
+  
+  @Environment(\.editMode) var editMode
+  var body: some View {
+    ZStack {
+      HStack {
+        Text("\(count)")
+          .foregroundStyle(Color.gray)
+          .fontDesign(.rounded)
+        Image(systemName: "chevron.right")
+          .font(.footnote.bold())
+          .foregroundStyle(Color(.tertiaryLabel))
+      }
+      .opacity(isEditing ? 0.0001 : 1)
+      Image(systemName: "pencil")
+        .opacity(isEditing ? 1 : 0.0001)
+    }
+  }
+  
+  var isEditing: Bool {
+    editMode?.wrappedValue.isEditing ?? false
+  }
+}
 
 
 struct ListRowView: View {
-  @State var model: DashboardModel
-  let row: TodoListWithCount
+  let color: Color
+  let count: Int
+  let name: String
   
+  init(name: String, color: Color, count: Int) {
+    self.color = color
+    self.count = count
+    self.name = name
+  }
+
   var body: some View {
     HStack {
-      Group {
-        Image(systemName: "circle.fill")
-          .font(.largeTitle)
-          .foregroundStyle(row.list.color.swiftUIColor ?? .gray)
-        Text(row.list.name)
-          .foregroundStyle(Color.primary)
-          .fontDesign(.rounded)
-          .lineLimit(2)
-      }
-      .opacity(model.isEditing ? 0.5 : 1)
+      ListLabel(name: name, color: color)
       Spacer()
-      ZStack {
-        HStack {
-          Text("\(row.count)")
-            .foregroundStyle(Color.gray)
-            .fontDesign(.rounded)
-          Image(systemName: "chevron.right")
-            .font(.footnote.bold())
-            .foregroundStyle(Color(.tertiaryLabel))
+      ListCount(count)
+    }
+  }
+}
+
+
+#Preview {
+  @Previewable @State var editMode = EditMode.inactive
+  NavigationStack {
+    List {
+      ListRowView(
+        name: "List",
+        color: .purple,
+        count: 5
+      )
+      Button("Toggle Edit") {
+        withAnimation {
+          editMode = editMode == .inactive ? .active : .inactive
         }
-        .opacity(model.isEditing ? 0.0001 : 1)
-        Image(systemName: "pencil")
-          .opacity(model.isEditing ? 1 : 0.0001)
       }
     }
-    .contentShape(Rectangle())
+    .environment(\.editMode, $editMode)
   }
+  .accentColor(.pink)
 }

@@ -19,6 +19,7 @@ public final class ListDetailModel {
 
   private(set) var listID: TodoList.ID
   private var modelTransitions = ModelTransitions()
+  var isCreatingTodo = false
 
   @ObservationIgnored
   @FetchAll(
@@ -68,5 +69,9 @@ public extension ListDetailModel {
     withErrorReporting {
       try modelActions.moveTodo(todoID, listID)
     }
+  }
+  
+  func newTodoButtonTapped() {
+    isCreatingTodo.toggle()
   }
 }

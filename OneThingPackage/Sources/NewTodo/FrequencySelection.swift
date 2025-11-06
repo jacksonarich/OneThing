@@ -1,10 +1,10 @@
 import AppModels
 
-public enum FrequencySelection: Hashable {
-  case never
-  case daily
-  case weekly
-  case monthly
-  case yearly
-  case custom
+public enum FrequencySelection: String, CaseIterable, Hashable {
+  case never = "never"
+  case daily = "daily"
+  case weekly = "weekly"
+  case monthly = "monthly"
+  case yearly = "yearly"
+  case custom = "custom"
 }

@@ -7,10 +7,12 @@ import Utilities
 
 
 public struct ListDetailView: View {
-  @State var model: ListDetailModel
+  @State private var model: ListDetailModel
+  @State private var newTodoModel: NewTodoModel
   
   public init(model: ListDetailModel) {
     self.model = model
+    self.newTodoModel = NewTodoModel(listID: model.listID)
   }
   
   public var body: some View {
@@ -48,9 +50,20 @@ public struct ListDetailView: View {
           .fontDesign(.rounded)
       }
     }
+    .sheet(isPresented: $model.isCreatingTodo, content: {
+      NavigationStack {
+        NewTodoView(model: newTodoModel)
+      }
+    })
     .toolbar {
+      ToolbarSpacer(placement: .bottomBar)
       ToolbarItem(placement: .bottomBar) {
-        Text("New Item")
+        Button {
+          model.newTodoButtonTapped()
+        } label: {
+          Image(systemName: "plus")
+        }
+        .buttonStyle(.glassProminent)
       }
     }
     .navigationTitle(model.list?.name ?? "Unknown")

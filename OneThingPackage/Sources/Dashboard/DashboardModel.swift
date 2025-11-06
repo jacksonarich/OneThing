@@ -75,7 +75,7 @@ public final class DashboardModel {
   var deletingListID: TodoList.ID?
   var editMode: EditMode
   
-  var isEditing: Bool {
+  private(set) var isEditing: Bool {
     get { editMode.isEditing }
     set { editMode = newValue ? .active : .inactive }
   }
@@ -147,5 +147,13 @@ extension DashboardModel {
         hiddenLists.insert(list)
       }
     }
+  }
+  
+  func createListButtonTapped() {
+    isCreatingList.toggle()
+  }
+  
+  func editButtonTapped() {
+    isEditing.toggle()
   }
 }
