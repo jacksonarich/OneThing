@@ -14,6 +14,10 @@ import Utilities
 public final class NewTodoModel {
   
   @ObservationIgnored
+  @Dependency(\.date)
+  private var date
+  
+  @ObservationIgnored
   @Dependency(\.modelActions)
   private var modelActions
   
@@ -85,6 +89,20 @@ public extension NewTodoModel {
   }
   
   func createTodo() {
-    
+    let now = date.now
+    let draft = Todo.Draft(
+      title: title,
+      notes: notes,
+      deadline: deadline,
+      frequencyUnit: frequency?.unit,
+      frequencyCount: frequency?.count,
+      createDate: now,
+      modifyDate: now,
+      rank: "0", // Placeholder
+      listID: listID
+    )
+    withErrorReporting {
+      try modelActions.createTodo(draft)
+    }
   }
 }

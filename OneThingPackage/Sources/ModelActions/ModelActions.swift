@@ -1,10 +1,10 @@
 // Interface used by view models to write to the database.
 
 
+import AppModels
+import RankGeneration
 import SQLiteData
 import SwiftUI
-
-import AppModels
 import Utilities
 
 public struct ModelActions: Sendable {
@@ -227,7 +227,7 @@ extension ModelActions: DependencyKey {
 
 extension Date {
   func nextFutureDate(
-    unit:  Calendar.Component,
+    unit: Calendar.Component,
     count: Int
   ) -> Date {
     @Dependency(\.date) var date

@@ -52,9 +52,9 @@ public final class DashboardModel {
   @FetchOne(
     Todo.select { t in
       Stats.Columns(
-        completedCount:  t.count(filter: t.isCompleted),
-        deletedCount:    t.count(filter: t.isDeleted),
-        scheduledCount:  t.count(filter: t.isScheduled),
+        completedCount: t.count(filter: t.isCompleted),
+        deletedCount: t.count(filter: t.isDeleted),
+        scheduledCount: t.count(filter: t.isScheduled),
         inProgressCount: t.count(filter: t.isInProgress)
       )
     },
@@ -85,15 +85,15 @@ public final class DashboardModel {
   private var modelTransitions = ModelTransitions()
   
   public init(
-    isCreatingList: Bool         = false,
-    editingListID:  TodoList.ID? = nil,
+    isCreatingList: Bool = false,
+    editingListID: TodoList.ID? = nil,
     deletingListID: TodoList.ID? = nil,
-    isEditing:      Bool         = false,
+    isEditing: Bool = false,
   ) {
     self.isCreatingList = isCreatingList
-    self.editingListID  = editingListID
+    self.editingListID = editingListID
     self.deletingListID = deletingListID
-    self.editMode       = isEditing ? .active : .inactive
+    self.editMode = isEditing ? .active : .inactive
   }
     
   @Selection

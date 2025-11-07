@@ -51,6 +51,10 @@ let package = Package(
       targets: ["NewTodo"]
     ),
     .library(
+      name: "RankGeneration",
+      targets: ["RankGeneration"]
+    ),
+    .library(
       name: "Search",
       targets: ["Search"]
     ),
@@ -80,6 +84,7 @@ let package = Package(
       dependencies: [
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppModels",
+        "RankGeneration",
       ]
     ),
     .target(
@@ -189,6 +194,7 @@ let package = Package(
       dependencies: [
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppModels",
+        "RankGeneration",
         "Utilities",
       ]
     ),
@@ -244,7 +250,16 @@ let package = Package(
         "Utilities",
       ]
     ),
-    
+    .target(
+      name: "RankGeneration",
+      dependencies: [
+        .product(name: "NonEmpty", package: "swift-nonempty"),
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "DependenciesMacros", package: "swift-dependencies"),
+        "AppModels",
+        "Utilities",
+      ]
+    ),
     .target(
       name: "Search",
       dependencies: [

@@ -77,15 +77,9 @@ public struct NewTodoView: View {
 
 #Preview {
   let _ = prepareDependencies {
-    $0.defaultDatabase = try! appDatabase(
-      lists: .preset(),
-      todos: .preset()
-    )
+    $0.defaultDatabase = try! appDatabase(data: .previewSeed)
   }
   let model = NewTodoModel(
-//    deadline: .now,
-//    frequencySelection: .custom,
-//    customFrequency: Frequency(unit: .day, count: 1),
     listID: 1
   )
   NavigationStack {

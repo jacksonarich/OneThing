@@ -75,15 +75,10 @@ public struct ListDetailView: View {
 
 #Preview {
   let _ = prepareDependencies {
-    $0.defaultDatabase = try! appDatabase(
-      lists: .preset(),
-      todos: .preset().map {
-        $0.modified { $0.listID = 1 }
-      }
-    )
+    $0.defaultDatabase = try! appDatabase(data: .previewSeed)
   }
   NavigationStack {
-    ListDetailView(model: .init(listID: 1))
+    ListDetailView(model: .init(listID: 4))
   }
   .accentColor(.pink)
 }

@@ -36,10 +36,10 @@ public final class NewListModel {
   var color: ListColor = .red
   
   public init(
-    name:       String = "",
-    color: ListColor?   = nil
+    name: String = "",
+    color: ListColor? = nil
   ) {
-    self.name       = name
+    self.name = name
     self.color = color ?? initialColor
   }
 }

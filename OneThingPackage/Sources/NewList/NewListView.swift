@@ -49,10 +49,7 @@ public struct NewListView: View {
 
 #Preview {
   let _ = prepareDependencies {
-    $0.defaultDatabase = try! appDatabase(
-      lists: .preset(),
-      todos: .preset()
-    )
+    $0.defaultDatabase = try! appDatabase(data: .previewSeed)
   }
   NavigationStack {
     NewListView(model: .init())

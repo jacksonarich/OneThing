@@ -1,49 +1,88 @@
 // Exports the `appDatabase` function.
 
 
-import Foundation
-import SQLiteData
-
 import AppModels
+import Dependencies
+import DependenciesMacros
+import Foundation
+import RankGeneration
+import SQLiteData
 
 
 /// Returns a stable connection to the local database, creating an empty database if necessary.
 public func appDatabase(
-  lists:   [TodoList.Draft] = [],
-  todos:   [Todo.Draft]     = []
+  data: @autoclosure () -> AppData = AppData()
 ) throws -> any DatabaseWriter {
+  
   // get connection
   let connection = try getDatabaseConnection()
   try migrate(connection)
+  
   // seed database
-  if !lists.isEmpty {
+#if DEBUG
+  @Dependency(\.context) var context
+  if context != .live {
     try connection.write { db in
-      try TodoList.Draft
-        .insert { lists }
-        .execute(db)
+      try db.seed(data())
     }
   }
-  if !todos.isEmpty {
-    try connection.write { db in
-      try Todo.Draft
-        .insert { todos }
-        .execute(db)
-    }
-  }
+#endif
+  
   // return
   return connection
 }
 
 
+extension Database {
+  public func seed(_ data: AppData) throws {
+    @Dependency(\.rankGeneration) var rankGeneration
+    for listData in data.lists {
+      // convert list to a todolist.draft
+      let list = TodoList.Draft(
+        name: listData.name,
+        color: listData.color,
+        createDate: listData.createDate,
+        modifyDate: listData.modifyDate
+      )
+      // insert the draft and return its id
+      let listID: TodoList.ID = try TodoList
+        .insert { list }
+        .returning(\.id)
+        .fetchOne(self)!
+      // loop over list's todos and insert, using the new list id
+      let ranks = rankGeneration.distribute(listData.todos.count)
+      for (rank, todoData) in zip(ranks, listData.todos) {
+        let todo = Todo.Draft(
+          title: todoData.title,
+          notes: todoData.notes,
+          deadline: todoData.deadline,
+          frequencyUnit: todoData.frequencyUnit,
+          frequencyCount: todoData.frequencyCount,
+          createDate: todoData.createDate,
+          modifyDate: todoData.modifyDate,
+          completeDate: todoData.completeDate,
+          deleteDate: todoData.deleteDate,
+          rank: todoData.rank ?? rank,
+          listID: listID
+        )
+        try Todo
+          .insert { todo }
+          .execute(self)
+      }
+    }
+  }
+}
+
+
 func getDatabaseConfig() -> Configuration {
-  let config = Configuration()
-//#if DEBUG
-//  config.prepareDatabase { db in
-//    db.trace(options: .profile) {
-//      print("\($0.expandedDescription)")
-//    }
-//  }
-//#endif
+  var config = Configuration()
+#if DEBUG
+  config.prepareDatabase { db in
+    db.trace(options: .profile) {
+      print("\($0.expandedDescription)")
+    }
+  }
+#endif
   return config
 }
 
@@ -96,3 +135,4 @@ func migrate(_ connection: DatabaseWriter) throws {
   }
   try migrator.migrate(connection)
 }
+

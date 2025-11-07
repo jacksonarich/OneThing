@@ -3,11 +3,6 @@ import SwiftUI
 
 
 struct ListCellView: View {
-  //  @State var model: DashboardModel
-  //  let list: ComputedList
-  //  let image: String
-  //  let color: Color
-  //  let count: Int?
   private let cellModel: ListCellModel
   let list: ComputedList
   let model: DashboardModel

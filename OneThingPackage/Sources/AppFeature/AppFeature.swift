@@ -24,10 +24,7 @@ public struct AppEntryPoint: View {
   
   public init() {
     let _ = prepareDependencies {
-      $0.defaultDatabase = try! appDatabase(
-        lists: .preset(),
-        todos: .preset()
-      )
+      $0.defaultDatabase = try! appDatabase()
     }
   }
   

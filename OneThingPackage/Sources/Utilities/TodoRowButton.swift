@@ -84,14 +84,6 @@ public struct TodoRowButton: View {
       }
     }
   }
-  
-//  var deadlineText: String? {
-//    if let date = deadline {
-//      "Due " + date.formatted(.dateTime.month(.abbreviated).day())
-//    } else {
-//      nil
-//    }
-//  }
 }
 
 #Preview {

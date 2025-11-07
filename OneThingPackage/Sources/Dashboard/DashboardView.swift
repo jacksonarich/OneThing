@@ -47,6 +47,19 @@ public struct DashboardView: View {
       Button("New List", systemImage: "plus") {
         model.createListButtonTapped()
       }
+      
+#if DEBUG
+      Button("Seed") {
+        @Dependency(\.defaultDatabase) var database
+        withErrorReporting {
+          try database.write { db in
+            try Todo.delete().execute(db)
+            try TodoList.delete().execute(db)
+            try db.seed(.previewSeed)
+          }
+        }
+      }
+#endif
     }
     .environment(\.editMode, $model.editMode)
   }
@@ -109,10 +122,7 @@ fileprivate struct ListRows: View {
 
 #Preview {
   let _ = prepareDependencies {
-    $0.defaultDatabase = try! appDatabase(
-      lists: .preset(),
-      todos: .preset()
-    )
+    $0.defaultDatabase = try! appDatabase(data: .previewSeed)
   }
   NavigationStack {
     DashboardView()

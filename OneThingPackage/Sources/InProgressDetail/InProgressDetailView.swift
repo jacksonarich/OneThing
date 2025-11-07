@@ -72,10 +72,7 @@ public struct InProgressDetailView: View {
 
 #Preview {
   let _ = prepareDependencies {
-    $0.defaultDatabase = try! appDatabase(
-      lists: .preset(),
-      todos: .preset()
-    )
+    $0.defaultDatabase = try! appDatabase(data: .previewSeed)
   }
   NavigationStack {
     InProgressDetailView()

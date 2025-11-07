@@ -29,16 +29,3 @@ extension FrequencyUnit {
     }
   }
 }
-
-//extension FrequencyUnit {
-//  public func dateComponents(_ count: Int) -> DateComponents? {
-//    switch self {
-//    case .day: .init(day: count)
-//    case .week: .init(weekOfMonth: count)
-//    case .month: .init(month: count)
-//    case .year: .init(year: count)
-//    default: nil
-//    }
-//  }
-//}
-

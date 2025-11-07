@@ -54,14 +54,7 @@ public struct DeletedDetailView: View {
 
 #Preview {
   let _ = prepareDependencies {
-    $0.defaultDatabase = try! appDatabase(
-      lists: .preset(),
-      todos: .preset().map {
-        $0.modified {
-          $0.deleteDate = .now.addingTimeInterval(.random(in: -1_000_000 ... 0))
-        }
-      }
-    )
+    $0.defaultDatabase = try! appDatabase(data: .previewSeed)
   }
   NavigationStack {
     DeletedDetailView()

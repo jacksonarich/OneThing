@@ -9,3 +9,4 @@
 others don't
 * Make all Text have rounded font + line limit
 * Thorough review of DashboardView
+* Add more todos to .previewSeed (ask chatgpt)

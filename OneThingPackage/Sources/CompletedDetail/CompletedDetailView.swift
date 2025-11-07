@@ -68,14 +68,7 @@ public struct CompletedDetailView: View {
 
 #Preview {
   let _ = prepareDependencies {
-    $0.defaultDatabase = try! appDatabase(
-      lists: .preset(),
-      todos: .preset().map {
-        $0.modified {
-          $0.completeDate = .now.addingTimeInterval(.random(in: -1_000_000 ... 0))
-        }
-      }
-    )
+    $0.defaultDatabase = try! appDatabase(data: .previewSeed)
   }
   NavigationStack {
     CompletedDetailView()

@@ -1,5 +1,7 @@
 import AppModels
 import NonEmpty
+import Utilities
+
 
 extension Rank {
   /// Generates evenly spaced rank values
