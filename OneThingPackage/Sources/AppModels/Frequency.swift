@@ -1,6 +1,7 @@
 import Foundation
 import StructuredQueries
 
+
 @Selection
 public struct Frequency: Codable, Hashable, Sendable {
   public var unit: FrequencyUnit
@@ -14,6 +15,7 @@ public struct Frequency: Codable, Hashable, Sendable {
     self.count = count
   }
 }
+
 
 extension Frequency {
   public var localizedString: String {

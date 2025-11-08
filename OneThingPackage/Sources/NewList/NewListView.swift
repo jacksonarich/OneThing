@@ -1,12 +1,11 @@
+import AppDatabase
 import SQLiteData
 import SwiftUI
-
-import AppDatabase
 import Utilities
 
 
 public struct NewListView: View {
-  @State var model: NewListModel
+  @Bindable var model: NewListModel
   @Environment(\.dismiss) var dismiss
   
   public init(model: NewListModel) {
@@ -51,8 +50,9 @@ public struct NewListView: View {
   let _ = prepareDependencies {
     $0.defaultDatabase = try! appDatabase(data: .previewSeed)
   }
+  let model = NewListModel()
   NavigationStack {
-    NewListView(model: .init())
+    NewListView(model: model)
   }
   .accentColor(.pink)
 }

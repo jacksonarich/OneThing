@@ -28,6 +28,9 @@ public struct ListLabel: View {
 
 #Preview {
   List {
-    ListLabel(name: "Grocery", color: .green)
+    ListLabel(
+      name: "Grocery",
+      color: .green
+    )
   }
 }

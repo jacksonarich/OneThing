@@ -1,12 +1,11 @@
+import AppModels
 import Dependencies
 import Foundation
+import ModelActions
+import ModelTransitions
 import SQLiteData
 import StructuredQueriesCore
 import SwiftUI
-
-import AppModels
-import ModelActions
-import ModelTransitions
 import Utilities
 
 
@@ -52,6 +51,7 @@ public final class InProgressDetailModel {
 
 
 public extension InProgressDetailModel {
+  
   func toggleComplete(_ todoID: Todo.ID, complete shouldComplete: Bool) {
     modelTransitions.toggleComplete(todoID, complete: shouldComplete)
   }

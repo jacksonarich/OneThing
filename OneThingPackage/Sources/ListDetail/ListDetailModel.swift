@@ -1,11 +1,10 @@
+import AppModels
 import Dependencies
 import Foundation
-import SQLiteData
-import SwiftUI
-
 import ModelActions
 import ModelTransitions
-import AppModels
+import SQLiteData
+import SwiftUI
 import Utilities
 
 
@@ -55,6 +54,7 @@ public final class ListDetailModel {
 
 
 public extension ListDetailModel {
+  
   func toggleComplete(_ todoID: Todo.ID, complete shouldComplete: Bool) {
     modelTransitions.toggleComplete(todoID, complete: shouldComplete)
   }

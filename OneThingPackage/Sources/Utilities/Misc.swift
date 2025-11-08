@@ -1,6 +1,3 @@
-// Miscellaneous utility functions.
-
-
 import SwiftUI
 
 

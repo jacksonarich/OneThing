@@ -67,7 +67,6 @@ struct FrequencyPickerView: View {
   let _ = prepareDependencies {
     $0.defaultDatabase = try! appDatabase(data: .previewSeed)
   }
-  
   let model = NewTodoModel(
     frequencySelection: .custom,
     customFrequency: Frequency(unit: .day, count: 1),

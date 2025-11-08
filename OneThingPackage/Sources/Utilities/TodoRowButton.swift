@@ -1,28 +1,29 @@
 import AppModels
 import SwiftUI
 
+
 public struct TodoRowButton: View {
-  let action: () -> Void
+  let title: String
+  let subtitle: String?
   let isCompleted: Bool
   let isDeleted: Bool
   let isTransitioning: Bool
-  let subtitle: String?
-  let title: String
+  let action: () -> Void
   
   public init(
     title: String,
+    subtitle: String?,
     completed: Bool,
     deleted: Bool,
-    subtitle: String?,
     transitioning: Bool,
     action: @escaping () -> Void
   ) {
-    self.action = action
+    self.title = title
+    self.subtitle = subtitle
     self.isCompleted = completed
     self.isDeleted = deleted
     self.isTransitioning = transitioning
-    self.title = title
-    self.subtitle = subtitle
+    self.action = action
   }
   
   public init(
@@ -30,12 +31,12 @@ public struct TodoRowButton: View {
     subtitle: String? = nil,
     action: @escaping () -> Void
   ) {
-    self.action = action
+    self.title = todo.title
+    self.subtitle = subtitle
     self.isCompleted = todo.completeDate != nil
     self.isDeleted = todo.deleteDate != nil
     self.isTransitioning = todo.isTransitioning
-    self.subtitle = subtitle
-    self.title = todo.title
+    self.action = action
   }
   
   public var body: some View {
@@ -86,13 +87,14 @@ public struct TodoRowButton: View {
   }
 }
 
+
 #Preview {
   List {
     TodoRowButton(
       title: "This is the todo",
+      subtitle: "Subtitle",
       completed: true,
       deleted: true,
-      subtitle: "Subtitle",
       transitioning: false
     ) {
       print("Tapped")

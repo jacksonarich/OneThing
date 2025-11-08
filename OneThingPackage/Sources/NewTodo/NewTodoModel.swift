@@ -1,11 +1,9 @@
+import AppModels
 import Dependencies
 import Foundation
-import SQLiteData
-import StructuredQueriesCore
-import SwiftUI
-
 import ModelActions
-import AppModels
+import SQLiteData
+import SwiftUI
 import Utilities
 
 
@@ -39,6 +37,23 @@ public final class NewTodoModel {
     selectableLists.first { $0.id == listID }
   }
   
+  var frequency: Frequency? {
+    switch frequencySelection {
+    case .never:
+      return nil
+    case .daily:
+      return Frequency(unit: .day)
+    case .weekly:
+      return Frequency(unit: .week)
+    case .monthly:
+      return Frequency(unit: .month)
+    case .yearly:
+      return Frequency(unit: .year)
+    case .custom:
+      return customFrequency
+    }
+  }
+  
   public init(
     title: String = "",
     notes: String = "",
@@ -58,22 +73,6 @@ public final class NewTodoModel {
 
 
 public extension NewTodoModel {
-  var frequency: Frequency? {
-    switch frequencySelection {
-    case .never:
-      return nil
-    case .daily:
-      return Frequency(unit: .day)
-    case .weekly:
-      return Frequency(unit: .week)
-    case .monthly:
-      return Frequency(unit: .month)
-    case .yearly:
-      return Frequency(unit: .year)
-    case .custom:
-      return customFrequency
-    }
-  }
 
   func toggleDeadline(isOn: Bool) {
     if isOn {

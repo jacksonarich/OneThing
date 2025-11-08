@@ -1,11 +1,9 @@
+import AppModels
 import Dependencies
 import Foundation
-import SQLiteData
-import StructuredQueriesCore
-import SwiftUI
-
 import ModelActions
-import AppModels
+import SQLiteData
+import SwiftUI
 import Utilities
 
 
@@ -46,6 +44,7 @@ public final class NewListModel {
 
 
 public extension NewListModel {
+  
   func createList() {
     let newList = TodoList.Draft(
       name: name.trimmed(),

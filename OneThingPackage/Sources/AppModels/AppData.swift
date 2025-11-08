@@ -12,6 +12,7 @@ public struct AppData {
   }
 }
 
+
 public struct TodoListData: Sendable {
   public var name: String = ""
   public var color: ListColor = .red
@@ -102,6 +103,7 @@ public struct TodoBuilder {
     components
   }
 }
+
 
 @resultBuilder
 public struct TodoListBuilder {

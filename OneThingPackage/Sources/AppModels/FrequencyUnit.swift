@@ -1,6 +1,7 @@
 import Foundation
 import StructuredQueries
 
+
 public struct FrequencyUnit: Codable, Hashable, QueryBindable, RawRepresentable, Sendable {
   public var rawValue: String
   
@@ -17,6 +18,7 @@ public struct FrequencyUnit: Codable, Hashable, QueryBindable, RawRepresentable,
     [.day, .week, .month, .year]
   }
 }
+
 
 extension FrequencyUnit {
   public var calendarComponent: Calendar.Component? {

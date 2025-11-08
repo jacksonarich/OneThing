@@ -1,5 +1,5 @@
-import Utilities
 import SwiftUI
+import Utilities
 
 
 struct SelectableRow<T>: View where T: View {

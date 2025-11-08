@@ -1,5 +1,6 @@
 import SQLiteData
 
+
 @Selection
 public struct TodoListWithTodos: Codable, Equatable, Sendable {
   public var list: TodoList

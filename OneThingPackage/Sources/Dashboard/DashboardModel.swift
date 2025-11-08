@@ -1,12 +1,11 @@
+import AppModels
 import Dependencies
 import Foundation
+import ModelActions
+import ModelTransitions
 import Sharing
 import SQLiteData
 import SwiftUI
-
-import AppModels
-import ModelActions
-import ModelTransitions
 import Utilities
 
 
@@ -106,7 +105,8 @@ public final class DashboardModel {
 }
 
 
-extension DashboardModel {
+public extension DashboardModel {
+  
   func toggleComplete(_ todoID: Todo.ID, complete shouldComplete: Bool) {
     modelTransitions.toggleComplete(todoID, complete: shouldComplete)
   }

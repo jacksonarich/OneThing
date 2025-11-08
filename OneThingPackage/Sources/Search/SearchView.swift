@@ -1,8 +1,7 @@
-import SQLiteData
-import SwiftUI
-
 import AppDatabase
 import AppModels
+import SQLiteData
+import SwiftUI
 import Utilities
 
 
@@ -31,9 +30,10 @@ public struct SearchView: View {
   let _ = prepareDependencies {
     $0.defaultDatabase = try! appDatabase(data: .previewSeed)
   }
+  let model = SearchModel(text: "v")
   NavigationStack {
     List {
-      SearchView(model: .init(text: "v"))
+      SearchView(model: model)
     }
   }
   .accentColor(.pink)

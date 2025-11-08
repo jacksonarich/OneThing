@@ -1,12 +1,8 @@
-// Utility functions relating to `TodoList` and its variants.
-
-
+import AppModels
 import Dependencies
 import Foundation
 import SQLiteData
 import SwiftUI
-
-import AppModels
 
 
 public extension TodoList.Draft {

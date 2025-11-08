@@ -1,6 +1,3 @@
-// Exports the `appDatabase` function.
-
-
 import AppModels
 import Dependencies
 import DependenciesMacros

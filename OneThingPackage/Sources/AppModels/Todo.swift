@@ -1,6 +1,7 @@
 import Foundation
 import SQLiteData
 
+
 @Table
 public struct Todo: Codable, Equatable, Identifiable, Sendable {
   public let id: ID
@@ -50,7 +51,9 @@ public struct Todo: Codable, Equatable, Identifiable, Sendable {
   }
 }
 
+
 extension Todo.Draft: Equatable, Sendable {}
+
 
 extension Todo.Draft {
   public init(

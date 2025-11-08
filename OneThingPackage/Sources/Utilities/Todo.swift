@@ -1,13 +1,9 @@
-// Utility functions relating to `Todo` and its variants.
-
-
+import AppModels
 import Dependencies
 import Foundation
 import SQLiteData
 import StructuredQueries
 import SwiftUI
-
-import AppModels
 
 
 public extension Todo.Draft {

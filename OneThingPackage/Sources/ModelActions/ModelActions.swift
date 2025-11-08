@@ -1,11 +1,9 @@
-// Interface used by view models to write to the database.
-
-
 import AppModels
 import RankGeneration
 import SQLiteData
 import SwiftUI
 import Utilities
+
 
 public struct ModelActions: Sendable {
   public var createTodo: @Sendable (Todo.Draft) throws -> Void
@@ -241,4 +239,3 @@ extension Date {
     return calendar.date(byAdding: unit, value: steps * count, to: self) ?? self
   }
 }
-

@@ -1,5 +1,6 @@
 import AppModels
 
+
 public enum FrequencySelection: String, CaseIterable, Hashable {
   case never = "never"
   case daily = "daily"

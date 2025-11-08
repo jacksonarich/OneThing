@@ -1,11 +1,10 @@
+import AppModels
 import Dependencies
 import Foundation
+import ModelActions
 import SQLiteData
 import StructuredQueriesCore
 import SwiftUI
-
-import AppModels
-import ModelActions
 import Utilities
 
 
@@ -44,6 +43,7 @@ public final class ScheduledDetailModel {
 
 
 public extension ScheduledDetailModel {
+  
   func toggleComplete(_ todoId: Todo.ID, complete shouldComplete: Bool) {
     timerTask?.cancel()
     withErrorReporting {

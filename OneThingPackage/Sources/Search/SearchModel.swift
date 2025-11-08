@@ -1,13 +1,12 @@
+import AppModels
 import Dependencies
 import Foundation
-import SQLiteData
-import StructuredQueries
-import SwiftUI
-
-import AppModels
 import ModelActions
 import ModelTransitions
+import SQLiteData
+import SwiftUI
 import Utilities
+
 
 @MainActor
 @Observable
@@ -49,6 +48,7 @@ public final class SearchModel {
   }
 }
 
+
 extension SearchModel {
   private static func searchResultQuery(_ text: String) -> SelectOf<Todo> {
     Todo
@@ -59,6 +59,7 @@ extension SearchModel {
       .order(by: \.title)
   }
 }
+
 
 public extension SearchModel {
   func toggleComplete(_ todoID: Todo.ID, complete shouldComplete: Bool) {

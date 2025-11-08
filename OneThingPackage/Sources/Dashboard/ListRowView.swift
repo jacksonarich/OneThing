@@ -1,10 +1,9 @@
-import SQLiteData
-import SwiftUI
-
 import AppDatabase
 import AppModels
 import NewList
 import Search
+import SQLiteData
+import SwiftUI
 import Utilities
 
 
@@ -39,9 +38,9 @@ private struct ListCount: View {
 
 
 struct ListRowView: View {
+  let name: String
   let color: Color
   let count: Int
-  let name: String
   
   init(name: String, color: Color, count: Int) {
     self.color = color
@@ -60,21 +59,17 @@ struct ListRowView: View {
 
 
 #Preview {
-  @Previewable @State var editMode = EditMode.inactive
   NavigationStack {
     List {
       ListRowView(
-        name: "List",
-        color: .purple,
+        name: "Grocery",
+        color: .green,
         count: 5
       )
-      Button("Toggle Edit") {
-        withAnimation {
-          editMode = editMode == .inactive ? .active : .inactive
-        }
-      }
     }
-    .environment(\.editMode, $editMode)
+    .toolbar {
+      EditButton()
+    }
   }
   .accentColor(.pink)
 }

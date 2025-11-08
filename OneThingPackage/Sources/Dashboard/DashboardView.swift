@@ -1,16 +1,16 @@
-import SQLiteData
-import SwiftUI
-
 import AppDatabase
 import AppModels
 import NewList
 import Search
+import SQLiteData
+import SwiftUI
 import Utilities
 
 
 public struct DashboardView: View {
   @State private var model = DashboardModel()
   @State private var searchModel = SearchModel()
+  @State private var newListModel = NewListModel()
   
   public init() {}
   
@@ -30,7 +30,7 @@ public struct DashboardView: View {
     .searchable(text: $searchModel.searchText)
     .sheet(isPresented: $model.isCreatingList) {
       NavigationStack {
-        NewListView(model: .init())
+        NewListView(model: newListModel)
       }
     }
 //    .sheet(item: $model.editingListID) { listID in
@@ -102,7 +102,7 @@ struct ListCells: View {
 
 
 fileprivate struct ListRows: View {
-  @State var model: DashboardModel
+  let model: DashboardModel
   
   var body: some View {
     ForEach(model.lists, id: \.id) { row in

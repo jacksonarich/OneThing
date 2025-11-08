@@ -1,6 +1,7 @@
 import StructuredQueries
 import SwiftUI
 
+
 public struct ListColor: Codable, Equatable, Hashable, QueryBindable, RawRepresentable, Sendable {
   public var rawValue: String
   
@@ -23,6 +24,7 @@ public struct ListColor: Codable, Equatable, Hashable, QueryBindable, RawReprese
     .red, .orange, .yellow, .green, .cyan, .blue, .indigo, .pink, .purple, .brown
   ]
 }
+
 
 extension ListColor {
   public var swiftUIColor: Color? {

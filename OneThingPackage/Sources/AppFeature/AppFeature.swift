@@ -1,11 +1,3 @@
-// Exports `AppEntryPoint`, the root view of the entire app.
-// Imports all other views as navigation destinations.
-
-
-import Sharing
-import SQLiteData
-import SwiftUI
-
 import AppDatabase
 import AppModels
 import CompletedDetail
@@ -13,9 +5,10 @@ import Dashboard
 import DeletedDetail
 import InProgressDetail
 import ListDetail
-import NewList
-import AppModels
 import ScheduledDetail
+import Sharing
+import SQLiteData
+import SwiftUI
 import Utilities
 
 
@@ -33,8 +26,8 @@ public struct AppEntryPoint: View {
       DashboardView()
         .navigationDestination(for: NavigationDestination.self) { dest in
           switch dest {
-          case .listDetail(let id):
-            ListDetailView(model: .init(listID: id))
+          case .listDetail(let listID):
+            ListDetailView(listID: listID)
           case .computedListDetail(.completed):
             CompletedDetailView()
           case .computedListDetail(.deleted):

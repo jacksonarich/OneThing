@@ -53,12 +53,14 @@ struct ListCellView: View {
   }
 }
 
+
 private struct ListCellModel {
   let name: String
   let image: String
   let color: Color
   let count: Int?
 }
+
 
 extension ComputedList {
   fileprivate func listCellModel(stats: DashboardModel.Stats?) -> ListCellModel? {

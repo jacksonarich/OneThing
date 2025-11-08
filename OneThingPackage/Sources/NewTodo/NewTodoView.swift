@@ -1,13 +1,12 @@
-import SQLiteData
-import SwiftUI
-
 import AppDatabase
 import AppModels
+import SQLiteData
+import SwiftUI
 import Utilities
 
 
 public struct NewTodoView: View {
-  @State var model: NewTodoModel
+  @Bindable var model: NewTodoModel
   @Environment(\.dismiss) var dismiss
   
   public init(model: NewTodoModel) {

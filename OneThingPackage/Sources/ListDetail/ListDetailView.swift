@@ -1,8 +1,8 @@
+import AppDatabase
+import AppModels
+import NewTodo
 import SQLiteData
 import SwiftUI
-
-import AppDatabase
-import NewTodo
 import Utilities
 
 
@@ -10,9 +10,9 @@ public struct ListDetailView: View {
   @State private var model: ListDetailModel
   @State private var newTodoModel: NewTodoModel
   
-  public init(model: ListDetailModel) {
-    self.model = model
-    self.newTodoModel = NewTodoModel(listID: model.listID)
+  public init(listID: TodoList.ID) {
+    self.model = ListDetailModel(listID: listID)
+    self.newTodoModel = NewTodoModel(listID: listID)
   }
   
   public var body: some View {
@@ -78,7 +78,7 @@ public struct ListDetailView: View {
     $0.defaultDatabase = try! appDatabase(data: .previewSeed)
   }
   NavigationStack {
-    ListDetailView(model: .init(listID: 4))
+    ListDetailView(listID: 4)
   }
   .accentColor(.pink)
 }
