@@ -83,7 +83,6 @@ let package = Package(
       name: "AppDatabase",
       dependencies: [
         .product(name: "Dependencies", package: "swift-dependencies"),
-        .product(name: "DependenciesMacros", package: "swift-dependencies"),
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppModels",
         "RankGeneration",
@@ -174,8 +173,8 @@ let package = Package(
     .testTarget(
       name: "InProgressDetailTests",
       dependencies: [
-        "InProgressDetail",
         .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
+        "InProgressDetail",
       ]
     ),
     .target(

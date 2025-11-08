@@ -16,7 +16,6 @@ import AppModels
 @Suite(
   .dependency(\.continuousClock, TestClock()),
   .dependency(\.defaultDatabase, try appDatabase()),
-  .dependency(\.uuid, .incrementing),
   .dependency(\.date.now, Date(timeIntervalSince1970: 0))
 )
 struct ModelTransitionsTests {

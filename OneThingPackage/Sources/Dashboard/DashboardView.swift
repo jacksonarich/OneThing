@@ -50,9 +50,9 @@ public struct DashboardView: View {
       
 #if DEBUG
       Button("Seed") {
-        @Dependency(\.defaultDatabase) var database
+        @Dependency(\.defaultDatabase) var connection
         withErrorReporting {
-          try database.write { db in
+          try connection.write { db in
             try Todo.delete().execute(db)
             try TodoList.delete().execute(db)
             try db.seed(.previewSeed)

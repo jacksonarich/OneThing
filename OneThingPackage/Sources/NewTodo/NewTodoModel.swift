@@ -76,7 +76,6 @@ public extension NewTodoModel {
 
   func toggleDeadline(isOn: Bool) {
     if isOn {
-      @Dependency(\.date) var date
       deadline = Calendar.current.date(
         byAdding: .day,
         value: 1,

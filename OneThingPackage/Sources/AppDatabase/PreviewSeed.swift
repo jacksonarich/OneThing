@@ -3,6 +3,7 @@ import Dependencies
 import DependenciesMacros
 import Foundation
 
+#if DEBUG
 
 extension AppData {
   public static var previewSeed: Self {
@@ -288,3 +289,5 @@ extension AppData {
     }
   }
 }
+
+#endif

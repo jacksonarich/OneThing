@@ -18,7 +18,6 @@ public struct ModelActions: Sendable {
   public var deleteList: @Sendable (TodoList.ID) throws -> Void
   public var transitionTodo: @Sendable (Todo.ID, Bool) throws -> Void
   public var finalizeTransitions: @Sendable () throws -> Void
-  public var seedDatabase: @Sendable ([TodoList.Draft], [Todo.Draft]) throws -> Void
 }
 
 
@@ -206,16 +205,6 @@ extension ModelActions: DependencyKey {
             .execute(db)
         }
       },
-      seedDatabase: { lists, todos in
-        try connection.write { db in
-          try TodoList
-            .insert { lists }
-            .execute(db)
-          try Todo
-            .insert { todos }
-            .execute(db)
-        }
-      }
     )
   }()
   

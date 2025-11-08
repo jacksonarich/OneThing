@@ -15,7 +15,6 @@ let now = Date(timeIntervalSince1970: 0)
 
 @Suite(
   .dependency(\.defaultDatabase, try appDatabase()),
-  .dependency(\.uuid, .incrementing),
   .dependency(\.date.now, now)
 )
 struct UtilitiesTests {

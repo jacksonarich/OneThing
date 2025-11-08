@@ -69,29 +69,25 @@ public final class DashboardModel {
   @Shared(.navPath)
   private(set) var navPath
   
+  @ObservationIgnored
+  private var modelTransitions = ModelTransitions()
+  
   var isCreatingList: Bool
   var editingListID: TodoList.ID?
-  var deletingListID: TodoList.ID?
   var editMode: EditMode
   
   private(set) var isEditing: Bool {
     get { editMode.isEditing }
     set { editMode = newValue ? .active : .inactive }
   }
-    
-  
-  @ObservationIgnored
-  private var modelTransitions = ModelTransitions()
   
   public init(
     isCreatingList: Bool = false,
     editingListID: TodoList.ID? = nil,
-    deletingListID: TodoList.ID? = nil,
     isEditing: Bool = false,
   ) {
     self.isCreatingList = isCreatingList
     self.editingListID = editingListID
-    self.deletingListID = deletingListID
     self.editMode = isEditing ? .active : .inactive
   }
     
