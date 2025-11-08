@@ -15,7 +15,7 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:OneThingPackage",
+        "containerPath" : "container:",
         "identifier" : "UtilitiesTests",
         "name" : "UtilitiesTests"
       }

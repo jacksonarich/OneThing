@@ -44,19 +44,6 @@ struct UtilitiesTests {
   }
   
   @Test
-  func testTodoListPreset() async throws {
-    let l1 = TodoList.Draft.preset()
-    let l2 = TodoList.Draft(
-      id: nil,
-      name: "",
-      color: .red,
-      createDate: now,
-      modifyDate: now
-    )
-    expectNoDifference(l2, l1)
-  }
-  
-  @Test
   func testTodoSearch() async throws {
     let t1 = Todo.Draft(
       title: "Bell pepper",

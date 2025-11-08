@@ -45,6 +45,20 @@
         "identifier" : "UtilitiesTests",
         "name" : "UtilitiesTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ModelTransitionsTests",
+        "name" : "ModelTransitionsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "RankGenerationTests",
+        "name" : "RankGenerationTests"
+      }
     }
   ],
   "version" : 1

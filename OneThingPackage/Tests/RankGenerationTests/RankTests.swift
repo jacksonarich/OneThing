@@ -1,7 +1,7 @@
 import Algorithms
 import AppModels
 import CustomDump
-@testable import Utilities
+@testable import RankGeneration
 import Testing
 
 struct AlphabetTests {

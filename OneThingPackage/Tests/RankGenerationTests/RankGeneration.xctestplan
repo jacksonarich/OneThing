@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "159690E2-B591-4E0F-98CE-FCFD6AAE2F3B",
+      "id" : "52A9283D-DEEA-494A-8B32-37082823E89D",
       "name" : "Test Scheme Action",
       "options" : {
 
@@ -16,8 +16,8 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "InProgressDetailTests",
-        "name" : "InProgressDetailTests"
+        "identifier" : "RankGenerationTests",
+        "name" : "RankGenerationTests"
       }
     }
   ],

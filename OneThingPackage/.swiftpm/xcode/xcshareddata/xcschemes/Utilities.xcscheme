@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "InProgressDetail"
-               BuildableName = "InProgressDetail"
-               BlueprintName = "InProgressDetail"
+               BlueprintIdentifier = "Utilities"
+               BuildableName = "Utilities"
+               BlueprintName = "Utilities"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -30,7 +30,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:Tests/InProgressDetailTests/InProgressDetailTestPlan.xctestplan"
+            reference = "container:Tests/UtilitiesTests/UtilitiesTestPlan.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -55,9 +55,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "InProgressDetail"
-            BuildableName = "InProgressDetail"
-            BlueprintName = "InProgressDetail"
+            BlueprintIdentifier = "Utilities"
+            BuildableName = "Utilities"
+            BlueprintName = "Utilities"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

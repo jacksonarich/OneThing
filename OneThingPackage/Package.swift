@@ -259,6 +259,13 @@ let package = Package(
         "Utilities",
       ]
     ),
+    .testTarget(
+      name: "RankGenerationTests",
+      dependencies: [
+        .product(name: "Algorithms", package: "swift-algorithms"),
+        "RankGeneration"
+      ]
+    ),
     .target(
       name: "Search",
       dependencies: [
@@ -293,7 +300,6 @@ let package = Package(
     .testTarget(
       name: "UtilitiesTests",
       dependencies: [
-        .product(name: "Algorithms", package: "swift-algorithms"),
         .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
         "AppDatabase",
         "Utilities",
