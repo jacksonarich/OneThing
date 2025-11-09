@@ -38,7 +38,7 @@ public final class SearchModel {
     didSet {
       let t = $todos
       let q = Self.searchResultQuery(searchText)
-      Task { try await t.load(q) }
+      Task { try await t.load(q, animation: .default) }
     }
   }
 
@@ -62,8 +62,9 @@ extension SearchModel {
 
 
 public extension SearchModel {
-  func toggleComplete(_ todoID: Todo.ID, complete shouldComplete: Bool) {
-    modelTransitions.toggleComplete(todoID, complete: shouldComplete)
+  
+  func todoRowTapped(_ todoID: Todo.ID, isTransitioning: Bool) {
+    modelTransitions.setTransition(todoID, to: isTransitioning == false)
   }
   
   func deleteTodo(_ todo: Todo) {

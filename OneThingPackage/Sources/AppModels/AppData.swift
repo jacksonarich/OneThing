@@ -57,6 +57,7 @@ public struct TodoListData: Sendable {
 
 
 public struct TodoData: Sendable {
+  public var rank: Rank? = nil
   public var title: String
   public var notes: String = ""
   public var deadline: Date? = nil
@@ -66,11 +67,11 @@ public struct TodoData: Sendable {
   public var modifyDate: Date? = nil
   public var completeDate: Date? = nil
   public var deleteDate: Date? = nil
-  public var rank: Rank? = nil
   public var isTransitioning: Bool = false
   
   public init(
-    title: String,
+    rank: Rank? = nil,
+    title: String = "",
     notes: String = "",
     deadline: Date? = nil,
     frequencyUnit: FrequencyUnit? = nil,
@@ -79,9 +80,9 @@ public struct TodoData: Sendable {
     modifyDate: Date? = nil,
     completeDate: Date? = nil,
     deleteDate: Date? = nil,
-    rank: Rank? = nil,
     isTransitioning: Bool = false
   ) {
+    self.rank = rank
     self.title = title
     self.notes = notes
     self.deadline = deadline
@@ -91,7 +92,6 @@ public struct TodoData: Sendable {
     self.modifyDate = modifyDate
     self.completeDate = completeDate
     self.deleteDate = deleteDate
-    self.rank = rank
     self.isTransitioning = isTransitioning
   }
 }

@@ -2,6 +2,7 @@ import AppModels
 import Dependencies
 import Foundation
 import ModelActions
+import ModelTransitions
 import SQLiteData
 import StructuredQueriesCore
 import SwiftUI
@@ -36,6 +37,9 @@ public final class ScheduledDetailModel {
   )
   var todos
   
+  @ObservationIgnored
+  private var modelTransitions = ModelTransitions()
+  
   private var timerTask: Task<Void, Never>?
   
   public init() {}
@@ -44,20 +48,8 @@ public final class ScheduledDetailModel {
 
 public extension ScheduledDetailModel {
   
-  func toggleComplete(_ todoId: Todo.ID, complete shouldComplete: Bool) {
-    timerTask?.cancel()
-    withErrorReporting {
-      try modelActions.transitionTodo(todoId, shouldComplete)
-      timerTask = Task { [clock] in
-        do {
-          try await clock.sleep(for: .seconds(2))
-          try modelActions.finalizeTransitions()
-        } catch {
-          if error is CancellationError { return }
-          reportIssue(error)
-        }
-      }
-    }
+  func todoRowTapped(_ todoID: Todo.ID, isTransitioning: Bool) {
+    modelTransitions.setTransition(todoID, to: isTransitioning == false)
   }
   
   func deleteTodo(_ todoID: Todo.ID) {

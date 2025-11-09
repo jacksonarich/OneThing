@@ -35,7 +35,7 @@ struct DeletedTodoRowContextMenu: View {
         Button {
           onMove(list.id)
         } label: {
-          Label(list.name, systemImage: list.id == currentListID ? "checkmark" : "")
+          Label(list.name, systemImage: list.id == currentListID ? "checkmark" : "DEBUG")
         }
       }
     } label: {

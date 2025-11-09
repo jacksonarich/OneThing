@@ -32,13 +32,13 @@ public func appDatabase(
 
 func getDatabaseConfig() -> Configuration {
   var config = Configuration()
-#if DEBUG
-  config.prepareDatabase { db in
-    db.trace(options: .profile) {
-      print("\($0.expandedDescription)")
-    }
-  }
-#endif
+//#if DEBUG
+//  config.prepareDatabase { db in
+//    db.trace(options: .profile) {
+//      print("\($0.expandedDescription)")
+//    }
+//  }
+//#endif
   return config
 }
 
@@ -75,6 +75,8 @@ func migrate(_ connection: DatabaseWriter) throws {
     // todos table
     try db.create(table: "todos") { table in
       table.autoIncrementedPrimaryKey("id")
+      table.column("listID", .integer).notNull().references("todoLists")
+      table.column("rank", .text).notNull()
       table.column("title", .text).notNull()
       table.column("notes", .text).notNull()
       table.column("deadline", .date)
@@ -84,8 +86,6 @@ func migrate(_ connection: DatabaseWriter) throws {
       table.column("modifyDate", .date).notNull()
       table.column("completeDate", .date)
       table.column("deleteDate", .date)
-      table.column("rank", .text).notNull()
-      table.column("listID", .integer).notNull().references("todoLists")
       table.column("isTransitioning", .boolean).notNull()
     }
   }

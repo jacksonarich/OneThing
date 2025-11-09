@@ -32,7 +32,7 @@ public extension DependencyValues {
 extension ModelActions: DependencyKey {
   public static let liveValue = {
     @Dependency(\.defaultDatabase) var connection
-    @Dependency(\.date.now) var now
+    @Dependency(\.date) var date
     @Dependency(\.rankGeneration) var rankGeneration
     return Self(
       createTodo: { [rankGeneration] todo in
@@ -84,7 +84,7 @@ extension ModelActions: DependencyKey {
           } else {
             try Todo
               .find(todoID)
-              .update { $0.completeDate = now }
+              .update { $0.completeDate = date.now }
               .execute(db)
           }
         }
@@ -101,7 +101,7 @@ extension ModelActions: DependencyKey {
         try connection.write { db in
           try Todo
             .find(todoID)
-            .update { $0.deleteDate = now }
+            .update { $0.deleteDate = date.now }
             .execute(db)
         }
       },
@@ -190,7 +190,7 @@ extension ModelActions: DependencyKey {
             } else if todo.completeDate == nil {
               try Todo
                 .find(todo.id)
-                .update { $0.completeDate = now }
+                .update { $0.completeDate = date.now }
                 .execute(db)
             } else {
               try Todo
@@ -217,8 +217,8 @@ extension Date {
     unit: Calendar.Component,
     count: Int
   ) -> Date {
-    @Dependency(\.date) var date
     if count <= 0 { return self }
+    @Dependency(\.date) var date
     let calendar = Calendar.current
     guard let difference = calendar
       .dateComponents([unit], from: self, to: date.now)

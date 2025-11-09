@@ -68,9 +68,9 @@ struct FrequencyPickerView: View {
     $0.defaultDatabase = try! appDatabase(data: .previewSeed)
   }
   let model = NewTodoModel(
+    listID: 1,
     frequencySelection: .custom,
-    customFrequency: Frequency(unit: .day, count: 1),
-    listID: 1
+    customFrequency: Frequency(unit: .day, count: 1)
   )
   NavigationStack {
     FrequencyPickerView(model: model)

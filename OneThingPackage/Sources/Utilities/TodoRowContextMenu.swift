@@ -5,41 +5,64 @@ import SwiftUI
 public struct TodoRowContextMenu: View {
   let currentListID: TodoList.ID
   let movableLists: [TodoList]
-  let onToggleComplete: () -> Void
+  let onTap: () -> Void
   let onDelete: () -> Void
   let onMove: (TodoList.ID) -> Void
   
   public init(
     currentListID: TodoList.ID,
     movableLists: [TodoList],
-    onToggleComplete: @escaping () -> Void,
+    onTap: @escaping () -> Void,
     onDelete: @escaping () -> Void,
     onMove: @escaping (TodoList.ID) -> Void
   ) {
     self.currentListID = currentListID
     self.movableLists = movableLists
-    self.onToggleComplete = onToggleComplete
+    self.onTap = onTap
     self.onDelete = onDelete
     self.onMove = onMove
   }
-  
+    
   public var body: some View {
-    Button(action: onToggleComplete) {
+    Button(action: onTap) {
       Label("Complete", systemImage: "checkmark")
     }
     Button(action: onDelete) {
       Label("Delete", systemImage: "xmark")
     }
-    Menu {
+    Picker("Move To...", systemImage: "folder", selection: Binding(
+      get: { currentListID },
+      set: { onMove($0) }
+    )) {
       ForEach(movableLists) { list in
-        Button {
-          onMove(list.id)
-        } label: {
-          Label(list.name, systemImage: list.id == currentListID ? "checkmark" : "")
-        }
+        Text(list.name)
+          .tag(list.id)
       }
-    } label: {
-      Label("Move To...", systemImage: "folder")
+    }
+    .pickerStyle(.menu)
+  }
+}
+
+
+#Preview {
+  @Previewable @State var currentListID: TodoList.ID = 1
+  NavigationStack {
+    List {
+      Text("Todo")
+        .contextMenu {
+          TodoRowContextMenu(
+            currentListID: currentListID,
+            movableLists: [
+              .init(id: 1, name: "List A", color: .red, createDate: .now, modifyDate: .now),
+              .init(id: 2, name: "List B", color: .green, createDate: .now, modifyDate: .now),
+              .init(id: 3, name: "List C", color: .blue, createDate: .now, modifyDate: .now),
+            ],
+            onTap: {},
+            onDelete: {},
+            onMove: { currentListID = $0 }
+          )
+        }
     }
   }
+  .accentColor(.pink)
 }

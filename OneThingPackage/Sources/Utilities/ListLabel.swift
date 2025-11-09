@@ -2,12 +2,12 @@ import SwiftUI
 
 
 public struct ListLabel: View {
-  let color: Color
   let name: String
+  let color: Color
   
   public init(name: String, color: Color) {
-    self.color = color
     self.name = name
+    self.color = color
   }
   
   public var body: some View {

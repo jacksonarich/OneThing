@@ -33,26 +33,24 @@ extension TodoList.Draft: Equatable, Sendable {}
 
 extension TodoList.Draft {
   public init(
-    id: TodoList.ID? = nil,
+    _ id: TodoList.ID? = nil,
     name: String = "",
     color: ListColor = .red,
     createDate: Date? = nil,
     modifyDate: Date? = nil
   ) {
-    let created = createDate ?? {
-      @Dependency(\.date) var date
-      return date.now
-    }()
-    let modified = modifyDate ?? createDate ?? {
-      @Dependency(\.date) var date
-      return date.now
-    }()
     self.init(
       id: id,
       name: name,
       color: color,
-      createDate: created,
-      modifyDate: modified
+      createDate: createDate ?? {
+        @Dependency(\.date) var date
+        return date.now
+      }(),
+      modifyDate: modifyDate ?? createDate ?? {
+        @Dependency(\.date) var date
+        return date.now
+      }()
     )
   }
 }

@@ -6,7 +6,7 @@ import SwiftUI
 
 
 @MainActor
-public struct ModelTransitions {
+public final class ModelTransitions {
   
   @Dependency(\.modelActions)
   private var modelActions
@@ -16,10 +16,10 @@ public struct ModelTransitions {
   
   private var timerTask: Task<Void, Never>? = nil
   
-  public mutating func toggleComplete(_ todoId: Todo.ID, complete shouldComplete: Bool) {
+  public func setTransition(_ todoId: Todo.ID, to shouldTransition: Bool) {
     timerTask?.cancel()
     withErrorReporting {
-      try modelActions.transitionTodo(todoId, shouldComplete)
+      try modelActions.transitionTodo(todoId, shouldTransition)
       timerTask = Task { [clock, modelActions] in
         do {
           try await clock.sleep(for: .seconds(2))

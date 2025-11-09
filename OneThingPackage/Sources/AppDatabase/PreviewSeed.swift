@@ -282,7 +282,8 @@ extension AppData {
         todos: {
           TodoData(
             title: "Plan weekend trip",
-            notes: "Research hiking trails"
+            notes: "Research hiking trails",
+            completeDate: date.now
           )
         }
       )

@@ -26,17 +26,17 @@ public final class NewTodoModel {
   )
   var selectableLists
   
-  var title: String
-  var notes: String
-  var deadline: Date?
-  var frequencySelection: FrequencySelection
-  var customFrequency: Frequency
-  
   var listID: TodoList.ID
   var selectedList: TodoList? {
     selectableLists.first { $0.id == listID }
   }
   
+  var title: String
+  var notes: String
+  var deadline: Date?
+  
+  var frequencySelection: FrequencySelection
+  var customFrequency: Frequency
   var frequency: Frequency? {
     switch frequencySelection {
     case .never:
@@ -55,19 +55,19 @@ public final class NewTodoModel {
   }
   
   public init(
+    listID: TodoList.ID,
     title: String = "",
     notes: String = "",
     deadline: Date? = nil,
     frequencySelection: FrequencySelection = .never,
-    customFrequency: Frequency = Frequency(unit: .day),
-    listID: TodoList.ID
+    customFrequency: Frequency = Frequency(unit: .day)
   ) {
+    self.listID = listID
     self.title = title
     self.notes = notes
     self.deadline = deadline
     self.frequencySelection = frequencySelection
     self.customFrequency = customFrequency
-    self.listID = listID
   }
 }
 
@@ -89,15 +89,15 @@ public extension NewTodoModel {
   func createTodo() {
     let now = date.now
     let draft = Todo.Draft(
+      listID: listID,
+      rank: "0", // Placeholder, filled in by ModelActions.createTodo
       title: title,
       notes: notes,
       deadline: deadline,
       frequencyUnit: frequency?.unit,
       frequencyCount: frequency?.count,
       createDate: now,
-      modifyDate: now,
-      rank: "0", // Placeholder
-      listID: listID
+      modifyDate: now
     )
     withErrorReporting {
       try modelActions.createTodo(draft)

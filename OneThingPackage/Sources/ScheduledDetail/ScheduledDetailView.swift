@@ -17,7 +17,7 @@ public struct ScheduledDetailView: View {
             todo: todo,
             subtitle: todo.deadline.map { "Due \($0.subtitle)" }
           ) {
-            model.toggleComplete(todo.id, complete: todo.isTransitioning == false)
+            model.todoRowTapped(todo.id, isTransitioning: todo.isTransitioning)
           }
           .swipeActions {
             Button("Delete", systemImage: "xmark", role: .destructive) {
@@ -28,7 +28,7 @@ public struct ScheduledDetailView: View {
             TodoRowContextMenu(
               currentListID: todo.listID,
               movableLists: model.movableLists,
-              onToggleComplete: { model.toggleComplete(todo.id, complete: todo.isTransitioning == false) },
+              onTap: { model.todoRowTapped(todo.id, isTransitioning: todo.isTransitioning) },
               onDelete: { model.deleteTodo(todo.id) },
               onMove: { listID in model.moveTodo(todo.id, to: listID) }
             )

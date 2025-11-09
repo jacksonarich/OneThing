@@ -52,8 +52,8 @@ public final class InProgressDetailModel {
 
 public extension InProgressDetailModel {
   
-  func toggleComplete(_ todoID: Todo.ID, complete shouldComplete: Bool) {
-    modelTransitions.toggleComplete(todoID, complete: shouldComplete)
+  func todoRowTapped(_ todoID: Todo.ID, isTransitioning: Bool) {
+    modelTransitions.setTransition(todoID, to: isTransitioning == false)
   }
   
   func deleteTodo(_ todoID: Todo.ID) {

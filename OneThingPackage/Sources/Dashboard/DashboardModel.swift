@@ -2,7 +2,6 @@ import AppModels
 import Dependencies
 import Foundation
 import ModelActions
-import ModelTransitions
 import Sharing
 import SQLiteData
 import SwiftUI
@@ -68,10 +67,7 @@ public final class DashboardModel {
   @ObservationIgnored
   @Shared(.navPath)
   private(set) var navPath
-  
-  @ObservationIgnored
-  private var modelTransitions = ModelTransitions()
-  
+    
   var isCreatingList: Bool
   var editingListID: TodoList.ID?
   var editMode: EditMode
@@ -102,22 +98,6 @@ public final class DashboardModel {
 
 
 public extension DashboardModel {
-  
-  func toggleComplete(_ todoID: Todo.ID, complete shouldComplete: Bool) {
-    modelTransitions.toggleComplete(todoID, complete: shouldComplete)
-  }
-  
-  func deleteTodo(_ todo: Todo) {
-    withErrorReporting {
-      try modelActions.deleteTodo(todo.id)
-    }
-  }
-  
-  func moveTodo(id: Todo.ID, to listID: TodoList.ID) {
-    withErrorReporting {
-      try modelActions.moveTodo(id, listID)
-    }
-  }
   
   func listRowTapped(id: TodoList.ID) {
     if isEditing {

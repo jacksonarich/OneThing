@@ -25,6 +25,8 @@ extension Database {
       let ranks = rankGeneration.distribute(listData.todos.count)
       for (rank, todoData) in zip(ranks, listData.todos) {
         let todo = Todo.Draft(
+          listID: listID,
+          rank: todoData.rank ?? rank,
           title: todoData.title,
           notes: todoData.notes,
           deadline: todoData.deadline,
@@ -34,8 +36,7 @@ extension Database {
           modifyDate: todoData.modifyDate,
           completeDate: todoData.completeDate,
           deleteDate: todoData.deleteDate,
-          rank: todoData.rank ?? rank,
-          listID: listID
+          isTransitioning: todoData.isTransitioning
         )
         try Todo
           .insert { todo }

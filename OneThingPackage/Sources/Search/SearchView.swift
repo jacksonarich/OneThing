@@ -18,7 +18,7 @@ public struct SearchView: View {
         todo: todo,
         subtitle: todo.deadline.map { "Due \($0.subtitle)" }
       ) {
-        model.toggleComplete(todo.id, complete: todo.isTransitioning == false)
+        model.todoRowTapped(todo.id, isTransitioning: todo.isTransitioning)
       }
       .listRowSeparator(.hidden)
     }

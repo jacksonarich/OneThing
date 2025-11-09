@@ -15,6 +15,10 @@ let package = Package(
       targets: ["AppFeature"]
     ),
     .library(
+      name: "AppModels",
+      targets: ["AppModels"]
+    ),
+    .library(
       name: "CompletedDetail",
       targets: ["CompletedDetail"]
     ),
@@ -63,12 +67,12 @@ let package = Package(
       targets: ["ScheduledDetail"]
     ),
     .library(
-      name: "Utilities",
-      targets: ["Utilities"]
+      name: "TestSupport",
+      targets: ["TestSupport"]
     ),
     .library(
-      name: "AppModels",
-      targets: ["AppModels"]
+      name: "Utilities",
+      targets: ["Utilities"]
     ),
   ],
   dependencies: [
@@ -144,6 +148,7 @@ let package = Package(
         "AppModels",
         "Dashboard",
         "ModelActions",
+        "TestSupport",
         "Utilities",
       ]
     ),
@@ -224,6 +229,7 @@ let package = Package(
         .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
         "AppDatabase",
         "ModelTransitions",
+        "TestSupport",
       ]
     ),
     .target(
@@ -285,7 +291,17 @@ let package = Package(
         "AppDatabase",
         "AppModels",
         "ModelActions",
+        "ModelTransitions",
         "Utilities",
+      ]
+    ),
+    .target(
+      name: "TestSupport",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "SQLiteData", package: "sqlite-data"),
+        "AppDatabase",
+        "AppModels",
       ]
     ),
     .target(

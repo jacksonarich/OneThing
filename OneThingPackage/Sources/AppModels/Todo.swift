@@ -5,6 +5,8 @@ import SQLiteData
 @Table
 public struct Todo: Codable, Equatable, Identifiable, Sendable {
   public let id: ID
+  public var listID: TodoList.ID
+  public var rank: Rank
   public var title: String = ""
   public var notes: String = ""
   public var deadline: Date? = nil
@@ -14,14 +16,14 @@ public struct Todo: Codable, Equatable, Identifiable, Sendable {
   public var modifyDate: Date
   public var completeDate: Date? = nil
   public var deleteDate: Date? = nil
-  public var rank: Rank
-  public var listID: TodoList.ID
   public var isTransitioning: Bool = false
   
   public typealias ID = Int
   
   public init(
     id: ID,
+    listID: TodoList.ID,
+    rank: Rank,
     title: String = "",
     notes: String = "",
     deadline: Date? = nil,
@@ -31,11 +33,11 @@ public struct Todo: Codable, Equatable, Identifiable, Sendable {
     modifyDate: Date,
     completeDate: Date? = nil,
     deleteDate: Date? = nil,
-    rank: Rank,
-    listID: TodoList.ID,
     isTransitioning: Bool = false
   ) {
     self.id = id
+    self.listID = listID
+    self.rank = rank
     self.title = title
     self.notes = notes
     self.deadline = deadline
@@ -45,8 +47,6 @@ public struct Todo: Codable, Equatable, Identifiable, Sendable {
     self.modifyDate = modifyDate
     self.completeDate = completeDate
     self.deleteDate = deleteDate
-    self.rank = rank
-    self.listID = listID
     self.isTransitioning = isTransitioning
   }
 }
@@ -57,7 +57,9 @@ extension Todo.Draft: Equatable, Sendable {}
 
 extension Todo.Draft {
   public init(
-    id: Todo.ID? = nil,
+    _ id: Todo.ID? = nil,
+    listID: TodoList.ID,
+    rank: Rank,
     title: String = "",
     notes: String = "",
     deadline: Date? = nil,
@@ -67,30 +69,28 @@ extension Todo.Draft {
     modifyDate: Date? = nil,
     completeDate: Date? = nil,
     deleteDate: Date? = nil,
-    rank: Rank,
-    listID: TodoList.ID
+    isTransitioning: Bool = false
   ) {
-    let created = createDate ?? {
-      @Dependency(\.date) var date
-      return date.now
-    }()
-    let modified = modifyDate ?? createDate ?? {
-      @Dependency(\.date) var date
-      return date.now
-    }()
     self.init(
       id: id,
+      listID: listID,
+      rank: rank,
       title: title,
       notes: notes,
       deadline: deadline,
       frequencyUnit: frequencyUnit,
       frequencyCount: frequencyCount,
-      createDate: created,
-      modifyDate: modified,
+      createDate: createDate ?? {
+        @Dependency(\.date) var date
+        return date.now
+      }(),
+      modifyDate: modifyDate ?? createDate ?? {
+        @Dependency(\.date) var date
+        return date.now
+      }(),
       completeDate: completeDate,
       deleteDate: deleteDate,
-      rank: rank,
-      listID: listID
+      isTransitioning: isTransitioning
     )
   }
 }

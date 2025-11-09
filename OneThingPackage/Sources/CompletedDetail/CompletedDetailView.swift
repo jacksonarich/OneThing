@@ -40,7 +40,7 @@ public struct CompletedDetailView: View {
                 Button {
                   model.moveTodo(todo.id, to: list.id)
                 } label: {
-                  Label(list.name, systemImage: list.id == todo.listID ? "checkmark" : "")
+                  Label(list.name, systemImage: list.id == todo.listID ? "checkmark" : "DEBUG")
                 }
               }
             } label: {

@@ -30,7 +30,6 @@ public final class NewListModel {
   }
   
   var name: String
-  
   var color: ListColor = .red
   
   public init(
