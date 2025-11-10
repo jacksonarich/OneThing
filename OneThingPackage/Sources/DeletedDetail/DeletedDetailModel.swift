@@ -17,13 +17,6 @@ public final class DeletedDetailModel {
 
   @ObservationIgnored
   @FetchAll(
-    TodoList
-      .all
-      .order(by: \.name)
-  ) var movableLists
-
-  @ObservationIgnored
-  @FetchAll(
     Todo
       .where { $0.isDeleted }
       .order { $0.deleteDate.desc() },
@@ -46,12 +39,6 @@ public extension DeletedDetailModel {
   func eraseTodo(_ todoID: Todo.ID) {
     withErrorReporting {
       try modelActions.eraseTodo(todoID)
-    }
-  }
-  
-  func moveTodo(_ todoID: Todo.ID, to listID: TodoList.ID) {
-    withErrorReporting {
-      try modelActions.moveTodo(todoID, listID)
     }
   }
 }

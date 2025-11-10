@@ -14,44 +14,22 @@ public extension Todo.Draft {
   }
 }
 
-
-public extension Todo {
-  /// True iff `title` contains the given text, case insensitive.
-  func search(_ text: String) -> some QueryExpression<Bool> {
-    text.isEmpty
-    || title.lowercased().contains(text.lowercased())
-  }
-}
-public extension Todo.Draft {
-  /// True iff `title` contains the given text, case insensitive.
-  func search(_ text: String) -> Bool {
-    text.isEmpty
-    || title.lowercased().contains(text.lowercased())
-  }
-}
-public extension Todo.TableColumns {
-  /// True iff `title` contains the given text, case insensitive.
-  func search(_ text: String) -> some QueryExpression<Bool> {
-    text.isEmpty
-    || title.lower().contains(text.lowercased())
-  }
-}
-
-
 public extension Todo.TableColumns {
   func contains(_ text: String) -> some QueryExpression<Bool> {
     title.lower().contains(text.lowercased())
   }
   var isCompleted: some QueryExpression<Bool> {
-    completeDate != nil
+    completeDate.isNot(nil)
   }
   var isDeleted: some QueryExpression<Bool> {
-    deleteDate != nil
+    deleteDate.isNot(nil)
   }
   var isInProgress: some QueryExpression<Bool> {
-    completeDate == nil && deleteDate == nil
+    completeDate.is(nil)
+    .and(deleteDate.is(nil))
   }
   var isScheduled: some QueryExpression<Bool> {
-    isInProgress && deadline != nil
+    isInProgress
+    .and(deadline.isNot(nil))
   }
 }

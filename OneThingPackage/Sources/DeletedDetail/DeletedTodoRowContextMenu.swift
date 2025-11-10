@@ -3,24 +3,15 @@ import SwiftUI
 
 
 struct DeletedTodoRowContextMenu: View {
-  let currentListID: TodoList.ID
-  let movableLists: [TodoList]
   let onPutBack: () -> Void
   let onErase: () -> Void
-  let onMove: (TodoList.ID) -> Void
   
   public init(
-    currentListID: TodoList.ID,
-    movableLists: [TodoList],
     onPutBack: @escaping () -> Void,
-    onErase: @escaping () -> Void,
-    onMove: @escaping (TodoList.ID) -> Void
+    onErase: @escaping () -> Void
   ) {
-    self.currentListID = currentListID
-    self.movableLists = movableLists
     self.onPutBack = onPutBack
     self.onErase = onErase
-    self.onMove = onMove
   }
   
   public var body: some View {
@@ -29,17 +20,6 @@ struct DeletedTodoRowContextMenu: View {
     }
     Button(action: onErase) {
       Label("Erase", systemImage: "trash")
-    }
-    Menu {
-      ForEach(movableLists) { list in
-        Button {
-          onMove(list.id)
-        } label: {
-          Label(list.name, systemImage: list.id == currentListID ? "checkmark" : "DEBUG")
-        }
-      }
-    } label: {
-      Label("Move To...", systemImage: "folder")
     }
   }
 }

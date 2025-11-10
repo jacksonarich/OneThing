@@ -17,15 +17,9 @@ public final class CompletedDetailModel {
 
   @ObservationIgnored
   @FetchAll(
-    TodoList
-      .all
-      .order(by: \.name)
-  ) var movableLists
-
-  @ObservationIgnored
-  @FetchAll(
     Todo
       .where { $0.isCompleted }
+      .where { $0.deleteDate.is(nil) }
       .order { $0.completeDate.desc() },
     animation: .default
   )
@@ -46,12 +40,6 @@ public extension CompletedDetailModel {
   func deleteTodo(_ todoID: Todo.ID) {
     withErrorReporting {
       try modelActions.deleteTodo(todoID)
-    }
-  }
-  
-  func moveTodo(_ todoID: Todo.ID, to listID: TodoList.ID) {
-    withErrorReporting {
-      try modelActions.moveTodo(todoID, listID)
     }
   }
 }

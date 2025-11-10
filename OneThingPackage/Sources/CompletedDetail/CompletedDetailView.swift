@@ -35,17 +35,6 @@ public struct CompletedDetailView: View {
             } label: {
               Label("Delete", systemImage: "xmark")
             }
-            Menu {
-              ForEach(model.movableLists) { list in
-                Button {
-                  model.moveTodo(todo.id, to: list.id)
-                } label: {
-                  Label(list.name, systemImage: list.id == todo.listID ? "checkmark" : "DEBUG")
-                }
-              }
-            } label: {
-              Label("Move To...", systemImage: "folder")
-            }
           }
         }
         .listRowSeparator(.hidden)

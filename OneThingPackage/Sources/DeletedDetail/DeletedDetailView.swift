@@ -26,11 +26,8 @@ public struct DeletedDetailView: View {
           }
           .contextMenu {
             DeletedTodoRowContextMenu(
-              currentListID: todo.listID,
-              movableLists: model.movableLists,
               onPutBack: { model.putBackTodo(todo.id) },
               onErase: { model.eraseTodo(todo.id) },
-              onMove: { listID in model.moveTodo(todo.id, to: listID) }
             )
           }
         }

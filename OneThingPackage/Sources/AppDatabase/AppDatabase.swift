@@ -31,7 +31,7 @@ public func appDatabase(
 
 
 func getDatabaseConfig() -> Configuration {
-  var config = Configuration()
+  let config = Configuration()
 //#if DEBUG
 //  config.prepareDatabase { db in
 //    db.trace(options: .profile) {
