@@ -41,6 +41,7 @@ public struct AppEntryPoint: View {
           }
         }
     }
+    .fontDesign(.rounded)
   }
 }
 

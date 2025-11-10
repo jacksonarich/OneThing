@@ -47,7 +47,6 @@ public struct ListDetailView: View {
       if model.todos.isEmpty {
         Text("Nothing to see here")
           .foregroundStyle(Color.secondary)
-          .fontDesign(.rounded)
       }
     }
     .sheet(isPresented: $model.isCreatingTodo, content: {

@@ -79,7 +79,6 @@ struct ListCells: View {
           )
         ) {
           Text(computedList.rawValue)
-            .fontDesign(.rounded)
         }
       }
     } else {

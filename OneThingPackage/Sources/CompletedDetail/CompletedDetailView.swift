@@ -44,7 +44,6 @@ public struct CompletedDetailView: View {
       if model.todos.isEmpty {
         Text("Nothing to see here")
           .foregroundStyle(Color.secondary)
-          .fontDesign(.rounded)
       }
     }
     .navigationTitle("Completed")

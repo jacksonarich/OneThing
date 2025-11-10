@@ -38,7 +38,6 @@ public struct DeletedDetailView: View {
       if model.todos.isEmpty {
         Text("Nothing to see here")
           .foregroundStyle(Color.secondary)
-          .fontDesign(.rounded)
       }
     }
     .navigationTitle("Deleted")

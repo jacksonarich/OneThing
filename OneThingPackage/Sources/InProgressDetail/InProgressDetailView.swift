@@ -40,7 +40,6 @@ public struct InProgressDetailView: View {
             Text(group.list.name) 
               .foregroundStyle(group.list.color.swiftUIColor ?? .gray)
               .font(.title2)
-              .fontDesign(.rounded)
               .bold()
               .lineLimit(2)
           }
@@ -52,7 +51,6 @@ public struct InProgressDetailView: View {
       if model.todoGroups.isEmpty {
         Text("Nothing to see here")
           .foregroundStyle(Color.secondary)
-          .fontDesign(.rounded)
       }
     }
     .navigationTitle("In Progress")

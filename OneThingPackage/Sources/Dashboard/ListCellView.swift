@@ -34,7 +34,6 @@ struct ListCellView: View {
         Text(list.rawValue)
           .foregroundStyle(.gray)
           .font(.headline)
-          .fontDesign(.rounded)
           .bold()
           .padding(.leading, 4)
       }
@@ -43,7 +42,6 @@ struct ListCellView: View {
         Text("\(count)")
           .foregroundStyle(Color.primary)
           .font(.title)
-          .fontDesign(.rounded)
           .bold()
       }
     }

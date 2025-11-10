@@ -41,7 +41,6 @@ public struct ScheduledDetailView: View {
       if model.todos.isEmpty {
         Text("Nothing to see here")
           .foregroundStyle(Color.secondary)
-          .fontDesign(.rounded)
       }
     }
     .navigationTitle("Scheduled")

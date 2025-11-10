@@ -49,7 +49,6 @@ public struct TodoRowButton: View {
         VStack(alignment: .leading) {
           Text(title)
             .foregroundStyle(Color.primary)
-            .fontDesign(.rounded)
             .lineLimit(2)
             .multilineTextAlignment(.leading)
             .strikethrough(isTransitioning)
@@ -57,7 +56,6 @@ public struct TodoRowButton: View {
             Text(subtitle)
               .foregroundStyle(Color.secondary)
               .font(.callout)
-              .fontDesign(.rounded)
               .animation(.default, value: self.subtitle)
           }
         }

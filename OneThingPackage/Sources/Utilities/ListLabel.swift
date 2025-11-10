@@ -14,7 +14,6 @@ public struct ListLabel: View {
     Label {
       Text(name)
         .foregroundStyle(Color.primary)
-        .fontDesign(.rounded)
         .lineLimit(2)
     } icon: {
       Image(systemName: "circle.fill")

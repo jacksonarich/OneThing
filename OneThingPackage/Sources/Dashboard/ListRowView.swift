@@ -20,7 +20,6 @@ private struct ListCount: View {
       HStack {
         Text("\(count)")
           .foregroundStyle(Color.gray)
-          .fontDesign(.rounded)
         Image(systemName: "chevron.right")
           .font(.footnote.bold())
           .foregroundStyle(Color(.tertiaryLabel))
