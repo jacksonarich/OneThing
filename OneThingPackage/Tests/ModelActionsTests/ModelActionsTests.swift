@@ -1,173 +1,167 @@
-import CustomDump
-import Dependencies
-import DependenciesTestSupport
-import Foundation
-import SQLiteData
-import StructuredQueries
-import Testing
-
-import AppDatabase
-import ModelActions
 import AppModels
-import Utilities
+import Foundation
+import ModelActions
+import SQLiteData
+import Testing
+import TestSupport
 
 
-let now = Date(timeIntervalSince1970: 0)
-
-
-@Suite(
-  .dependency(\.defaultDatabase, try appDatabase()),
-  .dependency(\.date.now, now)
-)
+@MainActor
 struct ModelActionsTests {
   
   @Test
-  func testCreateList() async throws {
-    try ModelActions.testValue.createList(.init())
-    @FetchAll(TodoList.Draft.all) var allLists
-    @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference([.init(id: 1)], allLists)
-    expectNoDifference([], allTodos)
+  func completeTodo() async throws {
+    await prepareTest {
+      TodoListData {
+        TodoData()
+      }
+    } test: {
+      let model = ModelActions.testValue
+      await runAction {
+        try model.completeTodo(1)
+      } assert: {
+        $0.todos[0].completeDate = Date(1)
+      }
+    }
   }
   
   @Test
-  func testUpdateList() async throws {
-    // setup
-    try ModelActions.testValue.seedDatabase([
-      TodoList.Draft()
-    ], [])
-    // begin test
-    try ModelActions.testValue.updateList(1, "Grocery", .blue)
-    @FetchAll(TodoList.Draft.all) var allLists
-    @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference([.init(id: 1, name: "Grocery", color: .blue)], allLists)
-    expectNoDifference([], allTodos)
+  func rescheduleTodo() async throws {
+    await prepareTest {
+      TodoListData {
+        TodoData(deadline: Date(0), frequencyUnit: .week, frequencyCount: 2)
+      }
+    } test: {
+      let model = ModelActions.testValue
+      await runAction {
+        try model.completeTodo(1)
+      } assert: {
+        $0.todos[0].deadline = Date(60 * 60 * 24 * 7 * 2)
+      }
+    }
   }
   
   @Test
-  func testDeleteList() async throws {
-    // setup
-    try ModelActions.testValue.seedDatabase([
-      TodoList.Draft()
-    ], [])
-    // begin test
-    try ModelActions.testValue.deleteList(1)
-    @FetchAll(TodoList.Draft.all) var allLists
-    @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference([], allLists)
-    expectNoDifference([], allTodos)
+  func deleteTodo() async throws {
+    await prepareTest {
+      TodoListData {
+        TodoData()
+      }
+    } test: {
+      let model = ModelActions.testValue
+      await runAction {
+        try model.deleteTodo(1)
+      } assert: {
+        $0.todos[0].deleteDate = Date(1)
+      }
+    }
   }
   
   @Test
-  func testCreateEmptyTodo() async throws {
-    // setup
-    try ModelActions.testValue.seedDatabase([
-      TodoList.Draft()
-    ], [])
-    // begin test
-    try ModelActions.testValue.createTodo(.init(rank: "0", listID: 1))
-    @FetchAll(TodoList.Draft.all) var allLists
-    @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference([.init(id: 1)], allLists)
-    expectNoDifference([.init(id: 1, rank: "0", listID: 1)], allTodos)
+  func putBackTodo() async throws {
+    await prepareTest {
+      TodoListData {
+        TodoData(completeDate: Date(0), deleteDate: Date(0))
+      }
+    } test: {
+      let model = ModelActions.testValue
+      await runAction {
+        try model.putBackTodo(1)
+      } assert: {
+        $0.todos[0].completeDate = nil
+        $0.todos[0].deleteDate = nil
+      }
+    }
   }
   
   @Test
-  func testCompleteTodo() async throws {
-    // setup
-    try ModelActions.testValue.seedDatabase([
-      TodoList.Draft()
-    ], [
-      Todo.Draft(rank: "0", listID: 1)
-    ])
-    // begin test
-    try ModelActions.testValue.completeTodo(1)
-    @FetchAll(TodoList.Draft.all) var allLists
-    @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference([.init(id: 1)], allLists)
-    expectNoDifference([.init(id: 1, completeDate: now, rank: "0", listID: 1)], allTodos)
+  func eraseTodo() async throws {
+    await prepareTest {
+      TodoListData {
+        TodoData(completeDate: Date(0), deleteDate: Date(0))
+      }
+    } test: {
+      let model = ModelActions.testValue
+      await runAction {
+        try model.eraseTodo(1)
+      } assert: {
+        $0.todos = []
+      }
+    }
   }
   
   @Test
-  func testDeleteTodo() async throws {
-    // setup
-    try ModelActions.testValue.seedDatabase([
-      TodoList.Draft()
-    ], [
-      Todo.Draft(rank: "0", listID: 1)
-    ])
-    // begin test
-    try ModelActions.testValue.deleteTodo(1)
-    @FetchAll(TodoList.Draft.all) var allLists
-    @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference([.init(id: 1)], allLists)
-    expectNoDifference([.init(id: 1, deleteDate: now, rank: "0", listID: 1)], allTodos)
+  func moveTodo() async throws {
+    await prepareTest {
+      TodoListData {
+        TodoData()
+      }
+      TodoListData()
+    } test: {
+      let model = ModelActions.testValue
+      await runAction {
+        try model.moveTodo(1, 2)
+      } assert: {
+        $0.todos[0].listID = 2
+      }
+    }
   }
   
   @Test
-  func testPutBackTodo() async throws {
-    // setup
-    try ModelActions.testValue.seedDatabase([
-      TodoList.Draft()
-    ], [
-      Todo.Draft(completeDate: .now, deleteDate: .now, rank: "0", listID: 1)
-    ])
-    // begin test
-    try ModelActions.testValue.putBackTodo(1)
-    @FetchAll(TodoList.Draft.all) var allLists
-    @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference([.init(id: 1)], allLists)
-    expectNoDifference([.init(id: 1, rank: "0", listID: 1)], allTodos)
+  func createList() async throws {
+    await prepareTest {
+    } test: {
+      let model = ModelActions.testValue
+      await runAction {
+        try model.createList(TodoList.Draft())
+      } assert: {
+        $0.lists = [TodoList(id: 1, createDate: Date(1), modifyDate: Date(1))]
+      }
+    }
   }
   
   @Test
-  func testEraseTodo() async throws {
-    // setup
-    try ModelActions.testValue.seedDatabase([
-      TodoList.Draft()
-    ], [
-      Todo.Draft(rank: "0", listID: 1)
-    ])
-    // begin test
-    try ModelActions.testValue.eraseTodo(1)
-    @FetchAll(TodoList.Draft.all) var allLists
-    @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference([.init(id: 1)], allLists)
-    expectNoDifference([], allTodos)
+  func updateList() async throws {
+    await prepareTest {
+      TodoListData()
+    } test: {
+      let model = ModelActions.testValue
+      await runAction {
+        try model.updateList(1, "Name", .yellow)
+      } assert: {
+        $0.lists[0].name = "Name"
+        $0.lists[0].color = .yellow
+      }
+    }
   }
   
   @Test
-  func testMoveTodo() async throws {
-    // setup
-    try ModelActions.testValue.seedDatabase([
-      TodoList.Draft(),
-      TodoList.Draft()
-    ], [
-      Todo.Draft(rank: "0", listID: 1)
-    ])
-    // begin test
-    try ModelActions.testValue.moveTodo(1, 2)
-    @FetchAll(TodoList.Draft.all) var allLists
-    @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference([.init(id: 1), .init(id: 2)], allLists)
-    expectNoDifference([.init(id: 1, rank: "0", listID: 2)], allTodos)
+  func deleteList() async throws {
+    await prepareTest {
+      TodoListData()
+    } test: {
+      let model = ModelActions.testValue
+      await runAction {
+        try model.deleteList(1)
+      } assert: {
+        $0.lists = []
+      }
+    }
   }
   
-  @Test
-  func testRescheduleTodo() async throws {
-    // setup
-    try ModelActions.testValue.seedDatabase([
-      TodoList.Draft()
-    ], [
-      Todo.Draft(deadline: now, frequencyUnit: .day, frequencyCount: 2, rank: "0", listID: 1)
-    ])
-    // begin test
-    try ModelActions.testValue.completeTodo(1)
-    @FetchAll(TodoList.Draft.all) var allLists
-    @FetchAll(Todo.Draft.all) var allTodos
-    expectNoDifference([.init(id: 1)], allLists)
-    expectNoDifference([
-      .init(id: 1, deadline: Calendar.current.date(byAdding: .day, value: 2, to: now), frequencyUnit: .day, frequencyCount: 2, rank: "0", listID: 1)
-    ], allTodos)
+  @Test(arguments: [false, true])
+  func transitionTodo(isTransitioning: Bool) async throws {
+    await prepareTest {
+      TodoListData {
+        TodoData(isTransitioning: isTransitioning)
+      }
+    } test: {
+      let model = ModelActions.testValue
+      await runAction {
+        try model.transitionTodo(1, isTransitioning == false)
+      } assert: {
+        $0.todos[0].isTransitioning.toggle()
+      }
+    }
   }
 }

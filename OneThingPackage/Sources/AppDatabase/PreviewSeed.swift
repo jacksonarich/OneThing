@@ -26,7 +26,7 @@ extension AppData {
               minute: 0,
               second: 0,
               of: calendar.nextDate(
-                after: .now,
+                after: date.now,
                 matching: DateComponents(weekday: 6),
                 matchingPolicy: .nextTime)!)!
           )
@@ -59,7 +59,7 @@ extension AppData {
               minute: 0,
               second: 0,
               of: calendar.nextDate(
-                after: .now,
+                after: date.now,
                 matching: DateComponents(weekday: 7),
                 matchingPolicy: .nextTime)!)
           )
@@ -70,7 +70,7 @@ extension AppData {
               minute: 0,
               second: 0,
               of: calendar.nextDate(
-                after: .now,
+                after: date.now,
                 matching: DateComponents(weekday: 1),
                 matchingPolicy: .nextTime)!)
           )
@@ -91,14 +91,12 @@ extension AppData {
         todos: {
           TodoData(
             title: "Reply to Sarah's email",
-            notes: "About the project update"
+            notes: "About the project update",
+            deadline: calendar.date(byAdding: .day, value: -1, to: date.now)
           )
           TodoData(
             title: "Pay electricity bill",
-            deadline: calendar.nextDate( // Next Monday
-              after: .now,
-              matching: DateComponents(weekday: 2),
-              matchingPolicy: .nextTime)!
+            deadline: calendar.date(byAdding: .day, value: 1, to: date.now)
           )
           TodoData(
             title: "Finish quarterly report",
@@ -110,7 +108,7 @@ extension AppData {
               of: calendar.date(
                 byAdding: .month,
                 value: 1,
-                to: calendar.date(from: calendar.dateComponents([.year, .month], from: .now))!)!)!,
+                to: calendar.date(from: calendar.dateComponents([.year, .month], from: date.now))!)!)!,
             frequencyUnit: .month,
             frequencyCount: 3
           )
@@ -195,7 +193,7 @@ extension AppData {
               minute: 0,
               second: 0,
               of: calendar.nextDate(
-                after: .now,
+                after: date.now,
                 matching: DateComponents(weekday: 1),
                 matchingPolicy: .nextTime)!)!,
             frequencyUnit: .week,
@@ -210,7 +208,7 @@ extension AppData {
               second: 0,
               of: calendar.date(
                 byAdding: .day,
-                value: 1, to: .now)!)!,
+                value: 1, to: date.now)!)!,
             frequencyUnit: .week,
             frequencyCount: 1
           )
@@ -232,7 +230,7 @@ extension AppData {
               minute: 0,
               second: 0,
               of: calendar.nextDate(
-                after: .now,
+                after: date.now,
                 matching: DateComponents(weekday: 6),
                 matchingPolicy: .nextTime)!)!
           )
@@ -252,7 +250,7 @@ extension AppData {
               bySettingHour: 18,
               minute: 30,
               second: 0,
-              of: .now)!
+              of: date.now)!
           )
         }
       )
@@ -270,7 +268,7 @@ extension AppData {
             deadline: calendar.date( // Two weeks from today
               byAdding: .day,
               value: 14,
-              to: .now)!,
+              to: date.now)!,
             frequencyUnit: .year,
             frequencyCount: 1
           )

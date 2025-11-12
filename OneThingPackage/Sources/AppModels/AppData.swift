@@ -58,7 +58,7 @@ public struct TodoListData: Sendable {
 
 public struct TodoData: Sendable {
   public var rank: Rank? = nil
-  public var title: String
+  public var title: String = ""
   public var notes: String = ""
   public var deadline: Date? = nil
   public var frequencyUnit: FrequencyUnit? = nil

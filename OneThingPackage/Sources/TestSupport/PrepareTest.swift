@@ -4,21 +4,34 @@ import Dependencies
 import Foundation
 import Testing
 
-public func prepareTest<Model: AnyObject>(
-  _ model: @autoclosure () -> Model,
-  @TodoListBuilder database: () -> [TodoListData],
-  dependencies prepareDependencies: (inout DependencyValues) -> Void = { _ in },
+
+//@MainActor
+public func prepareTest(
+  @TodoListBuilder data: @Sendable () -> [TodoListData],
+  dependencies: @Sendable (inout DependencyValues) -> Void = { _ in },
+  test: @MainActor () async throws -> Void,
   sourceLocation: SourceLocation = #_sourceLocation
-) -> Model {
-  withDependencies {
-    do {
-      $0.date.now = Date(timeIntervalSince1970: 0)
-      $0.defaultDatabase = try appDatabase(data: AppData(lists: database))
-      prepareDependencies(&$0)
-    } catch {
-      Issue.record(error, sourceLocation: sourceLocation)
+) async {
+  do {
+    let connection = try withDependencies {
+      $0.date.now = Date(0)
+    } operation: {
+      return try appDatabase(data: AppData(lists: data))
     }
-  } operation: {
-    return model()
+    try await withDependencies {
+      $0.date.now = Date(1)
+      $0.defaultDatabase = connection
+      dependencies(&$0)
+    } operation: {
+      try await test()
+    }
+  } catch {
+    Issue.record(error, sourceLocation: sourceLocation)
   }
 }
+
+
+// was working on this last night, found that my prepareDependencies solution doesn't work with parameterized tests (GPT convo)
+// decided to just use withDependencies and put the entire test in a closure passed to prepareTest
+// the concept does seem to work, but ended up adding a bunch of stuff to the prepareTest parameters, like async, throws, @Sendable, @MainActor
+// need to figure out how much of that stuff can be removed

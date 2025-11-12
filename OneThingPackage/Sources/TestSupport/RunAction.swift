@@ -6,30 +6,28 @@ import Foundation
 import SQLiteData
 import Testing
 
-public func runAction<Model: AnyObject>(
-  _ model: Model,
-  action: @MainActor () async -> Void,
-  change: @Sendable (inout DatabaseSnapshot) -> Void,
+
+public func runAction(
+  action: @MainActor () async throws -> Void,
+  assert change: @Sendable (inout DatabaseSnapshot) -> Void,
   fileID: StaticString = #fileID,
   filePath: StaticString = #filePath,
   line: UInt = #line,
   column: UInt = #column
 ) async {
   do {
-    try await withDependencies(from: model) {
-      var expected = try DatabaseSnapshot.fetch()
-      change(&expected)
-      await action()
-      let actual = try DatabaseSnapshot.fetch()
-      expectNoDifference(
-        expected,
-        actual,
-        fileID: fileID,
-        filePath: filePath,
-        line: line,
-        column: column
-      )
-    }
+    var expected = try DatabaseSnapshot.fetch()
+    change(&expected)
+    try await action()
+    let actual = try DatabaseSnapshot.fetch()
+    expectNoDifference(
+      expected,
+      actual,
+      fileID: fileID,
+      filePath: filePath,
+      line: line,
+      column: column
+    )
   } catch {
     reportIssue(error, fileID: fileID, filePath: filePath, line: line, column: column)
   }

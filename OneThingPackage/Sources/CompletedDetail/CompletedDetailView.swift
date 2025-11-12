@@ -15,7 +15,7 @@ public struct CompletedDetailView: View {
         ForEach(model.todos) { todo in
           TodoRowButton(
             todo: todo,
-            subtitle: todo.completeDate.map { "Completed \($0.subtitle)" }
+            subtitle: todo.completeDate.map { "Completed \($0.relativeString)" }
           ) {
             model.putBackTodo(todo.id)
           }

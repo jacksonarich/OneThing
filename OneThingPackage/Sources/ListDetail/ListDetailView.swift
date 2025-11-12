@@ -21,7 +21,7 @@ public struct ListDetailView: View {
         ForEach(model.todos) { todo in
           TodoRowButton(
             todo: todo,
-            subtitle: todo.deadline.map { "Due \($0.subtitle)" }
+            subtitle: todo.deadline.map { "Due \($0.relativeString)" }
           ) {
             model.todoRowTapped(todo.id, isTransitioning: todo.isTransitioning)
           }

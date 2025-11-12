@@ -77,7 +77,7 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/apple/swift-algorithms", from: "1.2.1"),
-    .package(url: "https://github.com/groue/GRDB.swift", from: "7.6.0"),
+//    .package(url: "https://github.com/groue/GRDB.swift", from: "7.6.0"),
     .package(url: "https://github.com/pointfreeco/sqlite-data", from: "1.0.0"),
     .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "1.9.0"),
     .package(url: "https://github.com/pointfreeco/swift-nonempty", from: "0.4.0"),
@@ -95,6 +95,7 @@ let package = Package(
     .target(
       name: "AppFeature",
       dependencies: [
+//        .product(name: "GRDB", package: "GRDB.swift"),
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppDatabase",
         "AppModels",
@@ -207,12 +208,10 @@ let package = Package(
     .testTarget(
       name: "ModelActionsTests",
       dependencies: [
-        .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
-        .product(name: "GRDB", package: "GRDB.swift"),
-        "AppDatabase",
+        .product(name: "SQLiteData", package: "sqlite-data"),
         "AppModels",
         "ModelActions",
-        "Utilities",
+        "TestSupport",
       ]
     ),
     .target(
@@ -226,8 +225,8 @@ let package = Package(
     .testTarget(
       name: "ModelTransitionsTests",
       dependencies: [
-        .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
-        "AppDatabase",
+        .product(name: "SQLiteData", package: "sqlite-data"),
+        "AppModels",
         "ModelTransitions",
         "TestSupport",
       ]

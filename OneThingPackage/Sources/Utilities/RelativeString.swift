@@ -7,7 +7,7 @@ extension Date {
     @Dependency(\.calendar) var calendar
     @Dependency(\.date.now) var now
     
-    var formatter = DateFormatter()
+    let formatter = DateFormatter()
     formatter.calendar = calendar
     formatter.locale = calendar.locale ?? Locale(identifier: "en_US_POSIX")
     formatter.timeZone = calendar.timeZone

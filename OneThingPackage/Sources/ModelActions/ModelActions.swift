@@ -8,7 +8,6 @@ import Utilities
 public struct ModelActions: Sendable {
   public var createTodo: @Sendable (Todo.Draft) throws -> Void
   public var completeTodo: @Sendable (Todo.ID) throws -> Void
-  public var unrescheduleTodo: @Sendable (Todo.ID, Date) throws -> Void
   public var deleteTodo: @Sendable (Todo.ID) throws -> Void
   public var putBackTodo: @Sendable (Todo.ID) throws -> Void
   public var eraseTodo: @Sendable (Todo.ID) throws -> Void
@@ -87,14 +86,6 @@ extension ModelActions: DependencyKey {
               .update { $0.completeDate = date.now }
               .execute(db)
           }
-        }
-      },
-      unrescheduleTodo: { todoID, oldDeadline in
-        try connection.write { db in
-          try Todo
-            .find(todoID)
-            .update { $0.deadline = oldDeadline }
-            .execute(db)
         }
       },
       deleteTodo: { todoID in
@@ -176,26 +167,31 @@ extension ModelActions: DependencyKey {
             .where { $0.isTransitioning }
             .fetchAll(db)
           for todo in transitioningTodos {
-            if let deadline = todo.deadline, let frequencyUnit = todo.frequencyUnit, let frequencyCount = todo.frequencyCount {
-              guard let calendarUnit = frequencyUnit.calendarComponent
-              else { throw ModelActionsError.invalidFrequency }
-              let newDeadline = deadline.nextFutureDate(
-                unit: calendarUnit,
-                count: frequencyCount
-              )
-              try Todo
-                .find(todo.id)
-                .update { $0.deadline = newDeadline }
-                .execute(db)
-            } else if todo.completeDate == nil {
-              try Todo
-                .find(todo.id)
-                .update { $0.completeDate = date.now }
-                .execute(db)
+            if todo.completeDate == nil {
+              if let deadline = todo.deadline, let frequencyUnit = todo.frequencyUnit, let frequencyCount = todo.frequencyCount {
+                guard let calendarUnit = frequencyUnit.calendarComponent
+                else { throw ModelActionsError.invalidFrequency }
+                let newDeadline = deadline.nextFutureDate(
+                  unit: calendarUnit,
+                  count: frequencyCount
+                )
+                try Todo
+                  .find(todo.id)
+                  .update { $0.deadline = newDeadline }
+                  .execute(db)
+              } else {
+                try Todo
+                  .find(todo.id)
+                  .update { $0.completeDate = date.now }
+                  .execute(db)
+              }
             } else {
               try Todo
                 .find(todo.id)
-                .update { $0.completeDate = nil }
+                .update {
+                  $0.completeDate = nil
+                  $0.deleteDate = nil
+                }
                 .execute(db)
             }
           }

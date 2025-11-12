@@ -17,7 +17,7 @@ public struct InProgressDetailView: View {
             ForEach(group.todos) { todo in
               TodoRowButton(
                 todo: todo,
-                subtitle: todo.deadline.map { "Due \($0.subtitle)" }
+                subtitle: todo.deadline.map { "Due \($0.relativeString)" }
               ) {
                 model.todoRowTapped(todo.id, isTransitioning: todo.isTransitioning)
               }

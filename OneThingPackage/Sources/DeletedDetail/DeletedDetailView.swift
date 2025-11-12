@@ -15,7 +15,7 @@ public struct DeletedDetailView: View {
         ForEach(model.todos) { todo in
           TodoRowButton(
             todo: todo,
-            subtitle: todo.deleteDate.map { "Deleted \($0.subtitle)" }
+            subtitle: todo.deleteDate.map { "Deleted \($0.relativeString)" }
           ) {
             model.putBackTodo(todo.id)
           }
