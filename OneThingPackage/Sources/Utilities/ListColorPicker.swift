@@ -2,10 +2,14 @@ import AppModels
 import SwiftUI
 
 
-struct ListColorPicker: View {
+public struct ListColorPicker: View {
   @Binding var color: ListColor
   
-  var body: some View {
+  public init(color: Binding<ListColor>) {
+    self._color = color
+  }
+  
+  public var body: some View {
     LazyVGrid(
       columns: (1...5).map {_ in GridItem(.flexible()) }
     ) {
@@ -22,4 +26,9 @@ struct ListColorPicker: View {
       }
     }
   }
+}
+
+#Preview {
+  @Previewable @State var color = ListColor.blue
+  ListColorPicker(color: $color)
 }

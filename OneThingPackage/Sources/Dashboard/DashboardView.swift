@@ -1,5 +1,6 @@
 import AppDatabase
 import AppModels
+import EditList
 import NewList
 import Search
 import SQLiteData
@@ -33,11 +34,11 @@ public struct DashboardView: View {
         NewListView(model: newListModel)
       }
     }
-//    .sheet(item: $model.editingListID) { listID in
-//      NavigationStack {
-//        EditListView(model: .init(listID: listID))
-//      }
-//    }
+    .sheet(item: $model.editingListID) { listID in
+      NavigationStack {
+        EditListView(listID: listID)
+      }
+    }
     .toolbar {
       Button(model.isEditing ? "Done" : "Edit") {
         withAnimation {

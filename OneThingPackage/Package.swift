@@ -31,6 +31,10 @@ let package = Package(
       targets: ["DeletedDetail"]
     ),
     .library(
+      name: "EditList",
+      targets: ["EditList"]
+    ),
+    .library(
       name: "InProgressDetail",
       targets: ["InProgressDetail"]
     ),
@@ -134,6 +138,7 @@ let package = Package(
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppDatabase",
         "AppModels",
+        "EditList",
         "ModelActions",
         "ModelTransitions",
         "NewList",
@@ -162,6 +167,24 @@ let package = Package(
         "AppModels",
         "ModelActions",
         "Utilities",
+      ]
+    ),
+    .target(
+      name: "EditList",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "SQLiteData", package: "sqlite-data"),
+        "AppDatabase",
+        "AppModels",
+        "ModelActions",
+        "Utilities",
+      ]
+    ),
+    .testTarget(
+      name: "EditListTests",
+      dependencies: [
+        "EditList",
+        "TestSupport",
       ]
     ),
     .target(

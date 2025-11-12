@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "A06843CD-5AE3-4805-BB42-B9D23DC7D9AF",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "performanceAntipatternCheckerEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "EditListTests",
+        "name" : "EditListTests"
+      }
+    }
+  ],
+  "version" : 1
+}

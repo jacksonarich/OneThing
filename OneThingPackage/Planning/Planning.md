@@ -16,7 +16,6 @@ others don't
 
 # Features
 
-* EditList (edit name, edit color, delete?)
 * Reorder todos
 * EditTodo
 * editMode for list detail & computed list detail
@@ -25,3 +24,4 @@ others don't
 
 # Future
 * Make Dashboard search bar a circle button instead in bottom right
+* Soft-delete lists

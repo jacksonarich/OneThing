@@ -17,7 +17,7 @@ public struct NewListView: View {
       Section {
         ListNameTextField(
           name: $model.name,
-          color: $model.color
+          color: model.color
         )
       }
       Section {
