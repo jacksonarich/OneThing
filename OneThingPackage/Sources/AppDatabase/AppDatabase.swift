@@ -10,23 +10,20 @@ import SQLiteData
 public func appDatabase(
   data: @autoclosure () -> AppData = AppData()
 ) throws -> any DatabaseWriter {
-  
-  // get connection
-  let connection = try getDatabaseConnection()
-  try migrate(connection)
-  
-  // seed database
+  // migrate
+  let database = try getDatabaseConnection()
+  try migrate(database)
+  // seed
 #if DEBUG
   @Dependency(\.context) var context
   if context != .live {
-    try connection.write { db in
+    try database.write { db in
       try db.seed(data())
     }
   }
 #endif
-  
   // return
-  return connection
+  return database
 }
 
 
@@ -45,20 +42,20 @@ func getDatabaseConfig() -> Configuration {
 
 func getDatabaseConnection() throws -> any DatabaseWriter {
   @Dependency(\.context) var context // magically knows if we're in a preview or not
-  let connection: any DatabaseWriter
+  let database: any DatabaseWriter
   let config = getDatabaseConfig()
   if context == .live {
     let path = URL.documentsDirectory.appending(component: "db.sqlite").path() // stored on disk
     print(path)
-    connection = try DatabaseQueue(path: path, configuration: config)
+    database = try DatabaseQueue(path: path, configuration: config)
   } else {
-    connection = try DatabaseQueue(configuration: config) // stored in memory
+    database = try DatabaseQueue(configuration: config) // stored in memory
   }
-  return connection
+  return database
 }
 
 
-func migrate(_ connection: DatabaseWriter) throws {
+func migrate(_ database: DatabaseWriter) throws {
   var migrator = DatabaseMigrator()
   #if DEBUG
   migrator.eraseDatabaseOnSchemaChange = true
@@ -89,6 +86,6 @@ func migrate(_ connection: DatabaseWriter) throws {
       table.column("isTransitioning", .boolean).notNull()
     }
   }
-  try migrator.migrate(connection)
+  try migrator.migrate(database)
 }
 

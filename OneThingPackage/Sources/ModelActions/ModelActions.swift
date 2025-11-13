@@ -30,12 +30,12 @@ public extension DependencyValues {
 
 extension ModelActions: DependencyKey {
   public static let liveValue = {
-    @Dependency(\.defaultDatabase) var connection
+    @Dependency(\.defaultDatabase) var database
     @Dependency(\.date) var date
     @Dependency(\.rankGeneration) var rankGeneration
     return Self(
       createTodo: { [rankGeneration] todo in
-        try connection.write { db in
+        try database.write { db in
           let maxRank = try Todo
             .select { $0.rank.max() }
             .fetchOne(db) ?? nil
@@ -65,7 +65,7 @@ extension ModelActions: DependencyKey {
         }
       },
       completeTodo: { todoID in
-        try connection.write { db in
+        try database.write { db in
           guard let todo = try Todo
             .find(todoID)
             .fetchOne(db) else { return }
@@ -89,7 +89,7 @@ extension ModelActions: DependencyKey {
         }
       },
       deleteTodo: { todoID in
-        try connection.write { db in
+        try database.write { db in
           try Todo
             .find(todoID)
             .update { $0.deleteDate = date.now }
@@ -97,7 +97,7 @@ extension ModelActions: DependencyKey {
         }
       },
       putBackTodo: { todoID in
-        try connection.write { db in
+        try database.write { db in
           try Todo
             .find(todoID)
             .update {
@@ -108,7 +108,7 @@ extension ModelActions: DependencyKey {
         }
       },
       eraseTodo: { todoID in
-        try connection.write { db in
+        try database.write { db in
           try Todo
             .find(todoID)
             .delete()
@@ -116,7 +116,7 @@ extension ModelActions: DependencyKey {
         }
       },
       moveTodo: { todoID, listID in
-        try connection.write { db in
+        try database.write { db in
           try Todo
             .find(todoID)
             .update { $0.listID = listID }
@@ -124,14 +124,14 @@ extension ModelActions: DependencyKey {
         }
       },
       createList: { list in
-        try connection.write { db in
+        try database.write { db in
           try TodoList
             .insert { list }
             .execute(db)
         }
       },
       updateList: { listID, listName, listColor in
-        try connection.write { db in
+        try database.write { db in
           try TodoList
             .find(listID)
             .update {
@@ -142,7 +142,7 @@ extension ModelActions: DependencyKey {
         }
       },
       deleteList: { listID in
-        try connection.write { db in
+        try database.write { db in
           try Todo
             .where { $0.listID.eq(listID) }
             .delete()
@@ -154,7 +154,7 @@ extension ModelActions: DependencyKey {
         }
       },
       transitionTodo: { todoID, shouldTransition in
-        try connection.write { db in
+        try database.write { db in
           try Todo
             .find(todoID)
             .update { $0.isTransitioning = shouldTransition }
@@ -162,7 +162,7 @@ extension ModelActions: DependencyKey {
         }
       },
       finalizeTransitions: {
-        try connection.write { db in
+        try database.write { db in
           let transitioningTodos = try Todo
             .where { $0.isTransitioning }
             .fetchAll(db)

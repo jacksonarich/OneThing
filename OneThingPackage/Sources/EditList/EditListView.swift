@@ -38,16 +38,16 @@ public struct EditListView: View {
           }
         }
         .confirmationDialog(
-          "Delete List",
+          "Delete List?",
           isPresented: $model.showAlert,
           titleVisibility: .visible
         ) {
-          Button(role: .destructive) {
+          Button("Delete List", role: .destructive) {
             model.deleteList()
             dismiss()
           }
         } message: {
-          Text("Are you sure?")
+          Text("All things in this list will be deleted.")
         }
       }
     }

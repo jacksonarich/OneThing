@@ -13,14 +13,14 @@ public func prepareTest(
   sourceLocation: SourceLocation = #_sourceLocation
 ) async {
   do {
-    let connection = try withDependencies {
+    let database = try withDependencies {
       $0.date.now = Date(0)
     } operation: {
       return try appDatabase(data: AppData(lists: data))
     }
     try await withDependencies {
       $0.date.now = Date(1)
-      $0.defaultDatabase = connection
+      $0.defaultDatabase = database
       dependencies(&$0)
     } operation: {
       try await test()

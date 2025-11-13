@@ -39,8 +39,8 @@ public struct DatabaseSnapshot: Equatable, Sendable {
   public var todos: [Todo]
   
   static func fetch() throws -> Self {
-    @Dependency(\.defaultDatabase) var connection
-    return try connection.read { db in
+    @Dependency(\.defaultDatabase) var database
+    return try database.read { db in
       try DatabaseSnapshot(
         lists: TodoList.all.fetchAll(db),
         todos: Todo.all.fetchAll(db)

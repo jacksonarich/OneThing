@@ -21,7 +21,7 @@ public final class EditListModel {
   
   public init(
     listID: TodoList.ID,
-    name: String = "List",
+    name: String = "",
     color: ListColor = .red,
     alert: Bool = false
   ) {
