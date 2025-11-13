@@ -3,9 +3,12 @@ import AppModels
 import Testing
 import TestSupport
 
+
 @MainActor
 struct EditListTests {
-  @Test func showDialog() async {
+  
+  @Test
+  func showDialog() async {
     await prepareTest {
       TodoListData()
     } test: {
@@ -19,7 +22,8 @@ struct EditListTests {
     }
   }
 
-  @Test func fetch() async {
+  @Test
+  func fetch() async {
     await prepareTest {
       TodoListData(name: "Grocery", color: .indigo)
     } test: {

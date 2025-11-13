@@ -164,4 +164,28 @@ struct ModelActionsTests {
       }
     }
   }
+  
+  @Test
+  func finalizeTransitions() async throws {
+    await prepareTest {
+      TodoListData {
+        TodoData()
+        TodoData(isTransitioning: true)
+        TodoData(completeDate: Date(0), isTransitioning: true)
+        TodoData(deleteDate: Date(0), isTransitioning: true)
+        TodoData(deadline: Date(0), frequencyUnit: .week, frequencyCount: 2, isTransitioning: true)
+      }
+    } test: {
+      let model = ModelActions.testValue
+      await runAction {
+        try model.finalizeTransitions()
+      } assert: {
+        $0.todos[1].completeDate = Date(1)
+        $0.todos[2].completeDate = nil
+        $0.todos[3].deleteDate = nil
+        $0.todos[4].deadline = Calendar.current.date(byAdding: .weekOfYear, value: 2, to: Date(0))
+        for i in 1...4 { $0.todos[i].isTransitioning = false }
+      }
+    }
+  }
 }

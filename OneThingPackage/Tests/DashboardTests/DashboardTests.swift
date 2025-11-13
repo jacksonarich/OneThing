@@ -13,38 +13,6 @@ import AppModels
 import Utilities
 import TestSupport
 
-class Example {
-  @Dependency(\.modelActions) var modelActions
-  
-  func whatDayIsIt() -> Date {
-    @Dependency(\.date) var date
-    return date.now
-  }
-  
-  func createTodo(list listID: TodoList.ID) throws {
-    let draft = Todo.Draft(rank: "0", listID: listID)
-    try modelActions.createTodo(draft)
-  }
-}
-
-struct TestTests {
-  @Test func test() throws {
-    let model = try prepareTest {
-      TodoListData()
-    } model: {
-      Example()
-    }
-    try model.createTodo(list: 1)
-    
-    try withDependencies(from: model) {
-      @Dependency(\.defaultDatabase) var database
-      try database.read { db in
-        let count = try Todo.count().fetchOne(db)
-        #expect(count == 1)
-      }
-    }
-  }
-}
 
 @MainActor
 struct DashboardTests {

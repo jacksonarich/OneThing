@@ -6,7 +6,8 @@ import Utilities
 
 struct RelativeStringTests {
   
-  @Test func relativeStringToUnixEpoch() {
+  @Test
+  func relativeStringToUnixEpoch() {
     var calendar = Calendar(identifier: .gregorian)
     calendar.locale = Locale(identifier: "en_US_POSIX")
     calendar.timeZone = TimeZone(secondsFromGMT: 0)!
