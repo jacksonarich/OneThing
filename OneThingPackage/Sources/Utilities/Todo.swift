@@ -6,6 +6,15 @@ import StructuredQueries
 import SwiftUI
 
 
+public extension Todo {
+  var isOverdue: Bool {
+    guard let deadline else { return false }
+    @Dependency(\.date) var date
+    return deadline < date.now
+  }
+}
+
+
 public extension Todo.Draft {
   func modified(_ body: (inout Todo.Draft) -> Void) -> Todo.Draft {
     var copy = self
@@ -13,6 +22,7 @@ public extension Todo.Draft {
     return copy
   }
 }
+
 
 public extension Todo.TableColumns {
   func contains(_ text: String) -> some QueryExpression<Bool> {

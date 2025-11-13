@@ -15,7 +15,8 @@ public struct DeletedDetailView: View {
         ForEach(model.todos) { todo in
           TodoRowButton(
             todo: todo,
-            subtitle: todo.deleteDate.map { "Deleted \($0.relativeString)" }
+            subtitle: todo.deleteDate.map { "Deleted \($0.relativeString)" },
+            checkboxImage: todo.transition == nil ? .deletedCheckbox : .inProgressCheckbox
           ) {
             model.putBackTodo(todo.id)
           }

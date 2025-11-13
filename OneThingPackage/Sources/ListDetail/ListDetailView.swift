@@ -21,7 +21,9 @@ public struct ListDetailView: View {
         ForEach(model.todos) { todo in
           TodoRowButton(
             todo: todo,
-            subtitle: todo.deadline.map { "Due \($0.relativeString)" }
+            subtitle: todo.deadline.map { "Due \($0.relativeString)" },
+            isSubtitleHighlighted: todo.isOverdue,
+            checkboxImage: todo.transition == nil ? .inProgressCheckbox : .completedCheckbox
           ) {
             model.todoRowTapped(todo.id, shouldTransition: todo.transition == nil)
           }

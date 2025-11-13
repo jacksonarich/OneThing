@@ -5,23 +5,23 @@ import SwiftUI
 public struct TodoRowButton: View {
   let title: String
   let subtitle: String?
-  let isCompleted: Bool
-  let isDeleted: Bool
+  let isSubtitleHighlighted: Bool
+  let checkboxImage: String
   let transition: TransitionAction?
   let action: () -> Void
   
   public init(
     title: String,
     subtitle: String?,
-    completed: Bool,
-    deleted: Bool,
+    isSubtitleHighlighted: Bool,
+    checkboxImage: String,
     transition: TransitionAction?,
     action: @escaping () -> Void
   ) {
     self.title = title
     self.subtitle = subtitle
-    self.isCompleted = completed
-    self.isDeleted = deleted
+    self.isSubtitleHighlighted = isSubtitleHighlighted
+    self.checkboxImage = checkboxImage
     self.transition = transition
     self.action = action
   }
@@ -29,12 +29,14 @@ public struct TodoRowButton: View {
   public init(
     todo: Todo,
     subtitle: String? = nil,
+    isSubtitleHighlighted: Bool = false,
+    checkboxImage: String,
     action: @escaping () -> Void
   ) {
     self.title = todo.title
     self.subtitle = subtitle
-    self.isCompleted = todo.completeDate != nil
-    self.isDeleted = todo.deleteDate != nil
+    self.isSubtitleHighlighted = isSubtitleHighlighted
+    self.checkboxImage = checkboxImage
     self.transition = todo.transition
     self.action = action
   }
@@ -58,9 +60,11 @@ public struct TodoRowButton: View {
             .strikethrough(isTransitioning)
           if let subtitle {
             Text(subtitle)
-              .foregroundStyle(Color.secondary)
+              .foregroundStyle(isSubtitleHighlighted ? Color.accentColor : Color.secondary)
               .font(.callout)
+              .bold(isSubtitleHighlighted)
               .animation(.default, value: self.subtitle)
+              .animation(.default, value: self.isSubtitleHighlighted)
           }
         }
         Spacer(minLength: 0)
@@ -69,23 +73,6 @@ public struct TodoRowButton: View {
       .contentShape(Rectangle())
     }
     .buttonStyle(.borderless)
-    
-  }
-  
-  var checkboxImage: String {
-    if isTransitioning {
-      if isDeleted || isCompleted {
-        return "circle"
-      } else {
-        return "checkmark.circle"
-      }
-    } else {
-      if isDeleted {
-        return "xmark.circle"
-      } else {
-        return isCompleted ? "checkmark.circle" : "circle"
-      }
-    }
   }
 }
 
@@ -95,12 +82,13 @@ public struct TodoRowButton: View {
     TodoRowButton(
       title: "This is the todo",
       subtitle: "Subtitle",
-      completed: true,
-      deleted: true,
+      isSubtitleHighlighted: false,
+      checkboxImage: "circle",
       transition: nil
     ) {
       print("Tapped")
     }
   }
   .listStyle(.plain)
+  .accentColor(.pink)
 }

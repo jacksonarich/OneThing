@@ -15,7 +15,8 @@ public struct CompletedDetailView: View {
         ForEach(model.todos) { todo in
           TodoRowButton(
             todo: todo,
-            subtitle: todo.completeDate.map { "Completed \($0.relativeString)" }
+            subtitle: todo.completeDate.map { "Completed \($0.relativeString)" },
+            checkboxImage: todo.transition == nil ? .completedCheckbox : .inProgressCheckbox
           ) {
             model.putBackTodo(todo.id)
           }
