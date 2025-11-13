@@ -9,6 +9,22 @@ import TestSupport
 @MainActor
 struct ModelActionsTests {
   
+  @Test func createTodo() async throws {
+    await prepareTest {
+      TodoListData {
+        TodoData(rank: "0")
+      }
+    } test: {
+      let model = ModelActions.testValue
+      await runAction {
+        let draft = Todo.Draft(listID: 1)
+        try model.createTodo(draft)
+      } assert: {
+        $0.todos.append(Todo(2, listID: 1, rank: "1"))
+      }
+    }
+  }
+  
   @Test
   func completeTodo() async throws {
     await prepareTest {

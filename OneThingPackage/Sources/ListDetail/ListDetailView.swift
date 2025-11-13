@@ -62,7 +62,7 @@ public struct ListDetailView: View {
         } label: {
           Image(systemName: "plus")
         }
-        .buttonStyle(.glassProminent)
+//        .buttonStyle(.glass)
       }
     }
     .navigationTitle(model.list?.name ?? "Unknown")

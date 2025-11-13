@@ -59,7 +59,7 @@ extension Todo.Draft {
   public init(
     _ id: Todo.ID? = nil,
     listID: TodoList.ID,
-    rank: Rank,
+    rank: Rank = "0", // placeholder, overridden by ModelActions.createTodo
     title: String = "",
     notes: String = "",
     deadline: Date? = nil,

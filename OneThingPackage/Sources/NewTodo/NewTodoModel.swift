@@ -90,7 +90,6 @@ public extension NewTodoModel {
     let now = date.now
     let draft = Todo.Draft(
       listID: listID,
-      rank: "0", // Placeholder, filled in by ModelActions.createTodo
       title: title,
       notes: notes,
       deadline: deadline,

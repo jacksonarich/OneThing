@@ -43,20 +43,21 @@ extension ModelActions: DependencyKey {
             if let newRank = rankGeneration.midpoint(between: maxRank, and: nil) {
               return newRank
             }
-            let todoIds = try Todo
-              .select(\.id)
-              .order(by: \.rank)
-              .fetchAll(db)
-            let ranks = rankGeneration.distribute(todoIds.count)
-            for (id, rank) in zip(todoIds, ranks) {
-              try Todo
-                .find(id)
-                .update { $0.rank = rank }
-                .execute(db)
-            }
-            guard let newRank = rankGeneration.midpoint(between: ranks.max(), and: nil)
-            else { throw ModelActionsError.noRankMidpoint }
-            return newRank
+//            let todoIds = try Todo
+//              .select(\.id)
+//              .order(by: \.rank)
+//              .fetchAll(db)
+//            let ranks = rankGeneration.distribute(todoIds.count)
+//            for (id, rank) in zip(todoIds, ranks) {
+//              try Todo
+//                .find(id)
+//                .update { $0.rank = rank }
+//                .execute(db)
+//            }
+//            guard let newRank = rankGeneration.midpoint(between: ranks.max(), and: nil)
+//            else { throw ModelActionsError.noRankMidpoint }
+//            return newRank
+            throw ModelActionsError.noRankMidpoint
           }()
           let rankedTodo = todo.modified { $0.rank = newRank }
           try Todo

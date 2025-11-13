@@ -8,7 +8,7 @@ extension Todo {
   public init(
     _ id: ID,
     listID: TodoList.ID,
-    rank: Rank = "0",
+    rank: Rank = "0", // must specify for multiple todos in a list
     title: String = "",
     notes: String = "",
     deadline: Date? = nil,
