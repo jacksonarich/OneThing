@@ -64,9 +64,9 @@ public struct ListDetailView: View {
         } label: {
           Image(systemName: "plus")
         }
-//        .buttonStyle(.glass)
       }
     }
+    .sensoryFeedback(.impact(flexibility: .solid), trigger: model.hapticID)
     .navigationTitle(model.list?.name ?? "Unknown")
     .navigationBarTitleDisplayMode(.large)
     .background(Color(.systemGroupedBackground))

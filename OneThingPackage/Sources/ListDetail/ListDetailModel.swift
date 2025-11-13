@@ -19,6 +19,7 @@ public final class ListDetailModel {
   private(set) var listID: TodoList.ID
   private var modelTransitions = ModelTransitions()
   var isCreatingTodo = false
+  private var hapticID = 0
 
   @ObservationIgnored
   @FetchAll(
@@ -57,6 +58,7 @@ public extension ListDetailModel {
   
   func todoRowTapped(_ todoID: Todo.ID, shouldTransition: Bool) {
     modelTransitions.setTransition(todoID, to: shouldTransition ? TransitionAction.complete : nil)
+    hapticID += 1
   }
   
   func deleteTodo(_ todoID: Todo.ID) {

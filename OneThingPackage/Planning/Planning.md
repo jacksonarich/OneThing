@@ -21,7 +21,6 @@ others don't
 * EditTodo
 * editMode for list detail & computed list detail
 * haptics for completing & deleting
-* Indicate late todos
 
 # Future
 * Make Dashboard search bar a circle button instead in bottom right
