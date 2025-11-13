@@ -63,8 +63,8 @@ extension SearchModel {
 
 public extension SearchModel {
   
-  func todoRowTapped(_ todoID: Todo.ID, isTransitioning: Bool) {
-    modelTransitions.setTransition(todoID, to: isTransitioning == false)
+  func todoRowTapped(_ todoID: Todo.ID, shouldTransition: Bool) {
+    modelTransitions.setTransition(todoID, to: shouldTransition ? TransitionAction.complete : nil)
   }
   
   func deleteTodo(_ todo: Todo) {

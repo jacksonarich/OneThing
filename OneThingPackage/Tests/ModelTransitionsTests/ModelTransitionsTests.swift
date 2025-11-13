@@ -9,14 +9,14 @@ import TestSupport
 @MainActor
 struct ModelTransitionsTests {
   
-  @Test(arguments: [false, true], [false, true])
-  func setTransition(old: Bool, new: Bool) async throws {
+  @Test(arguments: [TransitionAction.complete, nil as TransitionAction?], [nil as TransitionAction?, TransitionAction.complete])
+  func setTransition(old: TransitionAction?, new: TransitionAction?) async throws {
     let clock = TestClock()
     await prepareTest {
       TodoListData {
-        TodoData(isTransitioning: old)
-        TodoData(isTransitioning: true)
-        TodoData(isTransitioning: false)
+        TodoData(transition: old)
+        TodoData(transition: .complete)
+        TodoData(transition: nil)
       }
     } dependencies: {
       $0.continuousClock = clock
@@ -25,15 +25,16 @@ struct ModelTransitionsTests {
       await runAction {
         model.setTransition(1, to: new)
       } assert: {
-        $0.todos[0].isTransitioning = new
+        $0.todos[0].transition = new
       }
       await runAction {
         await clock.advance(by: .seconds(2))
       } assert: {
-        $0.todos[0].completeDate = new ? Date(1) : nil
-        $0.todos[0].isTransitioning = false
+        $0.todos[0].completeDate = new == nil ? nil : Date(1)
         $0.todos[1].completeDate = Date(1)
-        $0.todos[1].isTransitioning = false
+        for i in 0...2 {
+          $0.todos[i].transition = nil
+        }
       }
     }
   }

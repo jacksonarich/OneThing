@@ -36,7 +36,7 @@ extension Database {
           modifyDate: todoData.modifyDate,
           completeDate: todoData.completeDate,
           deleteDate: todoData.deleteDate,
-          isTransitioning: todoData.isTransitioning
+          transition: todoData.transition
         )
         try Todo
           .insert { todo }

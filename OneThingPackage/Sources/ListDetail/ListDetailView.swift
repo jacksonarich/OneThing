@@ -23,7 +23,7 @@ public struct ListDetailView: View {
             todo: todo,
             subtitle: todo.deadline.map { "Due \($0.relativeString)" }
           ) {
-            model.todoRowTapped(todo.id, isTransitioning: todo.isTransitioning)
+            model.todoRowTapped(todo.id, shouldTransition: todo.transition == nil)
           }
           .swipeActions {
             Button("Delete", systemImage: "xmark", role: .destructive) {
@@ -34,7 +34,7 @@ public struct ListDetailView: View {
             TodoRowContextMenu(
               currentListID: todo.listID,
               movableLists: model.movableLists,
-              onTap: { model.todoRowTapped(todo.id, isTransitioning: todo.isTransitioning) },
+              onTap: { model.todoRowTapped(todo.id, shouldTransition: todo.transition == nil) },
               onDelete: { model.deleteTodo(todo.id) },
               onMove: { listID in model.moveTodo(todo.id, to: listID) }
             )

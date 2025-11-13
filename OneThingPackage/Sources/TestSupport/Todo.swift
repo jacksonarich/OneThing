@@ -18,7 +18,7 @@ extension Todo {
     modifyDate: Date? = nil,
     completeDate: Date? = nil,
     deleteDate: Date? = nil,
-    isTransitioning: Bool = false
+    transition: TransitionAction? = nil
   ) {
     self.init(
       id: id,
@@ -39,7 +39,7 @@ extension Todo {
       }(),
       completeDate: completeDate,
       deleteDate: deleteDate,
-      isTransitioning: isTransitioning
+      transition: transition
     )
   }
 }

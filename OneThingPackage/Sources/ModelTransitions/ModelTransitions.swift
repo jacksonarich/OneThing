@@ -16,10 +16,10 @@ public final class ModelTransitions {
   
   private var timerTask: Task<Void, Never>? = nil
   
-  public func setTransition(_ todoId: Todo.ID, to shouldTransition: Bool) {
+  public func setTransition(_ todoId: Todo.ID, to transition: TransitionAction?) {
     timerTask?.cancel()
     withErrorReporting {
-      try modelActions.transitionTodo(todoId, shouldTransition)
+      try modelActions.transitionTodo(todoId, transition)
       timerTask = Task { [clock, modelActions] in
         do {
           try await clock.sleep(for: .seconds(2))

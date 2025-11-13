@@ -2,7 +2,7 @@ import StructuredQueries
 import SwiftUI
 
 
-public struct ListColor: Codable, Equatable, Hashable, QueryBindable, RawRepresentable, Sendable {
+public struct ListColor: Codable, Hashable, QueryBindable, RawRepresentable, Sendable {
   public var rawValue: String
   
   public init(rawValue: String) {

@@ -12,6 +12,7 @@ others don't
 * Create DisplayTodos and DisplayLists for views, instead of passing around raw Todos and TodoLists
 * Sheet model stored in parent view, causing unwanted persistence of state
 * New app name
+* NewTodoView should autofocus title on appear
 
 
 # Features

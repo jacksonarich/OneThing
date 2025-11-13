@@ -16,7 +16,7 @@ public struct Todo: Codable, Equatable, Identifiable, Sendable {
   public var modifyDate: Date
   public var completeDate: Date? = nil
   public var deleteDate: Date? = nil
-  public var isTransitioning: Bool = false
+  public var transition: TransitionAction? = nil
   
   public typealias ID = Int
   
@@ -33,7 +33,7 @@ public struct Todo: Codable, Equatable, Identifiable, Sendable {
     modifyDate: Date,
     completeDate: Date? = nil,
     deleteDate: Date? = nil,
-    isTransitioning: Bool = false
+    transition: TransitionAction? = nil
   ) {
     self.id = id
     self.listID = listID
@@ -47,7 +47,7 @@ public struct Todo: Codable, Equatable, Identifiable, Sendable {
     self.modifyDate = modifyDate
     self.completeDate = completeDate
     self.deleteDate = deleteDate
-    self.isTransitioning = isTransitioning
+    self.transition = transition
   }
 }
 
@@ -69,7 +69,7 @@ extension Todo.Draft {
     modifyDate: Date? = nil,
     completeDate: Date? = nil,
     deleteDate: Date? = nil,
-    isTransitioning: Bool = false
+    transition: TransitionAction? = nil
   ) {
     self.init(
       id: id,
@@ -90,7 +90,7 @@ extension Todo.Draft {
       }(),
       completeDate: completeDate,
       deleteDate: deleteDate,
-      isTransitioning: isTransitioning
+      transition: transition
     )
   }
 }

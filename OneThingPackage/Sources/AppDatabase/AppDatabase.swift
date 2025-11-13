@@ -83,7 +83,7 @@ func migrate(_ database: DatabaseWriter) throws {
       table.column("modifyDate", .date).notNull()
       table.column("completeDate", .date)
       table.column("deleteDate", .date)
-      table.column("isTransitioning", .boolean).notNull()
+      table.column("transition", .text)
     }
   }
   try migrator.migrate(database)

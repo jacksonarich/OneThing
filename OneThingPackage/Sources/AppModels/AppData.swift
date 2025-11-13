@@ -67,7 +67,7 @@ public struct TodoData: Sendable {
   public var modifyDate: Date? = nil
   public var completeDate: Date? = nil
   public var deleteDate: Date? = nil
-  public var isTransitioning: Bool = false
+  public var transition: TransitionAction? = nil
   
   public init(
     rank: Rank? = nil,
@@ -80,7 +80,7 @@ public struct TodoData: Sendable {
     modifyDate: Date? = nil,
     completeDate: Date? = nil,
     deleteDate: Date? = nil,
-    isTransitioning: Bool = false
+    transition: TransitionAction? = nil
   ) {
     self.rank = rank
     self.title = title
@@ -92,7 +92,7 @@ public struct TodoData: Sendable {
     self.modifyDate = modifyDate
     self.completeDate = completeDate
     self.deleteDate = deleteDate
-    self.isTransitioning = isTransitioning
+    self.transition = transition
   }
 }
 

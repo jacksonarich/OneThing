@@ -15,7 +15,7 @@ public struct ModelActions: Sendable {
   public var createList: @Sendable (TodoList.Draft) throws -> Void
   public var updateList: @Sendable (TodoList.ID, String, ListColor) throws -> Void
   public var deleteList: @Sendable (TodoList.ID) throws -> Void
-  public var transitionTodo: @Sendable (Todo.ID, Bool) throws -> Void
+  public var transitionTodo: @Sendable (Todo.ID, TransitionAction?) throws -> Void
   public var finalizeTransitions: @Sendable () throws -> Void
 }
 
@@ -70,10 +70,8 @@ extension ModelActions: DependencyKey {
             .find(todoID)
             .fetchOne(db) else { return }
           if let deadline = todo.deadline, let frequencyUnit = todo.frequencyUnit, let frequencyCount = todo.frequencyCount {
-            guard let calendarUnit = frequencyUnit.calendarComponent
-            else { throw ModelActionsError.invalidFrequency }
-            let newDeadline = deadline.nextFutureDate(
-              unit: calendarUnit,
+            let newDeadline = try deadline.nextFutureDate(
+              unit: frequencyUnit,
               count: frequencyCount
             )
             try Todo
@@ -153,52 +151,53 @@ extension ModelActions: DependencyKey {
             .execute(db)
         }
       },
-      transitionTodo: { todoID, shouldTransition in
+      transitionTodo: { todoID, transition in
         try database.write { db in
           try Todo
             .find(todoID)
-            .update { $0.isTransitioning = shouldTransition }
+            .update { $0.transition = transition }
             .execute(db)
         }
       },
       finalizeTransitions: {
         try database.write { db in
           let transitioningTodos = try Todo
-            .where { $0.isTransitioning }
+            .where { $0.transition.isNot(nil) }
             .fetchAll(db)
           for todo in transitioningTodos {
-            if todo.completeDate == nil {
+            if todo.transition == .complete {
               if let deadline = todo.deadline, let frequencyUnit = todo.frequencyUnit, let frequencyCount = todo.frequencyCount {
-                guard let calendarUnit = frequencyUnit.calendarComponent
-                else { throw ModelActionsError.invalidFrequency }
-                let newDeadline = deadline.nextFutureDate(
-                  unit: calendarUnit,
+                let newDeadline = try deadline.nextFutureDate(
+                  unit: frequencyUnit,
                   count: frequencyCount
                 )
                 try Todo
                   .find(todo.id)
-                  .update { $0.deadline = newDeadline }
+                  .update {
+                    $0.deadline = newDeadline
+                    $0.transition = nil
+                  }
                   .execute(db)
               } else {
                 try Todo
                   .find(todo.id)
-                  .update { $0.completeDate = date.now }
+                  .update {
+                    $0.completeDate = date.now
+                    $0.transition = nil
+                  }
                   .execute(db)
               }
-            } else {
+            } else if todo.transition == .putBack {
               try Todo
                 .find(todo.id)
                 .update {
                   $0.completeDate = nil
                   $0.deleteDate = nil
+                  $0.transition = nil
                 }
                 .execute(db)
             }
           }
-          try Todo
-            .where { $0.isTransitioning }
-            .update { $0.isTransitioning = false }
-            .execute(db)
         }
       },
     )
@@ -210,10 +209,12 @@ extension ModelActions: DependencyKey {
 
 extension Date {
   func nextFutureDate(
-    unit: Calendar.Component,
+    unit: FrequencyUnit,
     count: Int
-  ) -> Date {
+  ) throws -> Date {
     if count <= 0 { return self }
+    guard let unit = unit.calendarComponent
+    else { throw ModelActionsError.invalidFrequency }
     @Dependency(\.date) var date
     let calendar = Calendar.current
     guard let difference = calendar

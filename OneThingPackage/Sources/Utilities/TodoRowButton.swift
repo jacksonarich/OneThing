@@ -7,7 +7,7 @@ public struct TodoRowButton: View {
   let subtitle: String?
   let isCompleted: Bool
   let isDeleted: Bool
-  let isTransitioning: Bool
+  let transition: TransitionAction?
   let action: () -> Void
   
   public init(
@@ -15,14 +15,14 @@ public struct TodoRowButton: View {
     subtitle: String?,
     completed: Bool,
     deleted: Bool,
-    transitioning: Bool,
+    transition: TransitionAction?,
     action: @escaping () -> Void
   ) {
     self.title = title
     self.subtitle = subtitle
     self.isCompleted = completed
     self.isDeleted = deleted
-    self.isTransitioning = transitioning
+    self.transition = transition
     self.action = action
   }
   
@@ -35,8 +35,12 @@ public struct TodoRowButton: View {
     self.subtitle = subtitle
     self.isCompleted = todo.completeDate != nil
     self.isDeleted = todo.deleteDate != nil
-    self.isTransitioning = todo.isTransitioning
+    self.transition = todo.transition
     self.action = action
+  }
+  
+  private var isTransitioning: Bool {
+    transition != nil
   }
   
   public var body: some View {
@@ -61,7 +65,7 @@ public struct TodoRowButton: View {
         }
         Spacer(minLength: 0)
       }
-      .animation(nil, value: isTransitioning)
+      .animation(nil, value: transition)
       .contentShape(Rectangle())
     }
     .buttonStyle(.borderless)
@@ -93,7 +97,7 @@ public struct TodoRowButton: View {
       subtitle: "Subtitle",
       completed: true,
       deleted: true,
-      transitioning: false
+      transition: nil
     ) {
       print("Tapped")
     }

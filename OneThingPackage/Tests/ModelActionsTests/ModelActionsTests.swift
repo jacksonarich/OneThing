@@ -150,30 +150,30 @@ struct ModelActionsTests {
   }
   
   @Test(arguments: [false, true])
-  func transitionTodo(isTransitioning: Bool) async throws {
+  func transitionTodo(new: Bool) async throws {
+    let oldTransition: TransitionAction? = new ? nil : .complete
+    let newTransition: TransitionAction? = new ? .complete : nil
     await prepareTest {
       TodoListData {
-        TodoData(isTransitioning: isTransitioning)
+        TodoData(transition: oldTransition)
       }
     } test: {
       let model = ModelActions.testValue
       await runAction {
-        try model.transitionTodo(1, isTransitioning == false)
+        try model.transitionTodo(1, newTransition)
       } assert: {
-        $0.todos[0].isTransitioning.toggle()
+        $0.todos[0].transition = newTransition
       }
     }
   }
   
   @Test
-  func finalizeTransitions() async throws {
+  func finalizeTransitionsComplete() async throws {
     await prepareTest {
       TodoListData {
         TodoData()
-        TodoData(isTransitioning: true)
-        TodoData(completeDate: Date(0), isTransitioning: true)
-        TodoData(deleteDate: Date(0), isTransitioning: true)
-        TodoData(deadline: Date(0), frequencyUnit: .week, frequencyCount: 2, isTransitioning: true)
+        TodoData(transition: .complete)
+        TodoData(deadline: Date(0), frequencyUnit: .week, frequencyCount: 2, transition: .complete)
       }
     } test: {
       let model = ModelActions.testValue
@@ -181,10 +181,33 @@ struct ModelActionsTests {
         try model.finalizeTransitions()
       } assert: {
         $0.todos[1].completeDate = Date(1)
-        $0.todos[2].completeDate = nil
-        $0.todos[3].deleteDate = nil
-        $0.todos[4].deadline = Calendar.current.date(byAdding: .weekOfYear, value: 2, to: Date(0))
-        for i in 1...4 { $0.todos[i].isTransitioning = false }
+        $0.todos[2].deadline = Calendar.current.date(byAdding: .weekOfYear, value: 2, to: Date(0))
+        for i in 0...2 {
+          $0.todos[i].transition = nil
+        }
+      }
+    }
+  }
+  
+  @Test
+  func finalizeTransitionsPutBack() async throws {
+    await prepareTest {
+      TodoListData {
+        TodoData(completeDate: Date(0))
+        TodoData(completeDate: Date(0), transition: .putBack)
+        TodoData(deleteDate: Date(0), transition: .putBack)
+        TodoData(completeDate: Date(0), deleteDate: Date(0), transition: .putBack)
+      }
+    } test: {
+      let model = ModelActions.testValue
+      await runAction {
+        try model.finalizeTransitions()
+      } assert: {
+        for i in 1...3 {
+          $0.todos[i].completeDate = nil
+          $0.todos[i].deleteDate = nil
+          $0.todos[i].transition = nil
+        }
       }
     }
   }

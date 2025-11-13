@@ -19,14 +19,18 @@ struct DashboardTests {
   
   @Test(arguments: [false, true])
   func testListRowTapped(isEditing: Bool) async throws {
-    let model = try prepareTest {
+    await prepareTest {
       TodoListData()
-    } model: {
-      DashboardModel(isEditing: isEditing)
+    } test: {
+      let model = DashboardModel(isEditing: isEditing)
+      await runAction {
+        model.listRowTapped(id: 1)
+        #expect(model.editingListID == (isEditing ? 1 : nil))
+        expectNoDifference(model.navPath, isEditing ? [] : [.listDetail(1)])
+      } assert: { _ in
+        // No changes
+      }
     }
-    model.listRowTapped(id: 1)
-    #expect(model.editingListID == (isEditing ? 1 : nil))
-    expectNoDifference(model.navPath, isEditing ? [] : [.listDetail(1)])
   }
   
 //  @Test
