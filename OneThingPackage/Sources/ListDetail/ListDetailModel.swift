@@ -19,7 +19,7 @@ public final class ListDetailModel {
   private(set) var listID: TodoList.ID
   private var modelTransitions = ModelTransitions()
   var isCreatingTodo = false
-  private var hapticID = 0
+  private(set) var hapticID = 0
 
   @ObservationIgnored
   @FetchAll(
@@ -75,5 +75,13 @@ public extension ListDetailModel {
   
   func newTodoButtonTapped() {
     isCreatingTodo.toggle()
+  }
+  
+  func rerankTodos(_ indexes: IndexSet, _ targetIndex: Int) {
+    let todoIDs = indexes.map { todos[$0].id }
+    let targetID = todos[targetIndex].id
+    withErrorReporting {
+      try modelActions.rerankTodos(todoIDs, targetID)
+    }
   }
 }

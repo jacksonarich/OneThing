@@ -42,6 +42,7 @@ public struct ListDetailView: View {
             )
           }
         }
+        .onMove(perform: model.rerankTodos)
         .listRowSeparator(.hidden)
         .listRowBackground(Color.clear)
       }
@@ -57,6 +58,9 @@ public struct ListDetailView: View {
       }
     })
     .toolbar {
+      ToolbarItem {
+        EditButton()
+      }
       ToolbarSpacer(placement: .bottomBar)
       ToolbarItem(placement: .bottomBar) {
         Button {

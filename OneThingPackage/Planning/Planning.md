@@ -13,6 +13,7 @@ others don't
 * Sheet model stored in parent view, causing unwanted persistence of state
 * New app name
 * NewTodoView should autofocus title on appear
+* background task that occasionally rebalances ranks if any one rank exceeds a certain length
 
 
 # Features
