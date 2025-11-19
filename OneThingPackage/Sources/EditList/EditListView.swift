@@ -61,7 +61,7 @@ public struct EditListView: View {
       }
       ToolbarItem(placement: .topBarTrailing) {
         Button("Done") {
-          model.updateList()
+          model.editList()
           dismiss()
         }
         .disabled(model.name.trimmed().isEmpty)
@@ -79,12 +79,6 @@ public struct EditListView: View {
   let _ = prepareDependencies {
     $0.defaultDatabase = try! appDatabase(data: .previewSeed)
   }
-//  let model = EditListModel(
-//    listID: 1,
-//    name: "List name",
-//    color: .red,
-//    //    alert: true
-//  )
   Button("Show") {
     showSheet = true
   }
@@ -92,6 +86,6 @@ public struct EditListView: View {
     NavigationStack {
       EditListView(listID: 1)
     }
+    .accentColor(.pink)
   }
-  .accentColor(.pink)
 }

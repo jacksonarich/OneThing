@@ -5,11 +5,11 @@ import SwiftUI
 import Utilities
 
 
-public struct NewTodoView: View {
-  @Bindable var model: NewTodoModel
+public struct EditTodoView: View {
+  @Bindable var model: EditTodoModel
   @Environment(\.dismiss) var dismiss
   
-  public init(model: NewTodoModel) {
+  public init(model: EditTodoModel) {
     self.model = model
   }
   
@@ -49,10 +49,7 @@ public struct NewTodoView: View {
         }
       }
       Section {
-        ListPicker(
-          listID: $model.listID,
-          selectableLists: model.selectableLists
-        )
+        ListPicker(listID: $model.listID, selectableLists: model.selectableLists)
       }
     }
     .navigationTitle("New Thing")
@@ -75,22 +72,22 @@ public struct NewTodoView: View {
 }
 
 
-#Preview {
-  @Previewable @State var showSheet = true
-  let _ = prepareDependencies {
-    $0.defaultDatabase = try! appDatabase(data: .previewSeed)
-  }
-  let model = NewTodoModel(
-    listID: 1,
-    deadline: .now
-  )
-  Button("Show") {
-    showSheet = true
-  }
-  .sheet(isPresented: $showSheet) {
-    NavigationStack {
-      NewTodoView(model: model)
-    }
-    .accentColor(.pink)
-  }
-}
+//#Preview {
+//  @Previewable @State var showSheet = true
+//  let _ = prepareDependencies {
+//    $0.defaultDatabase = try! appDatabase(data: .previewSeed)
+//  }
+//  let model = NewTodoModel(
+//    listID: 1,
+//    deadline: .now
+//  )
+//  Button("Show") {
+//    showSheet = true
+//  }
+//  .sheet(isPresented: $showSheet) {
+//    NavigationStack {
+//      NewTodoView(model: model)
+//    }
+//    .accentColor(.pink)
+//  }
+//}

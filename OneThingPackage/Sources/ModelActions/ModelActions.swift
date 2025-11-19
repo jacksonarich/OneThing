@@ -10,11 +10,12 @@ public struct ModelActions: Sendable {
   public var completeTodo: @Sendable (Todo.ID) throws -> Void
   public var deleteTodo: @Sendable (Todo.ID) throws -> Void
   public var putBackTodo: @Sendable (Todo.ID) throws -> Void
+  public var editTodo: @Sendable (Todo) throws -> Void
   public var eraseTodo: @Sendable (Todo.ID) throws -> Void
   public var moveTodo: @Sendable (Todo.ID, TodoList.ID) throws -> Void
   public var rerankTodos: @Sendable ([Todo.ID], Todo.ID?) throws -> Void
   public var createList: @Sendable (TodoList.Draft) throws -> Void
-  public var updateList: @Sendable (TodoList.ID, String, ListColor) throws -> Void
+  public var editList: @Sendable (TodoList.ID, String, ListColor) throws -> Void
   public var deleteList: @Sendable (TodoList.ID) throws -> Void
   public var transitionTodo: @Sendable (Todo.ID, TransitionAction?) throws -> Void
   public var finalizeTransitions: @Sendable () throws -> Void
@@ -107,6 +108,13 @@ extension ModelActions: DependencyKey {
             .execute(db)
         }
       },
+      editTodo: { todo in
+        try database.write { db in
+          try Todo
+            .update(todo)
+            .execute(db)
+        }
+      },
       eraseTodo: { todoID in
         try database.write { db in
           try Todo
@@ -132,89 +140,50 @@ extension ModelActions: DependencyKey {
         // generate N ranks between lower and upper bounds, in order
         // if generation failed due to adjacent ranks, redistribute ranks and go back to step 1
         // assign ranks to todos
-        try database.write { db in
-          var rightID = targetID
-          var rightRank: Rank?
-          if let targetID {
-            let rank = try Todo
-              .find(targetID)
-              .select(\.rank)
-              .fetchOne(db)!
-            // Default to using `rightBound`'s rank
-            rightRank = rank
-            if todoIDs.contains(targetID) {
-              // If `rightBound` is being moved, find the next todo in rank order
-              let realRight = try Todo
-                .select { ($0.id, $0.rank) }
-                .where { $0.id.in(todoIDs).not() }
-                .where { $0.rank.gt(rank) }
-                .order { $0.rank.asc() }
-                .limit(1)
-                .fetchOne(db)
-              rightID = realRight?.0
-              rightRank = realRight?.1
-            }
-          }
-          var leftID: Todo.ID?
-          if let rightRank {
-            let left = try Todo
-              .select(\.id)
-              .where { $0.rank.lt(rightRank) }
-              .where { $0.id.in(todoIDs).not() }
-              .order { $0.rank.desc() }
-              .limit(1)
-              .fetchOne(db)
-            leftID = left
-          } else {
-            let left = try Todo
-              .select(\.id)
-              .where { $0.id.in(todoIDs).not() }
-              .order { $0.rank.desc() }
-              .limit(1)
-              .fetchOne(db)
-            leftID = left
-          }
-          let ranks = try db.createRanks(
-            count: todoIDs.count,
-            between: leftID,
-            and: rightID
-          )
-          for (todoID, rank) in zip(todoIDs, ranks) {
-            try Todo
-              .find(todoID)
-              .update { $0.rank = rank }
-              .execute(db)
-          }
-//          var upperRank: Rank?
-//          var lowerRank: Rank?
+//        try database.write { db in
+//          // find lower and upper bounds
+//          var leftRank: Rank?
+//          var rightRank: Rank?
 //          if let targetID {
 //            let targetRank = try Todo
 //              .find(targetID)
 //              .select(\.rank)
 //              .fetchOne(db)!
-//            upperRank = try Todo
-//              .select { $0.rank }
-//              .where {
-//                $0.rank.gte(targetRank)
-//                .and($0.id.in(todoIDs).not())
-//              }
+//            rightRank = try Todo
+//              .select(\.rank)
+//              .where { $0.rank.gte(targetRank) }
+//              .where { $0.id.in(todoIDs).not() }
 //              .order { $0.rank.asc() }
 //              .limit(1)
-//              .fetchOne(db)
-//            lowerRank = try Todo
-//              .select { $0.rank }
-//              .where {
-//                $0.rank.lt(targetRank)
-//                .and($0.id.in(todoIDs).not())
-//              }
+//              .fetchOne(db)! // defaults to targetRank
+//            leftRank = try Todo
+//              .select(\.rank)
+//              .where { $0.rank.lt(targetRank) }
+//              .where { $0.id.in(todoIDs).not() }
+//              .order { $0.rank.desc() }
+//              .limit(1)
+//              .fetchOne(db) // nil if moving to start of list
+//          } else { // moving to end of list
+//            leftRank = try Todo
+//              .select(\.rank)
+//              .where { $0.id.in(todoIDs).not() }
 //              .order { $0.rank.desc() }
 //              .limit(1)
 //              .fetchOne(db)
-//          } else {
-//            // end of list
-//            
 //          }
-        }
+//          // figure out how to refactor distribute function to take lower and upper bounds
+//          let ranks = try db.createRanks(
+//            count: todoIDs.count,
+//            between: leftID,
+//            and: rightID
+//          )
+//          for (todoID, rank) in zip(todoIDs, ranks) {
+//            try Todo
+//              .find(todoID)
+//              .update { $0.rank = rank }
+//              .execute(db)
+//          }
+//        }
       },
       createList: { list in
         try database.write { db in
@@ -223,7 +192,7 @@ extension ModelActions: DependencyKey {
             .execute(db)
         }
       },
-      updateList: { listID, listName, listColor in
+      editList: { listID, listName, listColor in
         try database.write { db in
           try TodoList
             .find(listID)

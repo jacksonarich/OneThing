@@ -35,6 +35,10 @@ let package = Package(
       targets: ["EditList"]
     ),
     .library(
+      name: "EditTodo",
+      targets: ["EditTodo"]
+    ),
+    .library(
       name: "InProgressDetail",
       targets: ["InProgressDetail"]
     ),
@@ -142,6 +146,7 @@ let package = Package(
         "ModelActions",
         "ModelTransitions",
         "NewList",
+        "NewTodo",
         "Search",
         "Utilities",
       ]
@@ -185,6 +190,17 @@ let package = Package(
       dependencies: [
         "EditList",
         "TestSupport",
+      ]
+    ),
+    .target(
+      name: "EditTodo",
+      dependencies: [
+        .product(name: "Dependencies", package: "swift-dependencies"),
+        .product(name: "SQLiteData", package: "sqlite-data"),
+        "AppDatabase",
+        "AppModels",
+        "ModelActions",
+        "Utilities",
       ]
     ),
     .target(

@@ -137,13 +137,13 @@ struct ModelActionsTests {
   }
   
   @Test
-  func updateList() async throws {
+  func editList() async throws {
     await prepareTest {
       TodoListData()
     } test: {
       let model = ModelActions.testValue
       await runAction {
-        try model.updateList(1, "Name", .yellow)
+        try model.editList(1, "Name", .yellow)
       } assert: {
         $0.lists[0].name = "Name"
         $0.lists[0].color = .yellow

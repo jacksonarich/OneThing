@@ -2,6 +2,7 @@ import AppDatabase
 import AppModels
 import EditList
 import NewList
+import NewTodo
 import Search
 import SQLiteData
 import SwiftUI
@@ -28,7 +29,7 @@ public struct DashboardView: View {
         SearchView(model: searchModel)
       }
     }
-    .searchable(text: $searchModel.searchText)
+    .searchable(text: $searchModel.searchText, placement: .navigationBarDrawer)
     .sheet(isPresented: $model.isCreatingList) {
       NavigationStack {
         NewListView(model: newListModel)
@@ -40,23 +41,31 @@ public struct DashboardView: View {
       }
     }
     .toolbar {
-      Button(model.isEditing ? "Done" : "Edit") {
-        withAnimation {
-          model.editButtonTapped()
+      ToolbarItem(placement: .topBarTrailing) {
+        Button(model.isEditing ? "Done" : "Edit") {
+          withAnimation {
+            model.editButtonTapped()
+          }
         }
       }
-      Button("New List", systemImage: "plus") {
-        model.createListButtonTapped()
+      ToolbarItem(placement: .bottomBar) {
+        Spacer()
       }
-      
+      ToolbarItem(placement: .bottomBar) {
+        Button("Add List") {
+          model.createListButtonTapped()
+        }
+      }
 #if DEBUG
-      Button("Seed") {
-        @Dependency(\.defaultDatabase) var database
-        withErrorReporting {
-          try database.write { db in
-            try Todo.delete().execute(db)
-            try TodoList.delete().execute(db)
-            try db.seed(.previewSeed)
+      ToolbarItem(placement: .topBarTrailing) {
+        Button("Seed") {
+          @Dependency(\.defaultDatabase) var database
+          withErrorReporting {
+            try database.write { db in
+              try Todo.delete().execute(db)
+              try TodoList.delete().execute(db)
+              try db.seed(.previewSeed)
+            }
           }
         }
       }

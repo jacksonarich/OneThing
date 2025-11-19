@@ -39,14 +39,6 @@ public final class DashboardModel {
   var lists
   
   @ObservationIgnored
-  @FetchAll(
-    TodoList
-      .all
-      .order(by: \.name)
-  )
-  var movableLists
-  
-  @ObservationIgnored
   @FetchOne(
     Todo.select { t in
       Stats.Columns(

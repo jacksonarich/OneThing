@@ -42,7 +42,7 @@ public struct ListDetailView: View {
             )
           }
         }
-        .onMove(perform: model.rerankTodos)
+//        .onMove(perform: model.rerankTodos)
         .listRowSeparator(.hidden)
         .listRowBackground(Color.clear)
       }

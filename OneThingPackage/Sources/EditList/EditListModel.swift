@@ -61,9 +61,9 @@ public extension EditListModel {
     }
   }
   
-  func updateList() {
+  func editList() {
     withErrorReporting {
-      try modelActions.updateList(listID, name, color)
+      try modelActions.editList(listID, name, color)
     }
   }
 }

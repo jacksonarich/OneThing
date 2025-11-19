@@ -20,7 +20,6 @@ others don't
 
 * Reorder todos
 * EditTodo
-* editMode for list detail & computed list detail
 * haptics for completing & deleting
 
 # Future
