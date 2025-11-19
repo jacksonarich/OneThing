@@ -41,6 +41,7 @@ public final class ScheduledDetailModel {
   private var modelTransitions = ModelTransitions()
   
   var editingTodo: Todo?
+  private(set) var hapticID = 0
   
   public init(
     editingTodo: Todo? = nil
@@ -54,6 +55,7 @@ public extension ScheduledDetailModel {
   
   func todoRowTapped(_ todoID: Todo.ID, shouldTransition: Bool) {
     modelTransitions.setTransition(todoID, to: shouldTransition ? TransitionAction.complete : nil)
+    hapticID += 1
   }
   
   func deleteTodo(_ todoID: Todo.ID) {

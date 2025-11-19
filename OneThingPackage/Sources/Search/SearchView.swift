@@ -56,6 +56,7 @@ public struct SearchView: View {
       }
       .accentColor(.pink)
     }
+    .sensoryFeedback(.impact(flexibility: .solid), trigger: model.hapticID)
     .background(Color(.systemGroupedBackground))
   }
 }

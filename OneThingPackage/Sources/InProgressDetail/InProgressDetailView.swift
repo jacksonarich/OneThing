@@ -63,6 +63,7 @@ public struct InProgressDetailView: View {
       }
       .accentColor(.pink)
     }
+    .sensoryFeedback(.impact(flexibility: .solid), trigger: model.hapticID)
     .navigationTitle("In Progress")
     .navigationBarTitleDisplayMode(.large)
     .background(Color(.systemGroupedBackground))

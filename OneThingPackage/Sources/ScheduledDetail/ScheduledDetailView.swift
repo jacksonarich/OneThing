@@ -53,6 +53,7 @@ public struct ScheduledDetailView: View {
       }
       .accentColor(.pink)
     }
+    .sensoryFeedback(.impact(flexibility: .solid), trigger: model.hapticID)
     .navigationTitle("Scheduled")
     .navigationBarTitleDisplayMode(.large)
     .background(Color(.systemGroupedBackground))

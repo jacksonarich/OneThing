@@ -47,6 +47,7 @@ public final class InProgressDetailModel {
   private var modelTransitions = ModelTransitions()
   
   var editingTodo: Todo?
+  private(set) var hapticID = 0
   
   public init(
     editingTodo: Todo? = nil
@@ -60,6 +61,7 @@ public extension InProgressDetailModel {
   
   func todoRowTapped(_ todoID: Todo.ID, shouldTransition: Bool) {
     modelTransitions.setTransition(todoID, to: shouldTransition ? TransitionAction.complete : nil)
+    hapticID += 1
   }
   
   func deleteTodo(_ todoID: Todo.ID) {

@@ -19,8 +19,6 @@ others don't
 # Features
 
 * Reorder todos
-* EditTodo
-* haptics for completing & deleting
 
 # Future
 * Make Dashboard search bar a circle button instead in bottom right

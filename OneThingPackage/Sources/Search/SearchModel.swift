@@ -43,6 +43,7 @@ public final class SearchModel {
   }
   
   var editingTodo: Todo?
+  private(set) var hapticID = 0
 
   public init(
     text: String = "",
@@ -71,6 +72,7 @@ public extension SearchModel {
   
   func todoRowTapped(_ todoID: Todo.ID, shouldTransition: Bool) {
     modelTransitions.setTransition(todoID, to: shouldTransition ? TransitionAction.complete : nil)
+    hapticID += 1
   }
   
   func deleteTodo(_ todoID: Todo.ID) {
