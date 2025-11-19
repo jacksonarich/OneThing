@@ -10,7 +10,7 @@ public struct ModelActions: Sendable {
   public var completeTodo: @Sendable (Todo.ID) throws -> Void
   public var deleteTodo: @Sendable (Todo.ID) throws -> Void
   public var putBackTodo: @Sendable (Todo.ID) throws -> Void
-  public var editTodo: @Sendable (Todo) throws -> Void
+  public var editTodo: @Sendable (Todo.ID, TodoList.ID, String, String, Date?, Frequency?) throws -> Void
   public var eraseTodo: @Sendable (Todo.ID) throws -> Void
   public var moveTodo: @Sendable (Todo.ID, TodoList.ID) throws -> Void
   public var rerankTodos: @Sendable ([Todo.ID], Todo.ID?) throws -> Void
@@ -108,10 +108,18 @@ extension ModelActions: DependencyKey {
             .execute(db)
         }
       },
-      editTodo: { todo in
+      editTodo: { todoID, listID, title, notes, deadline, frequency in
         try database.write { db in
           try Todo
-            .update(todo)
+            .find(todoID)
+            .update {
+              $0.listID = listID
+              $0.title = title
+              $0.notes = notes
+              $0.deadline = deadline
+              $0.frequencyUnit = frequency?.unit
+              $0.frequencyCount = frequency?.count
+            }
             .execute(db)
         }
       },

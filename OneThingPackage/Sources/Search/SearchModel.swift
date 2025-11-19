@@ -41,9 +41,15 @@ public final class SearchModel {
       Task { try await t.load(q, animation: .default) }
     }
   }
+  
+  var editingTodo: Todo?
 
-  public init(text: String = "") {
+  public init(
+    text: String = "",
+    editingTodo: Todo? = nil
+  ) {
     self.searchText = text
+    self.editingTodo = editingTodo
     self._todos = FetchAll(SearchModel.searchResultQuery(text), animation: .default)
   }
 }
@@ -67,15 +73,19 @@ public extension SearchModel {
     modelTransitions.setTransition(todoID, to: shouldTransition ? TransitionAction.complete : nil)
   }
   
-  func deleteTodo(_ todo: Todo) {
+  func deleteTodo(_ todoID: Todo.ID) {
     withErrorReporting {
-      try modelActions.deleteTodo(todo.id)
+      try modelActions.deleteTodo(todoID)
     }
   }
   
-  func moveTodo(id: Todo.ID, to listID: TodoList.ID) {
+  func editTodo(_ todo: Todo) {
+    editingTodo = todo
+  }
+  
+  func moveTodo(_ todoID: Todo.ID, to listID: TodoList.ID) {
     withErrorReporting {
-      try modelActions.moveTodo(id, listID)
+      try modelActions.moveTodo(todoID, listID)
     }
   }
 }

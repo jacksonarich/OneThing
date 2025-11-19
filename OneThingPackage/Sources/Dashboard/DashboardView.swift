@@ -17,13 +17,15 @@ public struct DashboardView: View {
   public init() {}
   
   public var body: some View {
-    List {
+    ZStack {
       if searchModel.searchText.cleaned().isEmpty {
-        Section {
-          ListCells(model: model)
-        }
-        Section {
-          ListRows(model: model)
+        List {
+          Section {
+            ListCells(model: model)
+          }
+          Section {
+            ListRows(model: model)
+          }
         }
       } else {
         SearchView(model: searchModel)
@@ -48,9 +50,7 @@ public struct DashboardView: View {
           }
         }
       }
-      ToolbarItem(placement: .bottomBar) {
-        Spacer()
-      }
+      ToolbarSpacer(placement: .bottomBar)
       ToolbarItem(placement: .bottomBar) {
         Button("Add List") {
           model.createListButtonTapped()

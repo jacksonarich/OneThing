@@ -1,5 +1,6 @@
 import AppDatabase
 import AppModels
+import EditTodo
 import NewTodo
 import SQLiteData
 import SwiftUI
@@ -38,11 +39,12 @@ public struct ListDetailView: View {
               movableLists: model.movableLists,
               onTap: { model.todoRowTapped(todo.id, shouldTransition: todo.transition == nil) },
               onDelete: { model.deleteTodo(todo.id) },
+              onEdit: { model.editTodo(todo) },
               onMove: { listID in model.moveTodo(todo.id, to: listID) }
             )
           }
         }
-//        .onMove(perform: model.rerankTodos)
+        .onMove(perform: model.rerankTodos)
         .listRowSeparator(.hidden)
         .listRowBackground(Color.clear)
       }
@@ -56,9 +58,16 @@ public struct ListDetailView: View {
       NavigationStack {
         NewTodoView(model: newTodoModel)
       }
+      .accentColor(.pink)
     })
+    .sheet(item: $model.editingTodo) { todo in
+      NavigationStack {
+        EditTodoView(model: .init(todo))
+      }
+      .accentColor(.pink)
+    }
     .toolbar {
-      ToolbarItem {
+      ToolbarItem(placement: .topBarTrailing) {
         EditButton()
       }
       ToolbarSpacer(placement: .bottomBar)

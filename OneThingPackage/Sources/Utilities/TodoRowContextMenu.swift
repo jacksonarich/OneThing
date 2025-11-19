@@ -7,6 +7,7 @@ public struct TodoRowContextMenu: View {
   let movableLists: [TodoList]
   let onTap: () -> Void
   let onDelete: () -> Void
+  let onEdit: () -> Void
   let onMove: (TodoList.ID) -> Void
   
   public init(
@@ -14,12 +15,14 @@ public struct TodoRowContextMenu: View {
     movableLists: [TodoList],
     onTap: @escaping () -> Void,
     onDelete: @escaping () -> Void,
+    onEdit: @escaping () -> Void,
     onMove: @escaping (TodoList.ID) -> Void
   ) {
     self.currentListID = currentListID
     self.movableLists = movableLists
     self.onTap = onTap
     self.onDelete = onDelete
+    self.onEdit = onEdit
     self.onMove = onMove
   }
     
@@ -29,6 +32,9 @@ public struct TodoRowContextMenu: View {
     }
     Button(action: onDelete) {
       Label("Delete", systemImage: "xmark")
+    }
+    Button(action: onEdit) {
+      Label("Edit", systemImage: "pencil")
     }
     Picker("Move To...", systemImage: "folder", selection: Binding(
       get: { currentListID },
@@ -59,6 +65,7 @@ public struct TodoRowContextMenu: View {
             ],
             onTap: {},
             onDelete: {},
+            onEdit: {},
             onMove: { currentListID = $0 }
           )
         }

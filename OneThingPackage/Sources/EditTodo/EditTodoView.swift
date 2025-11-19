@@ -52,7 +52,7 @@ public struct EditTodoView: View {
         ListPicker(listID: $model.listID, selectableLists: model.selectableLists)
       }
     }
-    .navigationTitle("New Thing")
+    .navigationTitle("Edit Thing")
     .navigationBarTitleDisplayMode(.inline)
     .toolbar {
       ToolbarItem(placement: .topBarLeading) {
@@ -62,7 +62,7 @@ public struct EditTodoView: View {
       }
       ToolbarItem(placement: .topBarTrailing) {
         Button("Done") {
-          model.createTodo()
+          model.editTodo()
           dismiss()
         }
         .disabled(model.title.trimmed().isEmpty)
@@ -72,22 +72,27 @@ public struct EditTodoView: View {
 }
 
 
-//#Preview {
-//  @Previewable @State var showSheet = true
-//  let _ = prepareDependencies {
-//    $0.defaultDatabase = try! appDatabase(data: .previewSeed)
-//  }
-//  let model = NewTodoModel(
-//    listID: 1,
-//    deadline: .now
-//  )
-//  Button("Show") {
-//    showSheet = true
-//  }
-//  .sheet(isPresented: $showSheet) {
-//    NavigationStack {
-//      NewTodoView(model: model)
-//    }
-//    .accentColor(.pink)
-//  }
-//}
+#Preview {
+  @Previewable @State var showSheet = true
+  let _ = prepareDependencies {
+    $0.defaultDatabase = try! appDatabase(data: .previewSeed)
+  }
+  let model = EditTodoModel(
+    todoID: 1,
+    listID: 1,
+    title: "Title",
+    notes: "Notes",
+    deadline: .now,
+    frequencySelection: .custom,
+    customFrequency: .init(unit: .week, count: 2)
+  )
+  Button("Show") {
+    showSheet = true
+  }
+  .sheet(isPresented: $showSheet) {
+    NavigationStack {
+      EditTodoView(model: model)
+    }
+    .accentColor(.pink)
+  }
+}

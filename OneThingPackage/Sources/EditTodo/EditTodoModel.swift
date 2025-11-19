@@ -59,7 +59,7 @@ public final class EditTodoModel {
   }
   
   public init(
-    todo: Todo
+    _ todo: Todo
   ) {
     self.todoID = todo.id
     self.listID = todo.listID
@@ -92,8 +92,8 @@ public extension EditTodoModel {
   }
   
   func editTodo() {
-//    withErrorReporting {
-//      try modelActions.editTodo(todo)
-//    }
+    withErrorReporting {
+      try modelActions.editTodo(todoID, listID, title, notes, deadline, actualFrequency)
+    }
   }
 }

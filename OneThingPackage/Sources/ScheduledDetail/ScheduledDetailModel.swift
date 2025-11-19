@@ -40,9 +40,13 @@ public final class ScheduledDetailModel {
   @ObservationIgnored
   private var modelTransitions = ModelTransitions()
   
-  private var timerTask: Task<Void, Never>?
+  var editingTodo: Todo?
   
-  public init() {}
+  public init(
+    editingTodo: Todo? = nil
+  ) {
+    self.editingTodo = editingTodo
+  }
 }
 
 
@@ -56,6 +60,10 @@ public extension ScheduledDetailModel {
     withErrorReporting {
       try modelActions.deleteTodo(todoID)
     }
+  }
+  
+  func editTodo(_ todo: Todo) {
+    editingTodo = todo
   }
   
   func moveTodo(_ todoID: Todo.ID, to listID: TodoList.ID) {

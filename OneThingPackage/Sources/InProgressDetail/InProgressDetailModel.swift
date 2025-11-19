@@ -46,7 +46,13 @@ public final class InProgressDetailModel {
   @ObservationIgnored
   private var modelTransitions = ModelTransitions()
   
-  public init() {}
+  var editingTodo: Todo?
+  
+  public init(
+    editingTodo: Todo? = nil
+  ) {
+    self.editingTodo = editingTodo
+  }
 }
 
 
@@ -60,6 +66,10 @@ public extension InProgressDetailModel {
     withErrorReporting {
       try modelActions.deleteTodo(todoID)
     }
+  }
+  
+  func editTodo(_ todo: Todo) {
+    editingTodo = todo
   }
   
   func moveTodo(_ todoID: Todo.ID, to listID: TodoList.ID) {

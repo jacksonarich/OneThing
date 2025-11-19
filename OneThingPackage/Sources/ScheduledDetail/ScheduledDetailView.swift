@@ -1,4 +1,5 @@
 import AppDatabase
+import EditTodo
 import SQLiteData
 import SwiftUI
 import Utilities
@@ -32,6 +33,7 @@ public struct ScheduledDetailView: View {
               movableLists: model.movableLists,
               onTap: { model.todoRowTapped(todo.id, shouldTransition: todo.transition == nil) },
               onDelete: { model.deleteTodo(todo.id) },
+              onEdit: { model.editTodo(todo) },
               onMove: { listID in model.moveTodo(todo.id, to: listID) }
             )
           }
@@ -44,6 +46,12 @@ public struct ScheduledDetailView: View {
         Text("Nothing to see here")
           .foregroundStyle(Color.secondary)
       }
+    }
+    .sheet(item: $model.editingTodo) { todo in
+      NavigationStack {
+        EditTodoView(model: .init(todo))
+      }
+      .accentColor(.pink)
     }
     .navigationTitle("Scheduled")
     .navigationBarTitleDisplayMode(.large)
