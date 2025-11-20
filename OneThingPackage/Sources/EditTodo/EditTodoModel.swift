@@ -27,7 +27,7 @@ public final class EditTodoModel {
   var selectableLists
   
   let todoID: Todo.ID
-  var listID: TodoList.ID
+  var listID: TodoList.ID?
   var title: String
   var notes: String
   var deadline: Date?
@@ -42,7 +42,7 @@ public final class EditTodoModel {
   
   public init(
     todoID: Todo.ID,
-    listID: TodoList.ID,
+    listID: TodoList.ID? = nil,
     title: String = "",
     notes: String = "",
     deadline: Date? = nil,
@@ -57,31 +57,37 @@ public final class EditTodoModel {
     self.frequencySelection = frequencySelection
     self.customFrequency = customFrequency
   }
-  
-  public init(
-    _ todo: Todo
-  ) {
-    self.todoID = todo.id
-    self.listID = todo.listID
-    self.title = todo.title
-    self.notes = todo.notes
-    self.deadline = todo.deadline
-    var todoFrequency: Frequency? = nil
-    if let unit = todo.frequencyUnit, let count = todo.frequencyCount {
-      todoFrequency = .init(unit: unit, count: count)
-    }
-    let selection = FrequencySelection(todoFrequency)
-    self.frequencySelection = selection
-    var custom = Frequency(unit: .day)
-    if let todoFrequency, selection == .custom {
-      custom = todoFrequency
-    }
-    self.customFrequency = custom
-  }
 }
 
 
 public extension EditTodoModel {
+  
+  func fetch() {
+    @Dependency(\.defaultDatabase) var database
+    let result = withErrorReporting {
+      try database.read { db in
+        try Todo
+          .find(todoID)
+          .select { ($0.listID, $0.title, $0.notes, $0.deadline, $0.frequencyUnit, $0.frequencyCount) }
+          .fetchOne(db)
+      }
+    } ?? nil
+    if let result {
+      self.listID = result.0
+      self.title = result.1
+      self.notes = result.2
+      self.deadline = result.3
+      var frequency: Frequency? = nil
+      if let unit = result.4, let count = result.5 {
+        frequency = .init(unit: unit, count: count)
+      }
+      let selection = FrequencySelection(frequency)
+      self.frequencySelection = selection
+      if let frequency, selection == .custom {
+        self.customFrequency = frequency
+      }
+    }
+  }
 
   func toggleDeadline(isOn: Bool) {
     if isOn {
@@ -92,6 +98,7 @@ public extension EditTodoModel {
   }
   
   func editTodo() {
+    guard let listID else { return }
     withErrorReporting {
       try modelActions.editTodo(todoID, listID, title, notes, deadline, actualFrequency)
     }

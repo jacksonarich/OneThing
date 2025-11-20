@@ -39,7 +39,7 @@ public struct ListDetailView: View {
               movableLists: model.movableLists,
               onTap: { model.todoRowTapped(todo.id, shouldTransition: todo.transition == nil) },
               onDelete: { model.deleteTodo(todo.id) },
-              onEdit: { model.editTodo(todo) },
+              onEdit: { model.editTodo(todo.id) },
               onMove: { listID in model.moveTodo(todo.id, to: listID) }
             )
           }
@@ -60,9 +60,9 @@ public struct ListDetailView: View {
       }
       .accentColor(.pink)
     })
-    .sheet(item: $model.editingTodo) { todo in
+    .sheet(item: $model.editingTodoID) { todoID in
       NavigationStack {
-        EditTodoView(model: .init(todo))
+        EditTodoView(model: .init(todoID: todoID))
       }
       .accentColor(.pink)
     }

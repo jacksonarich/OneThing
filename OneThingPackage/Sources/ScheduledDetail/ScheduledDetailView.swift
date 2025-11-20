@@ -33,7 +33,7 @@ public struct ScheduledDetailView: View {
               movableLists: model.movableLists,
               onTap: { model.todoRowTapped(todo.id, shouldTransition: todo.transition == nil) },
               onDelete: { model.deleteTodo(todo.id) },
-              onEdit: { model.editTodo(todo) },
+              onEdit: { model.editTodo(todo.id) },
               onMove: { listID in model.moveTodo(todo.id, to: listID) }
             )
           }
@@ -47,9 +47,9 @@ public struct ScheduledDetailView: View {
           .foregroundStyle(Color.secondary)
       }
     }
-    .sheet(item: $model.editingTodo) { todo in
+    .sheet(item: $model.editingTodoID) { todoID in
       NavigationStack {
-        EditTodoView(model: .init(todo))
+        EditTodoView(model: .init(todoID: todoID))
       }
       .accentColor(.pink)
     }

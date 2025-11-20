@@ -68,22 +68,22 @@ public struct NewTodoView: View {
           model.createTodo()
           dismiss()
         }
-        .disabled(model.title.trimmed().isEmpty)
+        .disabled(
+          model.title.trimmed().isEmpty
+          || model.listID == nil
+        )
       }
     }
   }
 }
 
 
-#Preview {
+#Preview { // TODO: textfields not working in preview
+  @Previewable @State var model = NewTodoModel()
   @Previewable @State var showSheet = true
   let _ = prepareDependencies {
     $0.defaultDatabase = try! appDatabase(data: .previewSeed)
   }
-  let model = NewTodoModel(
-    listID: 1,
-    deadline: .now
-  )
   Button("Show") {
     showSheet = true
   }

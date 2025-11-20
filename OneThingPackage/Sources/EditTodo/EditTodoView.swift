@@ -49,7 +49,10 @@ public struct EditTodoView: View {
         }
       }
       Section {
-        ListPicker(listID: $model.listID, selectableLists: model.selectableLists)
+        ListPicker(
+          listID: $model.listID,
+          selectableLists: model.selectableLists
+        )
       }
     }
     .navigationTitle("Edit Thing")
@@ -65,9 +68,13 @@ public struct EditTodoView: View {
           model.editTodo()
           dismiss()
         }
-        .disabled(model.title.trimmed().isEmpty)
+        .disabled(
+          model.title.trimmed().isEmpty
+          || model.listID == nil
+        )
       }
     }
+    .task(model.fetch)
   }
 }
 
@@ -77,15 +84,7 @@ public struct EditTodoView: View {
   let _ = prepareDependencies {
     $0.defaultDatabase = try! appDatabase(data: .previewSeed)
   }
-  let model = EditTodoModel(
-    todoID: 1,
-    listID: 1,
-    title: "Title",
-    notes: "Notes",
-    deadline: .now,
-    frequencySelection: .custom,
-    customFrequency: .init(unit: .week, count: 2)
-  )
+  let model = EditTodoModel(todoID: 1)
   Button("Show") {
     showSheet = true
   }

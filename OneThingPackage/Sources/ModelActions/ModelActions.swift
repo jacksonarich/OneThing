@@ -148,50 +148,49 @@ extension ModelActions: DependencyKey {
         // generate N ranks between lower and upper bounds, in order
         // if generation failed due to adjacent ranks, redistribute ranks and go back to step 1
         // assign ranks to todos
-//        try database.write { db in
-//          // find lower and upper bounds
-//          var leftRank: Rank?
-//          var rightRank: Rank?
-//          if let targetID {
-//            let targetRank = try Todo
-//              .find(targetID)
-//              .select(\.rank)
-//              .fetchOne(db)!
-//            rightRank = try Todo
-//              .select(\.rank)
-//              .where { $0.rank.gte(targetRank) }
-//              .where { $0.id.in(todoIDs).not() }
-//              .order { $0.rank.asc() }
-//              .limit(1)
-//              .fetchOne(db)! // defaults to targetRank
-//            leftRank = try Todo
-//              .select(\.rank)
-//              .where { $0.rank.lt(targetRank) }
-//              .where { $0.id.in(todoIDs).not() }
-//              .order { $0.rank.desc() }
-//              .limit(1)
-//              .fetchOne(db) // nil if moving to start of list
-//          } else { // moving to end of list
-//            leftRank = try Todo
-//              .select(\.rank)
-//              .where { $0.id.in(todoIDs).not() }
-//              .order { $0.rank.desc() }
-//              .limit(1)
-//              .fetchOne(db)
-//          }
-//          // figure out how to refactor distribute function to take lower and upper bounds
-//          let ranks = try db.createRanks(
-//            count: todoIDs.count,
-//            between: leftID,
-//            and: rightID
-//          )
-//          for (todoID, rank) in zip(todoIDs, ranks) {
-//            try Todo
-//              .find(todoID)
-//              .update { $0.rank = rank }
-//              .execute(db)
-//          }
-//        }
+        try database.write { db in
+          // find lower and upper bounds
+          var leftRank: Rank?
+          var rightRank: Rank?
+          if let targetID {
+            let targetRank = try Todo
+              .find(targetID)
+              .select(\.rank)
+              .fetchOne(db)!
+            rightRank = try Todo
+              .select(\.rank)
+              .where { $0.rank.gte(targetRank) }
+              .where { $0.id.in(todoIDs).not() }
+              .order { $0.rank.asc() }
+              .limit(1)
+              .fetchOne(db)! // defaults to targetRank
+            leftRank = try Todo
+              .select(\.rank)
+              .where { $0.rank.lt(targetRank) }
+              .where { $0.id.in(todoIDs).not() }
+              .order { $0.rank.desc() }
+              .limit(1)
+              .fetchOne(db) // nil if moving to start of list
+          } else { // moving to end of list
+            leftRank = try Todo
+              .select(\.rank)
+              .where { $0.id.in(todoIDs).not() }
+              .order { $0.rank.desc() }
+              .limit(1)
+              .fetchOne(db)
+          }
+          let ranks = try db.createRanks(
+            count: todoIDs.count,
+            between: leftRank,
+            and: rightRank
+          )
+          for (todoID, rank) in zip(todoIDs, ranks) {
+            try Todo
+              .find(todoID)
+              .update { $0.rank = rank }
+              .execute(db)
+          }
+        }
       },
       createList: { list in
         try database.write { db in
@@ -302,27 +301,17 @@ extension Date {
 extension Database {
   fileprivate func createRanks(
     count: Int,
-    between left: Todo.ID?,
-    and right: Todo.ID?,
+    between left: Rank?,
+    and right: Rank?,
     rebalanced: Bool = false
   ) throws -> [Rank] {
     guard count > 0 else { return [] }
-    func rank(for id: Todo.ID?) throws -> Rank? {
-      guard let id else { return nil }
-      return try Todo
-        .find(id)
-        .select(\.rank)
-        .fetchOne(self)
-    }
-    let leftRank = try rank(for: left)
-    let rightRank = try rank(for: right)
-    
     @Dependency(\.rankGeneration) var rankGeneration
     var ranks = [Rank]()
     ranks.reserveCapacity(count)
-    var current = leftRank
-    for _ in 0..<count {
-      guard let next = rankGeneration.midpoint(between: current, and: rightRank) else {
+    var current = left
+    for _ in 0 ..< count {
+      guard let next = rankGeneration.midpoint(between: current, and: right) else {
         if rebalanced {
           throw ModelActionsError.noRankMidpoint
         }

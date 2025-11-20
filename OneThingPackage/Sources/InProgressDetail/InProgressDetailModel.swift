@@ -46,13 +46,13 @@ public final class InProgressDetailModel {
   @ObservationIgnored
   private var modelTransitions = ModelTransitions()
   
-  var editingTodo: Todo?
+  var editingTodoID: Todo.ID?
   private(set) var hapticID = 0
   
   public init(
-    editingTodo: Todo? = nil
+    editingTodoID: Todo.ID? = nil
   ) {
-    self.editingTodo = editingTodo
+    self.editingTodoID = editingTodoID
   }
 }
 
@@ -70,8 +70,8 @@ public extension InProgressDetailModel {
     }
   }
   
-  func editTodo(_ todo: Todo) {
-    editingTodo = todo
+  func editTodo(_ todoID: Todo.ID) {
+    editingTodoID = todoID
   }
   
   func moveTodo(_ todoID: Todo.ID, to listID: TodoList.ID) {

@@ -19,7 +19,7 @@ public final class ListDetailModel {
   private var listID: TodoList.ID
   private var modelTransitions = ModelTransitions()
   var isCreatingTodo = false
-  var editingTodo: Todo?
+  var editingTodoID: Todo.ID?
   private(set) var hapticID = 0
 
   @ObservationIgnored
@@ -40,11 +40,11 @@ public final class ListDetailModel {
   public init(
     listID: TodoList.ID,
     isCreatingTodo: Bool = false,
-    editingTodo: Todo? = nil
+    editingTodoID: Todo.ID? = nil
   ) {
     self.listID = listID
     self.isCreatingTodo = isCreatingTodo
-    self.editingTodo = editingTodo
+    self.editingTodoID = editingTodoID
     self._list = FetchOne(TodoList.find(listID))
     self._todos = FetchAll(
       Todo
@@ -72,8 +72,8 @@ public extension ListDetailModel {
     }
   }
   
-  func editTodo(_ todo: Todo) {
-    editingTodo = todo
+  func editTodo(_ todoID: Todo.ID) {
+    editingTodoID = todoID
   }
   
   func moveTodo(_ todoID: Todo.ID, to listID: TodoList.ID) {
@@ -88,7 +88,8 @@ public extension ListDetailModel {
   
   func rerankTodos(_ indexes: IndexSet, _ targetIndex: Int) {
     let todoIDs = indexes.map { todos[$0].id }
-    let targetID = todos[targetIndex].id
+    let targetExists = todos.indices.contains(targetIndex)
+    let targetID = targetExists ? todos[targetIndex].id : nil
     withErrorReporting {
       try modelActions.rerankTodos(todoIDs, targetID)
     }

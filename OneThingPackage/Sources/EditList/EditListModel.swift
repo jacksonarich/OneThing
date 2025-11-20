@@ -56,8 +56,8 @@ public extension EditListModel {
       }
     } ?? nil
     if let result {
-      name = result.0
-      color = result.1
+      self.name = result.0
+      self.color = result.1
     }
   }
   

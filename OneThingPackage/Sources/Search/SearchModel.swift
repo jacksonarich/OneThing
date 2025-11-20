@@ -42,15 +42,15 @@ public final class SearchModel {
     }
   }
   
-  var editingTodo: Todo?
+  var editingTodoID: Todo.ID?
   private(set) var hapticID = 0
 
   public init(
     text: String = "",
-    editingTodo: Todo? = nil
+    editingTodoID: Todo.ID? = nil
   ) {
     self.searchText = text
-    self.editingTodo = editingTodo
+    self.editingTodoID = editingTodoID
     self._todos = FetchAll(SearchModel.searchResultQuery(text), animation: .default)
   }
 }
@@ -81,8 +81,8 @@ public extension SearchModel {
     }
   }
   
-  func editTodo(_ todo: Todo) {
-    editingTodo = todo
+  func editTodo(_ todoID: Todo.ID) {
+    editingTodoID = todoID
   }
   
   func moveTodo(_ todoID: Todo.ID, to listID: TodoList.ID) {

@@ -7,6 +7,27 @@ import SwiftUI
 import Utilities
 
 
+struct ListRowView: View {
+  let name: String
+  let color: Color
+  let count: Int
+  
+  init(name: String, color: Color, count: Int) {
+    self.color = color
+    self.count = count
+    self.name = name
+  }
+
+  var body: some View {
+    HStack {
+      ListLabel(name: name, color: color)
+      Spacer()
+      ListCount(count)
+    }
+  }
+}
+
+
 private struct ListCount: View {
   let count: Int
   
@@ -32,27 +53,6 @@ private struct ListCount: View {
   
   var isEditing: Bool {
     editMode?.wrappedValue.isEditing ?? false
-  }
-}
-
-
-struct ListRowView: View {
-  let name: String
-  let color: Color
-  let count: Int
-  
-  init(name: String, color: Color, count: Int) {
-    self.color = color
-    self.count = count
-    self.name = name
-  }
-
-  var body: some View {
-    HStack {
-      ListLabel(name: name, color: color)
-      Spacer()
-      ListCount(count)
-    }
   }
 }
 

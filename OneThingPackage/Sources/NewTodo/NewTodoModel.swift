@@ -26,12 +26,10 @@ public final class NewTodoModel {
   )
   var selectableLists
   
-  var listID: TodoList.ID
-  
+  var listID: TodoList.ID?
   var title: String
   var notes: String
   var deadline: Date?
-  
   var frequencySelection: FrequencySelection
   var customFrequency: Frequency
   var actualFrequency: Frequency? {
@@ -42,7 +40,7 @@ public final class NewTodoModel {
   }
   
   public init(
-    listID: TodoList.ID,
+    listID: TodoList.ID? = nil,
     title: String = "",
     notes: String = "",
     deadline: Date? = nil,
@@ -70,6 +68,7 @@ public extension NewTodoModel {
   }
   
   func createTodo() {
+    guard let listID else { return }
     let now = date.now
     let draft = Todo.Draft(
       listID: listID,

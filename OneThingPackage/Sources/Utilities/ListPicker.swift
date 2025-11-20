@@ -4,11 +4,11 @@ import SwiftUI
 
 
 public struct ListPicker: View {
-  @Binding var listID: TodoList.ID
+  @Binding var listID: TodoList.ID?
   let selectableLists: [TodoList]
   
   public init(
-    listID: Binding<TodoList.ID>,
+    listID: Binding<TodoList.ID?>,
     selectableLists: [TodoList]
   ) {
     self._listID = listID
@@ -17,11 +17,17 @@ public struct ListPicker: View {
   
   public var body: some View {
     Picker(selection: $listID) {
+      ListLabel(
+        name: "Select...",
+        color: .gray.opacity(0.5)
+      )
+      .tag(nil as TodoList.ID?)
       ForEach(selectableLists) { list in
         ListLabel(
           name: list.name,
           color: list.color.swiftUIColor ?? .gray
         )
+        .tag(list.id)
       }
     } label: {
       ListLabel(
@@ -41,17 +47,17 @@ public struct ListPicker: View {
   }
   
   var selectedTint: Color {
-    selectedList?.color.swiftUIColor ?? .gray
+    selectedList?.color.swiftUIColor ?? .gray.opacity(0.5)
   }
   
   var selectedTitle: String {
-    selectedList?.name ?? ""
+    selectedList?.name ?? "Select..."
   }
 }
 
 
 #Preview {
-  @Previewable @State var listID: TodoList.ID = 1
+  @Previewable @State var listID: TodoList.ID? = nil
   let selectableLists: [TodoList] = [
     .init(id: 1, name: "A", color: .red, createDate: .now, modifyDate: .now),
     .init(id: 2, name: "B", color: .green, createDate: .now, modifyDate: .now),
