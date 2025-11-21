@@ -197,9 +197,19 @@ extension ModelActions: DependencyKey {
       },
       moveTodo: { todoID, listID in
         try database.write { db in
+          let maxRank = try Todo
+            .where { $0.listID.eq(listID) }
+            .select { $0.rank.max() }
+            .fetchOne(db) ?? nil
+          guard let nextRank = rankGeneration.midpoint(between: maxRank, and: nil)
+          else { throw ModelActionsError.noRankMidpoint }
+          
           try Todo
             .find(todoID)
-            .update { $0.listID = listID }
+            .update {
+              $0.listID = listID
+              $0.rank = nextRank
+            }
             .execute(db)
         }
       },

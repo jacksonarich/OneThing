@@ -5,7 +5,6 @@
 * Frontend audit
 * Add more todos to .previewSeed (ask chatgpt)
 * New app name
-* moving todos should rerank them at end of list
 * more tests
 
 # Future
