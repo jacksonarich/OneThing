@@ -9,7 +9,7 @@ import Testing
 
 public func runAction(
   action: @MainActor () async throws -> Void,
-  assert change: @Sendable (inout DatabaseSnapshot) -> Void,
+  assert change: @Sendable (inout DatabaseSnapshot) -> Void = { _ in },
   fileID: StaticString = #fileID,
   filePath: StaticString = #filePath,
   line: UInt = #line,

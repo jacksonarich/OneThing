@@ -117,6 +117,12 @@ let package = Package(
         "Utilities",
       ]
     ),
+    .testTarget(
+      name: "AppFeatureTests",
+      dependencies: [
+        "AppFeature",
+      ]
+    ),
     .target(
       name: "AppModels",
       dependencies: [

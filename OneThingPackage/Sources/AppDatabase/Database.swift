@@ -4,6 +4,7 @@ import Foundation
 import RankGeneration
 import SQLiteData
 
+#if DEBUG
 
 extension Database {
   public func seed(_ data: AppData) throws {
@@ -45,3 +46,5 @@ extension Database {
     }
   }
 }
+
+#endif

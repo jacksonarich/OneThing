@@ -44,7 +44,7 @@ public struct AppFeatureView: View {
         }
     }
     .fontDesign(.rounded)
-    .onFirstAppear(model.startRebalanceLoop)
+    .onFirstAppear(model.startDbMaintenanceLoop)
   }
 }
 

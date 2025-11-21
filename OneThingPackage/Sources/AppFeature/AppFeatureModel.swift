@@ -15,7 +15,7 @@ public final class AppFeatureModel {
 
 public extension AppFeatureModel {
   
-  func startRebalanceLoop() {
+  func startDbMaintenanceLoop() {
     Task(priority: .background) {
       @Dependency(\.continuousClock) var clock
       @Dependency(\.modelActions) var modelActions
