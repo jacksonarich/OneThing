@@ -88,6 +88,22 @@ extension Rank: Comparable {
   }
 }
 
+extension Rank: Collection {
+  public typealias Index = String.Index
+  public typealias Element = Character
+  
+  public var startIndex: Index { rawValue.startIndex }
+  public var endIndex: Index { rawValue.endIndex }
+  
+  public func index(after i: Index) -> Index {
+    rawValue.index(after: i)
+  }
+  
+  public subscript(position: Index) -> Element {
+    rawValue[position]
+  }
+}
+
 
 // MARK: - Validation
 

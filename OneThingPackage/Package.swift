@@ -98,6 +98,7 @@ let package = Package(
         .product(name: "SQLiteData", package: "sqlite-data"),
         "AppModels",
         "RankGeneration",
+        "Utilities",
       ]
     ),
     .target(

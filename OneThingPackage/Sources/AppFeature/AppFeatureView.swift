@@ -12,10 +12,12 @@ import SwiftUI
 import Utilities
 
 
-public struct AppEntryPoint: View {
+public struct AppFeatureView: View {
+  @State private var model: AppFeatureModel
   @Shared(.navPath) var navPath
   
   public init() {
+    self.model = AppFeatureModel()
     let _ = prepareDependencies {
       $0.defaultDatabase = try! appDatabase()
     }
@@ -42,12 +44,13 @@ public struct AppEntryPoint: View {
         }
     }
     .fontDesign(.rounded)
+    .onFirstAppear(model.startRebalanceLoop)
   }
 }
 
 
 
 #Preview {
-  AppEntryPoint()
+  AppFeatureView()
     .accentColor(.pink)
 }

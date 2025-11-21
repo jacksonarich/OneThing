@@ -1,10 +1,11 @@
 #  Planning
 
 * Go through each view and review dynamic text size and long names
-* Audit
+* Backend audit
+* Frontend audit
 * Add more todos to .previewSeed (ask chatgpt)
 * New app name
-* background task that occasionally rebalances ranks if any one rank exceeds a certain length
+* moving todos should rerank them at end of list
 * more tests
 
 # Future

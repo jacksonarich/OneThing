@@ -1,13 +1,14 @@
 import AppModels
 import NonEmpty
-import Utilities
-
 
 extension Rank {
-  /// Generates evenly spaced rank values
+  /// Generates `count` new ranks spread across the full rank space.
   ///
-  /// This is used when rebalancing the existing collections to keep the rank strings from getting too long. It's also used when seeding
-  /// the database with rank values when converting from the old `order` integer values.
+  /// Used when seeding ranks from scratch or fully rebalancing a list.
+  ///
+  /// - Parameter count: Number of ranks to generate. If `count <= 0`,
+  ///   returns an empty array.
+  /// - Returns: `count` increasing `Rank` values.
   static func distributed(count: Int) -> [Self] {
     guard count > 0 else { return [] }
     if count == 1 {
@@ -51,6 +52,47 @@ extension Rank {
     return result
   }
   
+  /// Generates `count` ranks between optional bounds.
+  ///
+  /// * If both `left` and `right` are `nil`, this is equivalent to `distributed(count:)`
+  /// * If `left` is `nil`, all returned ranks are `< right`.
+  /// * If `right` is `nil`, all returned ranks are `> left`.
+  /// * If both are non-`nil`, all returned ranks are strictly between them.
+  ///
+  /// Returns `nil` if no such ranks can be generated (e.g. `left` and `right` are adjacent)
+  static func distributed(
+    count: Int,
+    between left: Rank?,
+    and right: Rank?
+  ) -> [Self]? {
+    if left == nil, right == nil {
+      return distributed(count: count)
+    }
+    
+    struct Interval {
+      let left: Rank?
+      let right: Rank?
+    }
+    var queue = [Interval(left: left, right: right)]
+    var results = [Self]()
+    results.reserveCapacity(count)
+    while results.count < count {
+      guard queue.isEmpty == false
+      else { return nil }
+      let interval = queue.removeFirst()
+      guard let mid = midpoint(between: interval.left, and: interval.right)
+      else { return nil }
+      results.append(mid)
+      queue.append(Interval(left: interval.left, right: mid))
+      queue.append(Interval(left: mid, right: interval.right))
+    }
+    return results.sorted()
+  }
+  
+  /// Returns a rank strictly between `previous` and `next`
+  ///
+  /// * If both are `nil`, returns `defaultMidpoint`
+  /// * Return `nil` if `previous` and `next` are adjacent
   static func midpoint(
     between previous: Self?,
     and next: Self?
@@ -99,7 +141,9 @@ extension Rank {
     let remainder = b.dropFirst(a.count)
     // a.count == b.count
     if remainder.isEmpty {
-      return .init(a.appending(Alphabet.midDigit))
+      var result = a
+      result.append(Alphabet.midDigit)
+      return .init(result)
     }
     // Count the number of columns where there's no room (digit is either 0 or 1)
     let zeroCount = remainder

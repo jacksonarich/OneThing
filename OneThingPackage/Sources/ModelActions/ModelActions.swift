@@ -1,4 +1,5 @@
 import AppModels
+import Foundation
 import RankGeneration
 import SQLiteData
 import SwiftUI
@@ -6,19 +7,21 @@ import Utilities
 
 
 public struct ModelActions: Sendable {
+  public var createList: @Sendable (TodoList.Draft) throws -> Void
   public var createTodo: @Sendable (Todo.Draft) throws -> Void
   public var completeTodo: @Sendable (Todo.ID) throws -> Void
+  public var deleteList: @Sendable (TodoList.ID) throws -> Void
   public var deleteTodo: @Sendable (Todo.ID) throws -> Void
-  public var putBackTodo: @Sendable (Todo.ID) throws -> Void
+  public var editList: @Sendable (TodoList.ID, String, ListColor) throws -> Void
   public var editTodo: @Sendable (Todo.ID, TodoList.ID, String, String, Date?, Frequency?) throws -> Void
   public var eraseTodo: @Sendable (Todo.ID) throws -> Void
-  public var moveTodo: @Sendable (Todo.ID, TodoList.ID) throws -> Void
-  public var rerankTodos: @Sendable ([Todo.ID], Todo.ID?) throws -> Void
-  public var createList: @Sendable (TodoList.Draft) throws -> Void
-  public var editList: @Sendable (TodoList.ID, String, ListColor) throws -> Void
-  public var deleteList: @Sendable (TodoList.ID) throws -> Void
-  public var transitionTodo: @Sendable (Todo.ID, TransitionAction?) throws -> Void
   public var finalizeTransitions: @Sendable () throws -> Void
+  public var moveTodo: @Sendable (Todo.ID, TodoList.ID) throws -> Void
+  public var purge: @Sendable () throws -> Void
+  public var putBackTodo: @Sendable (Todo.ID) throws -> Void
+  public var rebalanceTodoRanks: @Sendable () throws -> Void
+  public var rerankTodos: @Sendable ([Todo.ID], Todo.ID?) throws -> Void
+  public var transitionTodo: @Sendable (Todo.ID, TransitionAction?) throws -> Void
 }
 
 
@@ -32,10 +35,18 @@ public extension DependencyValues {
 
 extension ModelActions: DependencyKey {
   public static let liveValue = {
+    @Dependency(\.calendar) var calendar
     @Dependency(\.defaultDatabase) var database
     @Dependency(\.date) var date
     @Dependency(\.rankGeneration) var rankGeneration
     return Self(
+      createList: { list in
+        try database.write { db in
+          try TodoList
+            .insert { list }
+            .execute(db)
+        }
+      },
       createTodo: { [rankGeneration] todo in
         try database.write { db in
           let maxRank = try Todo
@@ -89,6 +100,18 @@ extension ModelActions: DependencyKey {
           }
         }
       },
+      deleteList: { listID in
+        try database.write { db in
+          try Todo
+            .where { $0.listID.eq(listID) }
+            .delete()
+            .execute(db)
+          try TodoList
+            .find(listID)
+            .delete()
+            .execute(db)
+        }
+      },
       deleteTodo: { todoID in
         try database.write { db in
           try Todo
@@ -97,13 +120,13 @@ extension ModelActions: DependencyKey {
             .execute(db)
         }
       },
-      putBackTodo: { todoID in
+      editList: { listID, listName, listColor in
         try database.write { db in
-          try Todo
-            .find(todoID)
+          try TodoList
+            .find(listID)
             .update {
-              $0.completeDate = nil
-              $0.deleteDate = nil
+              $0.name = listName
+              $0.color = listColor
             }
             .execute(db)
         }
@@ -131,12 +154,98 @@ extension ModelActions: DependencyKey {
             .execute(db)
         }
       },
+      finalizeTransitions: {
+        try database.write { db in
+          let transitioningTodos = try Todo
+            .where { $0.transition.isNot(nil) }
+            .fetchAll(db)
+          for todo in transitioningTodos {
+            if todo.transition == .complete {
+              if let deadline = todo.deadline, let frequencyUnit = todo.frequencyUnit, let frequencyCount = todo.frequencyCount {
+                let newDeadline = try deadline.nextFutureDate(
+                  unit: frequencyUnit,
+                  count: frequencyCount
+                )
+                try Todo
+                  .find(todo.id)
+                  .update {
+                    $0.deadline = newDeadline
+                    $0.transition = nil
+                  }
+                  .execute(db)
+              } else {
+                try Todo
+                  .find(todo.id)
+                  .update {
+                    $0.completeDate = date.now
+                    $0.transition = nil
+                  }
+                  .execute(db)
+              }
+            } else if todo.transition == .putBack {
+              try Todo
+                .find(todo.id)
+                .update {
+                  $0.completeDate = nil
+                  $0.deleteDate = nil
+                  $0.transition = nil
+                }
+                .execute(db)
+            }
+          }
+        }
+      },
       moveTodo: { todoID, listID in
         try database.write { db in
           try Todo
             .find(todoID)
             .update { $0.listID = listID }
             .execute(db)
+        }
+      },
+      purge: {
+        guard let purgeDate = calendar.date(byAdding: .day, value: -30, to: date.now)
+        else { return }
+        try database.write { db in
+          try Todo
+            .where { $0.deleteDate.lt(Date?.some(purgeDate)) }
+            .delete()
+            .execute(db)
+        }
+      },
+      putBackTodo: { todoID in
+        try database.write { db in
+          try Todo
+            .find(todoID)
+            .update {
+              $0.completeDate = nil
+              $0.deleteDate = nil
+            }
+            .execute(db)
+        }
+      },
+      rebalanceTodoRanks: { [rankGeneration] in
+        // Traverse all todos grouped by list and redistribute when length(rank) > ?
+        try database.write { db in
+          let listIDs = try Todo
+            .where { $0.rank.length().gt(8) }
+            .select(\.listID)
+            .distinct()
+            .fetchAll(db)
+
+          for listID in listIDs {
+            let todoIDs = try Todo
+              .where { $0.listID.eq(listID) }
+              .select { $0.id }
+              .fetchAll(db)
+            let newRanks = try db.createRanks(count: todoIDs.count, between: nil, and: nil)
+            for (todoID, rank) in zip(todoIDs, newRanks) {
+              try Todo
+                .find(todoID)
+                .update { $0.rank = rank }
+                .execute(db)
+            }
+          }
         }
       },
       rerankTodos: { todoIDs, targetID in
@@ -192,36 +301,6 @@ extension ModelActions: DependencyKey {
           }
         }
       },
-      createList: { list in
-        try database.write { db in
-          try TodoList
-            .insert { list }
-            .execute(db)
-        }
-      },
-      editList: { listID, listName, listColor in
-        try database.write { db in
-          try TodoList
-            .find(listID)
-            .update {
-              $0.name = listName
-              $0.color = listColor
-            }
-            .execute(db)
-        }
-      },
-      deleteList: { listID in
-        try database.write { db in
-          try Todo
-            .where { $0.listID.eq(listID) }
-            .delete()
-            .execute(db)
-          try TodoList
-            .find(listID)
-            .delete()
-            .execute(db)
-        }
-      },
       transitionTodo: { todoID, transition in
         try database.write { db in
           try Todo
@@ -229,48 +308,7 @@ extension ModelActions: DependencyKey {
             .update { $0.transition = transition }
             .execute(db)
         }
-      },
-      finalizeTransitions: {
-        try database.write { db in
-          let transitioningTodos = try Todo
-            .where { $0.transition.isNot(nil) }
-            .fetchAll(db)
-          for todo in transitioningTodos {
-            if todo.transition == .complete {
-              if let deadline = todo.deadline, let frequencyUnit = todo.frequencyUnit, let frequencyCount = todo.frequencyCount {
-                let newDeadline = try deadline.nextFutureDate(
-                  unit: frequencyUnit,
-                  count: frequencyCount
-                )
-                try Todo
-                  .find(todo.id)
-                  .update {
-                    $0.deadline = newDeadline
-                    $0.transition = nil
-                  }
-                  .execute(db)
-              } else {
-                try Todo
-                  .find(todo.id)
-                  .update {
-                    $0.completeDate = date.now
-                    $0.transition = nil
-                  }
-                  .execute(db)
-              }
-            } else if todo.transition == .putBack {
-              try Todo
-                .find(todo.id)
-                .update {
-                  $0.completeDate = nil
-                  $0.deleteDate = nil
-                  $0.transition = nil
-                }
-                .execute(db)
-            }
-          }
-        }
-      },
+      }
     )
   }()
   
@@ -297,7 +335,6 @@ extension Date {
   }
 }
 
-
 extension Database {
   fileprivate func createRanks(
     count: Int,
@@ -307,24 +344,17 @@ extension Database {
   ) throws -> [Rank] {
     guard count > 0 else { return [] }
     @Dependency(\.rankGeneration) var rankGeneration
-    var ranks = [Rank]()
-    ranks.reserveCapacity(count)
-    var current = left
-    for _ in 0 ..< count {
-      guard let next = rankGeneration.midpoint(between: current, and: right) else {
-        if rebalanced {
-          throw ModelActionsError.noRankMidpoint
-        }
-        try rebalanceRanks()
-        return try createRanks(
-          count: count,
-          between: left,
-          and: right,
-          rebalanced: true
-        )
+    guard let ranks = rankGeneration.distribute(count, between: left, and: right) else {
+      if rebalanced {
+        throw ModelActionsError.noRankMidpoint
       }
-      ranks.append(next)
-      current = next
+      try rebalanceRanks()
+      return try createRanks(
+        count: count,
+        between: left,
+        and: right,
+        rebalanced: true
+      )
     }
     return ranks
   }

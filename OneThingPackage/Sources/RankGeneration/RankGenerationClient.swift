@@ -5,13 +5,27 @@ import DependenciesMacros
 @DependencyClient
 public struct RankGenerationClient: Sendable {
   public var distribute: @Sendable (Int) -> [Rank] = { _ in [] }
+  public var distributeBounded: @Sendable (Int, Rank?, Rank?) -> [Rank]? = { _, _, _ in nil }
   public var midpoint: @Sendable (_ between: Rank?, _ and: Rank?) -> Rank? = { _, _ in nil }
+}
+
+extension RankGenerationClient {
+  public func distribute(_ count: Int, between left: Rank?, and right: Rank?) -> [Rank]? {
+    distributeBounded(count, left, right)
+  }
 }
 
 extension RankGenerationClient: DependencyKey {
   public static let liveValue = RankGenerationClient(
-    distribute: { count in Rank.distributed(count: count) },
-    midpoint: { left, right in Rank.midpoint(between: left, and: right) }
+    distribute: { count in
+      Rank.distributed(count: count)
+    },
+    distributeBounded: { count, left, right in
+      Rank.distributed(count: count, between: left, and: right)
+    },
+    midpoint: { left, right in
+      Rank.midpoint(between: left, and: right)
+    }
   )
   
   public static let testValue = RankGenerationClient(
@@ -21,6 +35,9 @@ extension RankGenerationClient: DependencyKey {
       return (0..<count)
         .map { [$0].toRankString() }
         .map { Rank($0)! }
+    },
+    distributeBounded: { count, left, right in
+      Rank.distributed(count: count, between: left, and: right)
     },
     midpoint: { left, right in
       let leftDigits = left?.rawValue.toDigits()
@@ -46,7 +63,9 @@ extension RankGenerationClient: DependencyKey {
         }
         // Splitting between two ranks; add a 5 to the left rank
         // For example left = "1", right = "4", result is "15"
-        return Rank(leftDigits.appending(5).toRankString())!
+        var result = leftDigits
+        result.append(5)
+        return Rank(result.toRankString())!
       } else {
         fatalError(
           "midpoint unknown for left \(left.debugDescription), right \(right.debugDescription)"

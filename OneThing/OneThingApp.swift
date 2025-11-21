@@ -5,7 +5,7 @@ import SwiftUI
 struct OneThingApp: App {
   var body: some Scene {
     WindowGroup {
-      AppEntryPoint()
+      AppFeatureView()
     }
   }
 }
