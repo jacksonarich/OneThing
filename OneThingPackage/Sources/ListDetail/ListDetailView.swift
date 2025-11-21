@@ -56,13 +56,11 @@ public struct ListDetailView: View {
       NavigationStack {
         NewTodoView(listID: model.listID)
       }
-      .accentColor(.pink)
     }
     .sheet(item: $model.editingTodoID) { todoID in
       NavigationStack {
-        EditTodoView(model: .init(todoID: todoID))
+        EditTodoView(todoID: todoID)
       }
-      .accentColor(.pink)
     }
     .toolbar {
       ToolbarItem(placement: .topBarTrailing) {

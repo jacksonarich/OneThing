@@ -7,6 +7,7 @@
 * New app name
 * background task that occasionally rebalances ranks if any one rank exceeds a certain length
 * more tests
+* Add "new list" and "new todo" buttons where necessary
 
 # Future
 * Make Dashboard search bar a circle button instead in bottom right
@@ -15,5 +16,3 @@
 * Make Dashboard edit button use checkmark on iOS 26
 * When entering edit mode on Dashboard, Scheduled list animates from leading edge when the 
 others don't
-
-* Sheet model stored in parent view, causing unwanted persistence of state

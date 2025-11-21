@@ -59,9 +59,8 @@ public struct InProgressDetailView: View {
     }
     .sheet(item: $model.editingTodoID) { todoID in
       NavigationStack {
-        EditTodoView(model: .init(todoID: todoID))
+        EditTodoView(todoID: todoID)
       }
-      .accentColor(.pink)
     }
     .sensoryFeedback(.impact(flexibility: .solid), trigger: model.hapticID)
     .navigationTitle("In Progress")

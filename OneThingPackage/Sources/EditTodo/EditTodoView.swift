@@ -6,11 +6,11 @@ import Utilities
 
 
 public struct EditTodoView: View {
-  @Bindable var model: EditTodoModel
+  @State private var model: EditTodoModel
   @Environment(\.dismiss) var dismiss
   
-  public init(model: EditTodoModel) {
-    self.model = model
+  public init(todoID: Todo.ID) {
+    self.model = EditTodoModel(todoID: todoID)
   }
   
   public var body: some View {
@@ -84,13 +84,12 @@ public struct EditTodoView: View {
   let _ = prepareDependencies {
     $0.defaultDatabase = try! appDatabase(data: .previewSeed)
   }
-  let model = EditTodoModel(todoID: 1)
   Button("Show") {
     showSheet = true
   }
   .sheet(isPresented: $showSheet) {
     NavigationStack {
-      EditTodoView(model: model)
+      EditTodoView(todoID: 1)
     }
     .accentColor(.pink)
   }
