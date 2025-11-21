@@ -8,7 +8,6 @@ import SQLiteData
 import SwiftUI
 import Utilities
 
-
 public struct DashboardView: View {
   @State private var model = DashboardModel()
   @State private var searchModel = SearchModel()
@@ -43,7 +42,7 @@ public struct DashboardView: View {
     }
     .toolbar {
       ToolbarItem(placement: .topBarTrailing) {
-        Button(model.isEditing ? "Done" : "Edit") {
+        CustomEditButton("Edit") {
           withAnimation {
             model.editButtonTapped()
           }
@@ -56,6 +55,7 @@ public struct DashboardView: View {
         }
       }
 #if DEBUG
+      ToolbarSpacer(placement: .topBarTrailing)
       ToolbarItem(placement: .topBarTrailing) {
         Button("Seed") {
           @Dependency(\.defaultDatabase) var database
