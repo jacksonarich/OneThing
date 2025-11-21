@@ -12,7 +12,6 @@ import Utilities
 public struct DashboardView: View {
   @State private var model = DashboardModel()
   @State private var searchModel = SearchModel()
-  @State private var newListModel = NewListModel()
   
   public init() {}
   
@@ -34,7 +33,7 @@ public struct DashboardView: View {
     .searchable(text: $searchModel.searchText, placement: .navigationBarDrawer)
     .sheet(isPresented: $model.isCreatingList) {
       NavigationStack {
-        NewListView(model: newListModel)
+        NewListView()
       }
     }
     .sheet(item: $model.editingListID) { listID in

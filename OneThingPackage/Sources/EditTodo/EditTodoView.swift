@@ -74,7 +74,7 @@ public struct EditTodoView: View {
         )
       }
     }
-    .task(model.fetch)
+    .onFirstAppear(model.fetch)
   }
 }
 

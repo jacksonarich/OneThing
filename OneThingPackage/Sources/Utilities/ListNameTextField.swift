@@ -19,7 +19,7 @@ public struct ListNameTextField: View {
       .tint(color.swiftUIColor ?? .gray)
       .padding(.vertical, 5)
       .focused($isFocused)
-      .onAppear {
+      .onFirstAppear {
         isFocused = true
       }
   }

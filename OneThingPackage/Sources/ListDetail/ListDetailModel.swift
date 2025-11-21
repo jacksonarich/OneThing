@@ -16,12 +16,6 @@ public final class ListDetailModel {
   @Dependency(\.modelActions)
   private var modelActions
 
-  private var listID: TodoList.ID
-  private var modelTransitions = ModelTransitions()
-  var isCreatingTodo = false
-  var editingTodoID: Todo.ID?
-  private(set) var hapticID = 0
-
   @ObservationIgnored
   @FetchAll(
     TodoList
@@ -36,6 +30,12 @@ public final class ListDetailModel {
   @ObservationIgnored
   @FetchAll
   var todos: [Todo]
+  
+  let listID: TodoList.ID
+  var isCreatingTodo: Bool
+  var editingTodoID: Todo.ID?
+  private(set) var hapticID = 0
+  private var modelTransitions = ModelTransitions()
 
   public init(
     listID: TodoList.ID,

@@ -5,12 +5,10 @@ import Utilities
 
 
 public struct NewListView: View {
-  @Bindable var model: NewListModel
+  @State private var model = NewListModel()
   @Environment(\.dismiss) var dismiss
   
-  public init(model: NewListModel) {
-    self.model = model
-  }
+  public init() {}
   
   public var body: some View {
     List {
@@ -50,9 +48,8 @@ public struct NewListView: View {
   let _ = prepareDependencies {
     $0.defaultDatabase = try! appDatabase(data: .previewSeed)
   }
-  let model = NewListModel()
   NavigationStack {
-    NewListView(model: model)
+    NewListView()
   }
   .accentColor(.pink)
 }

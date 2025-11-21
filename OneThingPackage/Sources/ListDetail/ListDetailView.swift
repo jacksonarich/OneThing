@@ -9,11 +9,9 @@ import Utilities
 
 public struct ListDetailView: View {
   @State private var model: ListDetailModel
-  @State private var newTodoModel: NewTodoModel
   
   public init(listID: TodoList.ID) {
     self.model = ListDetailModel(listID: listID)
-    self.newTodoModel = NewTodoModel(listID: listID)
   }
   
   public var body: some View {
@@ -54,12 +52,12 @@ public struct ListDetailView: View {
           .foregroundStyle(Color.secondary)
       }
     }
-    .sheet(isPresented: $model.isCreatingTodo, content: {
+    .sheet(isPresented: $model.isCreatingTodo) {
       NavigationStack {
-        NewTodoView(model: newTodoModel)
+        NewTodoView(listID: model.listID)
       }
       .accentColor(.pink)
-    })
+    }
     .sheet(item: $model.editingTodoID) { todoID in
       NavigationStack {
         EditTodoView(model: .init(todoID: todoID))

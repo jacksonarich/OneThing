@@ -67,7 +67,7 @@ public struct EditListView: View {
         .disabled(model.name.trimmed().isEmpty)
       }
     }
-    .task(model.fetch)
+    .onFirstAppear(model.fetch)
   }
 }
 

@@ -6,17 +6,22 @@ import Utilities
 
 
 public struct NewTodoView: View {
-  @Bindable var model: NewTodoModel
+  @State private var model: NewTodoModel
   @Environment(\.dismiss) var dismiss
+  @FocusState private var isFocused: Bool
   
-  public init(model: NewTodoModel) {
-    self.model = model
+  public init(listID: TodoList.ID? = nil) {
+    self.model = NewTodoModel(listID: listID)
   }
   
   public var body: some View {
     List {
       Section {
         TextField("Title", text: $model.title)
+          .focused($isFocused)
+          .onFirstAppear {
+            isFocused = true
+          }
         TextField("Notes", text: $model.notes)
       }
       Section {
@@ -78,8 +83,7 @@ public struct NewTodoView: View {
 }
 
 
-#Preview { // TODO: textfields not working in preview
-  @Previewable @State var model = NewTodoModel()
+#Preview {
   @Previewable @State var showSheet = true
   let _ = prepareDependencies {
     $0.defaultDatabase = try! appDatabase(data: .previewSeed)
@@ -89,7 +93,7 @@ public struct NewTodoView: View {
   }
   .sheet(isPresented: $showSheet) {
     NavigationStack {
-      NewTodoView(model: model)
+      NewTodoView()
     }
     .accentColor(.pink)
   }
