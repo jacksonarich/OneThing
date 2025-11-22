@@ -27,46 +27,42 @@ struct DashboardTests {
         model.listRowTapped(id: 1)
         #expect(model.editingListID == (isEditing ? 1 : nil))
         expectNoDifference(model.navPath, isEditing ? [] : [.listDetail(1)])
-      } assert: { _ in
-        // No changes
       }
     }
   }
   
-//  @Test
-//  func testListCellTapped() async throws {
-//    // setup
-//    try ModelActions.testValue.seedDatabase([
-//      TodoList.Draft()
-//    ], [
-//      Todo.Draft(rank: "0", listID: 1)
-//    ])
-//    // tap "In Progress"
-//    let m = DashboardModel()
-//    m.listCellTapped(list: .inProgress)
-//    expectNoDifference(m.navPath, [.computedListDetail(.inProgress)])
-//  }
-//  
-//  @Test
-//  func testListVisibilityChanged() async throws {
-//    // setup
-//    try ModelActions.testValue.seedDatabase([
-//      TodoList.Draft()
-//    ], [
-//      Todo.Draft(rank: "0", listID: 1)
-//    ])
-//    let model = DashboardModel()
-//    // true -> false
-//    model.listVisibilityChanged(list: .inProgress, to: false)
-//    expectNoDifference(model.hiddenLists, [.inProgress])
-//    // false -> false
-//    model.listVisibilityChanged(list: .inProgress, to: false)
-//    expectNoDifference(model.hiddenLists, [.inProgress])
-//    // false -> true
-//    model.listVisibilityChanged(list: .inProgress, to: true)
-//    expectNoDifference(model.hiddenLists, [])
-//    // true -> true
-//    model.listVisibilityChanged(list: .inProgress, to: true)
-//    expectNoDifference(model.hiddenLists, [])
-//  }
+  @Test
+  func testListCellTapped() async throws {
+    await prepareTest {
+    } test: {
+      let model = DashboardModel()
+      await runAction {
+        model.listCellTapped(list: .inProgress)
+        expectNoDifference(model.navPath, [.computedListDetail(.inProgress)])
+      }
+    }
+  }
+  
+  @Test
+  func testListVisibilityChanged() async throws {
+    await prepareTest {
+      TodoListData {
+        TodoData()
+      }
+    } test: {
+      let model = DashboardModel()
+      // true -> false
+      model.listVisibilityChanged(list: .inProgress, to: false)
+      expectNoDifference(model.hiddenLists, [.inProgress])
+      // false -> false
+      model.listVisibilityChanged(list: .inProgress, to: false)
+      expectNoDifference(model.hiddenLists, [.inProgress])
+      // false -> true
+      model.listVisibilityChanged(list: .inProgress, to: true)
+      expectNoDifference(model.hiddenLists, [])
+      // true -> true
+      model.listVisibilityChanged(list: .inProgress, to: true)
+      expectNoDifference(model.hiddenLists, [])
+    }
+  }
 }

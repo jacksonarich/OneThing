@@ -195,6 +195,7 @@ let package = Package(
     .testTarget(
       name: "EditListTests",
       dependencies: [
+        "AppModels",
         "EditList",
         "TestSupport",
       ]
@@ -208,6 +209,14 @@ let package = Package(
         "AppModels",
         "ModelActions",
         "Utilities",
+      ]
+    ),
+    .testTarget(
+      name: "EditTodoTests",
+      dependencies: [
+        "AppModels",
+        "EditTodo",
+        "TestSupport",
       ]
     ),
     .target(
@@ -226,8 +235,9 @@ let package = Package(
     .testTarget(
       name: "InProgressDetailTests",
       dependencies: [
-        .product(name: "DependenciesTestSupport", package: "swift-dependencies"),
+        "AppModels",
         "InProgressDetail",
+        "TestSupport",
       ]
     ),
     .target(
@@ -242,6 +252,14 @@ let package = Package(
         "ModelTransitions",
         "NewTodo",
         "Utilities",
+      ]
+    ),
+    .testTarget(
+      name: "ListDetailTests",
+      dependencies: [
+        "AppModels",
+        "ListDetail",
+        "TestSupport",
       ]
     ),
     .target(

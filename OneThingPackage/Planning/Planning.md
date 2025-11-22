@@ -1,11 +1,11 @@
 #  Planning
 
 * Go through each view and review dynamic text size and long names
+* Test audit
 * Backend audit
 * Frontend audit
 * Add more todos to .previewSeed (ask chatgpt)
 * New app name
-* more tests
 
 # Future
 * Make Dashboard search bar a circle button instead in bottom right

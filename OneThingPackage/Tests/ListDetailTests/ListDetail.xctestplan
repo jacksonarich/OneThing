@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "D115BD04-C5D8-4DB4-888C-B5B18DFEAD6C",
+      "id" : "F06DD391-F2E0-48EC-AA27-ABC27FB3C77B",
       "name" : "Test Scheme Action",
       "options" : {
 
@@ -15,8 +15,8 @@
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "ModelActionsTests",
-        "name" : "ModelActionsTests"
+        "identifier" : "ListDetailTests",
+        "name" : "ListDetailTests"
       }
     }
   ],

@@ -16,8 +16,6 @@ struct EditListTests {
       await runAction {
         model.showDialog()
         #expect(model.showAlert == true)
-      } assert: { _ in
-        // No changes
       }
     }
   }
@@ -32,8 +30,20 @@ struct EditListTests {
         model.fetch()
         #expect(model.name == "Grocery")
         #expect(model.color == .indigo)
-      } assert: { _ in
-        // No changes
+      }
+    }
+  }
+
+  @Test
+  func fetchInvalidListID() async {
+    await prepareTest {
+      TodoListData(name: "Grocery", color: .indigo)
+    } test: {
+      let model = EditListModel(listID: 100, name: "Invalid List", color: .orange)
+      await runAction {
+        model.fetch()
+        #expect(model.name == "Invalid List")
+        #expect(model.color == .orange)
       }
     }
   }

@@ -49,6 +49,34 @@
     {
       "target" : {
         "containerPath" : "container:",
+        "identifier" : "AppFeatureTests",
+        "name" : "AppFeatureTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "EditListTests",
+        "name" : "EditListTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "EditTodoTests",
+        "name" : "EditTodoTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ListDetailTests",
+        "name" : "ListDetailTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
         "identifier" : "ModelTransitionsTests",
         "name" : "ModelTransitionsTests"
       }

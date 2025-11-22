@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "D115BD04-C5D8-4DB4-888C-B5B18DFEAD6C",
+      "id" : "ACBA1C7D-2C27-457F-82D8-133E8BE8EE70",
       "name" : "Test Scheme Action",
       "options" : {
 
@@ -9,14 +9,15 @@
     }
   ],
   "defaultOptions" : {
+    "codeCoverage" : false,
     "performanceAntipatternCheckerEnabled" : true
   },
   "testTargets" : [
     {
       "target" : {
         "containerPath" : "container:",
-        "identifier" : "ModelActionsTests",
-        "name" : "ModelActionsTests"
+        "identifier" : "EditTodoTests",
+        "name" : "EditTodoTests"
       }
     }
   ],

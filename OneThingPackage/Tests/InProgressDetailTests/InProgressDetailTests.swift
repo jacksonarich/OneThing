@@ -1,16 +1,44 @@
-import AppDatabase
 import AppModels
 import Dependencies
-import DependenciesTestSupport
-import Foundation
 @testable import InProgressDetail
-import SQLiteData
 import Testing
+import TestSupport
+
 
 @MainActor
-@Suite(
-  .dependency(\.defaultDatabase, try appDatabase()),
-  .dependency(\.date.now, Date(timeIntervalSince1970: 0))
-)
 struct InProgressDetailTests {
+  
+  @Test
+  func todoRowTapped() async {
+    await prepareTest {
+      TodoListData {
+        TodoData()
+      }
+    } dependencies: {
+      $0.continuousClock = ImmediateClock()
+    } test: {
+      let model = InProgressDetailModel()
+      await runAction {
+        model.todoRowTapped(1, shouldTransition: true)
+        #expect(model.hapticID == 1)
+      } assert: {
+        $0.todos[0].transition = .complete
+      }
+    }
+  }
+  
+  @Test
+  func editTodo() async {
+    await prepareTest {
+      TodoListData {
+        TodoData()
+      }
+    } test: {
+      let model = InProgressDetailModel()
+      await runAction {
+        model.editTodo(1)
+        #expect(model.editingTodoID == 1)
+      }
+    }
+  }
 }

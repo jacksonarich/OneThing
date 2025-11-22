@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "2600"
+   LastUpgradeVersion = "2610"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EditList"
-               BuildableName = "EditList"
-               BlueprintName = "EditList"
+               BlueprintIdentifier = "EditTodo"
+               BuildableName = "EditTodo"
+               BlueprintName = "EditTodo"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -30,7 +30,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:Tests/EditListTests/EditListTestPlan.xctestplan"
+            reference = "container:Tests/EditTodoTests/EditTodo.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
@@ -55,9 +55,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "EditList"
-            BuildableName = "EditList"
-            BlueprintName = "EditList"
+            BlueprintIdentifier = "EditTodo"
+            BuildableName = "EditTodo"
+            BlueprintName = "EditTodo"
             ReferencedContainer = "container:">
          </BuildableReference>
       </MacroExpansion>

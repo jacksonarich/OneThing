@@ -7,6 +7,7 @@ import Utilities
 
 
 public struct ModelActions: Sendable {
+  
   public var createList: @Sendable (TodoList.Draft) throws -> Void
   public var createTodo: @Sendable (Todo.Draft) throws -> Void
   public var completeTodo: @Sendable (Todo.ID) throws -> Void
@@ -26,6 +27,7 @@ public struct ModelActions: Sendable {
 
 
 public extension DependencyValues {
+  
   var modelActions: ModelActions {
     get { self[ModelActions.self] }
     set { self[ModelActions.self] = newValue }
@@ -34,6 +36,7 @@ public extension DependencyValues {
 
 
 extension ModelActions: DependencyKey {
+  
   public static let liveValue = {
     @Dependency(\.calendar) var calendar
     @Dependency(\.defaultDatabase) var database
@@ -56,20 +59,6 @@ extension ModelActions: DependencyKey {
             if let newRank = rankGeneration.midpoint(between: maxRank, and: nil) {
               return newRank
             }
-//            let todoIds = try Todo
-//              .select(\.id)
-//              .order(by: \.rank)
-//              .fetchAll(db)
-//            let ranks = rankGeneration.distribute(todoIds.count)
-//            for (id, rank) in zip(todoIds, ranks) {
-//              try Todo
-//                .find(id)
-//                .update { $0.rank = rank }
-//                .execute(db)
-//            }
-//            guard let newRank = rankGeneration.midpoint(between: ranks.max(), and: nil)
-//            else { throw ModelActionsError.noRankMidpoint }
-//            return newRank
             throw ModelActionsError.noRankMidpoint
           }()
           let rankedTodo = todo.modified { $0.rank = newRank }
@@ -235,14 +224,13 @@ extension ModelActions: DependencyKey {
         }
       },
       rebalanceTodoRanks: { [rankGeneration] in
-        // Traverse all todos grouped by list and redistribute when length(rank) > ?
+        // Traverse all todos grouped by list and redistribute when length(rank) > 8
         try database.write { db in
           let listIDs = try Todo
             .where { $0.rank.length().gt(8) }
             .select(\.listID)
             .distinct()
             .fetchAll(db)
-
           for listID in listIDs {
             let todoIDs = try Todo
               .where { $0.listID.eq(listID) }
@@ -269,30 +257,30 @@ extension ModelActions: DependencyKey {
         // assign ranks to todos
         try database.write { db in
           // find lower and upper bounds
-          var leftRank: Rank?
-          var rightRank: Rank?
+          var left: Todo.ID?
+          var right: Todo.ID?
           if let targetID {
             let targetRank = try Todo
               .find(targetID)
               .select(\.rank)
               .fetchOne(db)!
-            rightRank = try Todo
-              .select(\.rank)
+            right = try Todo
+              .select(\.id)
               .where { $0.rank.gte(targetRank) }
               .where { $0.id.in(todoIDs).not() }
               .order { $0.rank.asc() }
               .limit(1)
               .fetchOne(db)! // defaults to targetRank
-            leftRank = try Todo
-              .select(\.rank)
+            left = try Todo
+              .select(\.id)
               .where { $0.rank.lt(targetRank) }
               .where { $0.id.in(todoIDs).not() }
               .order { $0.rank.desc() }
               .limit(1)
               .fetchOne(db) // nil if moving to start of list
           } else { // moving to end of list
-            leftRank = try Todo
-              .select(\.rank)
+            left = try Todo
+              .select(\.id)
               .where { $0.id.in(todoIDs).not() }
               .order { $0.rank.desc() }
               .limit(1)
@@ -300,8 +288,8 @@ extension ModelActions: DependencyKey {
           }
           let ranks = try db.createRanks(
             count: todoIDs.count,
-            between: leftRank,
-            and: rightRank
+            between: left,
+            and: right
           )
           for (todoID, rank) in zip(todoIDs, ranks) {
             try Todo
@@ -348,13 +336,24 @@ extension Date {
 extension Database {
   fileprivate func createRanks(
     count: Int,
-    between left: Rank?,
-    and right: Rank?,
+    between left: Todo.ID?,
+    and right: Todo.ID?,
     rebalanced: Bool = false
   ) throws -> [Rank] {
-    guard count > 0 else { return [] }
     @Dependency(\.rankGeneration) var rankGeneration
-    guard let ranks = rankGeneration.distribute(count, between: left, and: right) else {
+    func rankOfTodo(_ todoID: Todo.ID?) throws -> Rank? {
+      guard let todoID else { return nil }
+      return try Todo
+        .find(todoID)
+        .select { $0.rank }
+        .fetchOne(self)
+    }
+    guard count > 0 else { return [] }
+    guard let ranks = rankGeneration.distribute(
+      count,
+      between: try rankOfTodo(left),
+      and: try rankOfTodo(right)
+    ) else {
       if rebalanced {
         throw ModelActionsError.noRankMidpoint
       }
@@ -380,9 +379,7 @@ extension Database {
     for (todoId, rank) in zip(todoIds, ranks) {
       try Todo
         .find(todoId)
-        .update {
-          $0.rank = rank
-        }
+        .update { $0.rank = rank }
         .execute(self)
     }
     return ranks

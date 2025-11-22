@@ -37,7 +37,19 @@ extension RankGenerationClient: DependencyKey {
         .map { Rank($0)! }
     },
     distributeBounded: { count, left, right in
-      Rank.distributed(count: count, between: left, and: right)
+      precondition(count <= Alphabet.maxDigit, "Max count for tests is \(Alphabet.maxDigit)")
+      // Check if midpoint exists
+      if Rank.midpoint(between: left, and: right) == nil { return nil }
+      // Creates a sequence of ranks starting at 0
+      return (0..<count)
+        .map {
+          let out = [$0].toRankString()
+          if let left { return left + out }
+          else { return out }
+        }
+        .map {
+          Rank($0)!
+        }
     },
     midpoint: { left, right in
       let leftDigits = left?.rawValue.toDigits()
